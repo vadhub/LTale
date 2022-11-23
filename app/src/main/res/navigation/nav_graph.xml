@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/accountFragment">
+    app:startDestination="@id/registrationFragment">
 
     <fragment
         android:id="@+id/accountFragment"
@@ -19,18 +19,12 @@
         android:name="com.vad.ltale.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_accountFragment"
-            app:destination="@id/accountFragment" />
     </fragment>
     <fragment
         android:id="@+id/recordFragment"
         android:name="com.vad.ltale.RecordFragment"
         android:label="fragment_record"
         tools:layout="@layout/fragment_record" >
-        <action
-            android:id="@+id/action_recordFragment_to_accountFragment"
-            app:destination="@id/accountFragment" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
@@ -40,8 +34,5 @@
         <action
             android:id="@+id/action_registrationFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_registrationFragment_to_accountFragment"
-            app:destination="@id/accountFragment" />
     </fragment>
 </navigation>
