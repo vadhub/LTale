@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class AccountFragment : Fragment() {
@@ -19,7 +20,7 @@ class AccountFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val buttonCreateRecord: Button = view.findViewById(R.id.createRecordButton)
+        val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
 }
