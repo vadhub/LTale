@@ -13,7 +13,7 @@ class ChunkTimer(time: Long) {
     }
 
     fun startTimer() {
-        timer = object: CountDownTimer(timeStartFrom, 1000) {
+        timer = object: CountDownTimer(timeStartFrom, 100) {
             override fun onTick(millisUntilFinished: Long) {
                 timeStartFrom = millisUntilFinished
                 handler.showTime(millisUntilFinished)
