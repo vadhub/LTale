@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +32,7 @@ class AccountFragment : Fragment() {
             Record(10, "hello2", URI(""), Date(123424424), 1000),
             Record(10, "hello3", URI(""), Date(123424424), 1000)
             )
+
         val adapter = RecordAdapter()
         adapter.setRecords(listRecord)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
