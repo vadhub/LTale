@@ -1,4 +1,4 @@
-package com.vad.ltale
+package com.vad.ltale.domain
 
 import android.os.CountDownTimer
 

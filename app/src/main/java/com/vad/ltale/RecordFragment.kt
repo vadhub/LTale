@@ -1,13 +1,12 @@
 package com.vad.ltale
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -16,20 +15,23 @@ import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.vad.ltale.domain.ChunkTimer
+import com.vad.ltale.domain.RecordAudioHandle
+import com.vad.ltale.domain.TimerHandler
 import java.io.IOException
 
 class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
     private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer
+    private lateinit var actionButton: FloatingActionButton
 
-    private var output: String = ""
-    private var mediaRecorder: MediaRecorder? = null
     private lateinit var contextThis: Context
+    private lateinit var recorder: RecordAudioHandle
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -44,21 +46,20 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
             ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
                 contextThis,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                contextThis,
+                Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             val permissions = arrayOf(
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.RECORD_AUDIO
             )
             ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
         } else {
-            mediaRecorder = MediaRecorder()
-            output = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath + "/record1ingTest.mp3"
-            Log.d("---Record", output)
-            mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-            mediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            mediaRecorder?.setOutputFile(output)
+            chunkTimer = ChunkTimer(1000 * 60)
+            recorder = RecordAudioHandle(chunkTimer, contextThis)
         }
     }
 
@@ -70,47 +71,31 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        chunkTimer = ChunkTimer(1000 * 60)
         chunkTimer.setTimerHandler(this)
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
-        val actionButton: FloatingActionButton = view.findViewById(R.id.recordFloatingButton)
+        actionButton = view.findViewById(R.id.recordFloatingButton)
         actionButton.setOnTouchListener(this)
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+
         when (event?.action) {
-            MotionEvent.ACTION_DOWN -> startRecording()
-            MotionEvent.ACTION_UP -> stopRecording()
-            MotionEvent.ACTION_CANCEL -> stopRecording()
+            MotionEvent.ACTION_DOWN -> recorder.startRecording()
+            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton)
+            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton)
         }
         return true
     }
 
+    @SuppressLint("SetTextI18n")
     override fun showTime(time: Long) {
-        timeRecordTextView.text = "$time"
+        val minutes = time / 1000 / 60
+        val seconds = time / 1000 % 60
+        timeRecordTextView.text = "$minutes:$seconds"
     }
 
     override fun finishTime() {
         timeRecordTextView.text = "end"
     }
 
-    private fun startRecording() {
-
-        try {
-            chunkTimer.startTimer()
-            mediaRecorder?.prepare()
-            mediaRecorder?.start()
-            Toast.makeText(contextThis, "Recording started!", Toast.LENGTH_SHORT).show()
-        } catch (e: IllegalStateException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun stopRecording() {
-        chunkTimer.cancelTimer()
-        mediaRecorder?.stop()
-        mediaRecorder?.release()
-    }
 }
