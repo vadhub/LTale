@@ -39,7 +39,7 @@ class AccountFragment : Fragment() {
         val listRecord = mutableListOf<Record>()
 
         for (recordFiles in files!!) {
-            listRecord.add(Record(1, recordFiles.name, URI(recordFiles.absolutePath), Date(124), 122))
+            listRecord.add(Record(1, recordFiles.name, URI(recordFiles.absolutePath), recordFiles.absolutePath, Date(124), 122))
         }
 
 //        val listRecord = listOf(
