@@ -38,7 +38,6 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         if (ContextCompat.checkSelfPermission(
                 contextThis,
                 Manifest.permission.RECORD_AUDIO
