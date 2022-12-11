@@ -2,21 +2,15 @@ package com.vad.ltale
 
 import android.annotation.SuppressLint
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vad.ltale.data.Record
-import java.io.IOException
-import java.net.URI
 
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {

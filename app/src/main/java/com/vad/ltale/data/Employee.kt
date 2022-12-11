@@ -14,5 +14,5 @@ data class Employee(
 
     @SerializedName("active")
     @Expose
-    val active: Integer
+    val active: Int
 )
