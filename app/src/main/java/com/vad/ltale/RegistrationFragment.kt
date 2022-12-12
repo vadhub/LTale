@@ -46,11 +46,11 @@ class RegistrationFragment : Fragment() {
 
     fun postValue(user: User) = runBlocking { launch {
         println("---------------------------")
-        RetrofitInstance().api.postUser(user)
+        RetrofitInstance().apiUser.postUser(user)
     } }
 
     fun getUser() = runBlocking { launch {
         println("---------------------------")
-        println(RetrofitInstance().api.getUsers().body()?.embedded?.employees)
+        println(RetrofitInstance().apiUser.getUsers().body()?.embedded?.users)
     } }
 }

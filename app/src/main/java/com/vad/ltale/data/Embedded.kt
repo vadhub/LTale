@@ -7,5 +7,9 @@ import com.google.gson.annotations.SerializedName
 data class Embedded(
     @SerializedName("users")
     @Expose
-    val employees: List<User>
+    val users: List<User>,
+
+    @SerializedName("users")
+    @Expose
+    val messages: List<Message>
     )

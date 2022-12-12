@@ -8,6 +8,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.vad.ltale.data.remote.RetrofitInstance
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
+import android.util.Log
+import com.vad.ltale.data.Message
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.create
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,14 +27,31 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
+
+        //sendPost()
+
         runBlocking { launch {
             println("---------------------------")
-            println(RetrofitInstance().api.getEmployees().body()?.embedded?.employees)
+            println(RetrofitInstance().apiUser.getUsers().body()?.embedded?.users)
         } }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    fun sendPost(file: File) {
+
+        Log.e("file", file.absolutePath)
+        val requestFile: RequestBody = create("multipart/form-data".toMediaTypeOrNull(), file)
+
+        val body: MultipartBody.Part =
+            MultipartBody.Part.createFormData("image-client", file.getName(), requestFile)
+
+        runBlocking { launch {
+            RetrofitInstance().apiMessage.postMessage(body, Message("test", "uri-test", 1))
+            }
+        }
     }
 
 }

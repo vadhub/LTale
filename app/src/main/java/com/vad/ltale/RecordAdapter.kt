@@ -10,16 +10,16 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.vad.ltale.data.Record
+import com.vad.ltale.data.Message
 
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
-    private lateinit var records: List<Record>
+    private lateinit var records: List<Message>
     private var mediaPlayer: MediaPlayer? = null
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setRecords(records: List<Record>) {
+    fun setRecords(records: List<Message>) {
         this.records = records
         notifyDataSetChanged()
     }
@@ -30,10 +30,10 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
         )
 
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
-        holder.bind(records.get(position).title, records.get(position).duration)
+        holder.bind(records.get(position).title, 0)
         holder.playButton.setOnClickListener {
-            playAudio(records.get(position).path)
-            println(records.get(position).path)
+            playAudio(records.get(position).uri)
+            println(records.get(position).uri)
         }
     }
 

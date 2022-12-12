@@ -10,11 +10,9 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.vad.ltale.data.Record
+import com.vad.ltale.data.Message
 import java.io.File
 import java.io.FilenameFilter
-import java.net.URI
-import java.util.*
 
 
 class AccountFragment : Fragment() {
@@ -36,12 +34,7 @@ class AccountFragment : Fragment() {
 
         println(files.size)
 
-        val listRecord = mutableListOf<Record>()
-
-        for (recordFiles in files!!) {
-            listRecord.add(Record(1, recordFiles.name, URI(recordFiles.absolutePath), recordFiles.absolutePath, Date(124), 122))
-        }
-
+        val listRecord = mutableListOf<Message>()
 //        val listRecord = listOf(
 //            Record(10, "hello", URI(""), Date(123424424), 1000),
 //            Record(10, "hello1", URI(""), Date(123424424), 1000),
