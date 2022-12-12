@@ -11,7 +11,7 @@ class RetrofitInstance {
             .build()
     }
 
-    val api: JsonPlaceHolder by lazy {
-        retrofit.create(JsonPlaceHolder::class.java)
+    val api: JsonPlaceHolderUser by lazy {
+        retrofit.create(JsonPlaceHolderUser::class.java)
     }
 }

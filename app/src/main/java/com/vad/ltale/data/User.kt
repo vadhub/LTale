@@ -3,7 +3,7 @@ package com.vad.ltale.data
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class Employee(
+data class User(
     @SerializedName("firstName")
     @Expose
     val firstName: String,
@@ -12,7 +12,7 @@ data class Employee(
     @Expose
     val lastName: String,
 
-    @SerializedName("active")
+    @SerializedName("password")
     @Expose
-    val active: Int
+    val password: String
 )

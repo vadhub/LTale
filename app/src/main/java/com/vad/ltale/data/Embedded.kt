@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class Embedded(
-    @SerializedName("employees")
+    @SerializedName("users")
     @Expose
-    val employees: List<Employee>
+    val employees: List<User>
     )
