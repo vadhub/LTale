@@ -20,5 +20,5 @@ interface JsonPlaceHolderMessage {
 
     @Multipart
     @POST("api-v1/messages")
-    suspend fun postMessage(@Part serData: MultipartBody.Part, @Body message: Message)
+    suspend fun postMessage(@Part serData: MultipartBody.Part)
 }

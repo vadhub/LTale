@@ -9,7 +9,7 @@ data class Embedded(
     @Expose
     val users: List<User>,
 
-    @SerializedName("users")
+    @SerializedName("messages")
     @Expose
     val messages: List<Message>
     )
