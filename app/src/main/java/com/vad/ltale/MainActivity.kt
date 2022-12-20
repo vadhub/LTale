@@ -26,15 +26,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
         //sendPost()
 
-        runBlocking { launch {
-            println("---------------------------")
-            println(RetrofitInstance().apiUser.getUsers().body()?.embedded?.users)
-        } }
+        runBlocking {
+            launch {
+                println("---------------------------")
+                println(RetrofitInstance().apiUser.getUsers().body()?.embedded?.users)
+            }
+        }
 
         sendFile(File("/storage/self/primary/Pictures/test.txt"))
     }
@@ -49,11 +52,12 @@ class MainActivity : AppCompatActivity() {
         val requestFile: RequestBody = create("multipart/form-data".toMediaTypeOrNull(), file)
 
         val body: MultipartBody.Part =
-            MultipartBody.Part.createFormData("image-client", file.getName(), requestFile)
+            MultipartBody.Part.createFormData("file", file.getName(), requestFile)
 
-        runBlocking { launch {
-            RetrofitInstance().apiUpload.uploadFile(body)
-        }
+        runBlocking {
+            launch {
+                RetrofitInstance().apiUpload.uploadFile(body)
+            }
         }
     }
 
