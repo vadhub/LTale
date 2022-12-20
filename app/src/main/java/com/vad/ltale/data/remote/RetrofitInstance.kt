@@ -18,4 +18,8 @@ class RetrofitInstance {
     val apiMessage: JsonPlaceHolderMessage by lazy {
         retrofit.create(JsonPlaceHolderMessage::class.java)
     }
+
+    val apiUpload: UploadService by lazy {
+        retrofit.create(UploadService::class.java)
+    }
 }

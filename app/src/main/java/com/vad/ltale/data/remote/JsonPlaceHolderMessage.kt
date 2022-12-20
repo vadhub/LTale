@@ -17,8 +17,4 @@ interface JsonPlaceHolderMessage {
 
     @GET("api-v1/messages/{id}")
     suspend fun getMessage(@Part id: Int): Response<Main>
-
-    @Multipart
-    @POST("api-v1/messages")
-    suspend fun postMessage(@Part serData: MultipartBody.Part)
 }
