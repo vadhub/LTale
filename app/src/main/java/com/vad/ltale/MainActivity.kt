@@ -12,11 +12,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import android.util.Log
-import com.vad.ltale.data.Message
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.create
-import java.util.Arrays
-import java.util.Collections
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         runBlocking {
             launch {
                 println("---------------------------")
-                println(RetrofitInstance().apiUser.getUsers().body()?.embedded?.users)
+                println(RetrofitInstance().apiUser.getUser().body()?.embedded?.users)
             }
         }
 

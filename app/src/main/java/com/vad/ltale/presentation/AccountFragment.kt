@@ -1,4 +1,4 @@
-package com.vad.ltale
+package com.vad.ltale.presentation
 
 import android.os.Bundle
 import android.os.Environment
@@ -10,6 +10,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.vad.ltale.R
+import com.vad.ltale.presentation.adapter.RecordAdapter
 import com.vad.ltale.data.Message
 import java.io.File
 import java.io.FilenameFilter

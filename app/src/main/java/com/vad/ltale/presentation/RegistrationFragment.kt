@@ -1,4 +1,4 @@
-package com.vad.ltale
+package com.vad.ltale.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.navigation.findNavController
+import com.vad.ltale.R
 import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RetrofitInstance
 import kotlinx.coroutines.launch
@@ -51,6 +52,6 @@ class RegistrationFragment : Fragment() {
 
     fun getUser() = runBlocking { launch {
         println("---------------------------")
-        println(RetrofitInstance().apiUser.getUsers().body()?.embedded?.users)
+        println(RetrofitInstance().apiUser.getUser().body()?.embedded?.users)
     } }
 }

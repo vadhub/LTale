@@ -1,4 +1,4 @@
-package com.vad.ltale
+package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
 import android.media.AudioAttributes
@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.vad.ltale.R
 import com.vad.ltale.data.Message
 
 

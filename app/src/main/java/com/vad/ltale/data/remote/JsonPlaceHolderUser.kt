@@ -10,10 +10,10 @@ import retrofit2.http.Part
 
 interface JsonPlaceHolderUser {
     @GET("api-v1/users")
-    suspend fun getUsers(): Response<Main>
+    suspend fun getUser(): Response<Main>
 
     @GET("api-v1/users/{id}")
-    suspend fun getUsers(@Part id: Int): Response<Main>
+    suspend fun getUser(@Part id: Int): Response<Main>
 
     @POST("api-v1/users")
     suspend fun postUser(@Body user: User)
