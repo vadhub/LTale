@@ -1,4 +1,4 @@
-package com.vad.ltale.presentation
+package com.vad.ltale.presentation.account
 
 import android.os.Bundle
 import android.os.Environment

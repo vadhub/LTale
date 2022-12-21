@@ -1,4 +1,4 @@
-package com.vad.ltale.presentation
+package com.vad.ltale.presentation.registration
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.vad.ltale.presentation
+package com.vad.ltale.presentation.record
 
 import android.Manifest
 import android.annotation.SuppressLint

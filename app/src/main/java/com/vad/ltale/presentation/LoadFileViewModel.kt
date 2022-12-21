@@ -18,7 +18,7 @@ class LoadFileViewModel(private val retrofitInstance: RetrofitInstance) : ViewMo
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
 
         val body: MultipartBody.Part =
-            MultipartBody.Part.createFormData("file", file.getName(), requestFile)
+            MultipartBody.Part.createFormData("file", file.name, requestFile)
         retrofitInstance.apiUpload.uploadFile(body)
     }
 }

@@ -12,6 +12,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import android.util.Log
+import androidx.activity.viewModels
+import com.vad.ltale.presentation.LoadFileViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.create
 
@@ -27,35 +29,14 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
-        //sendPost()
+//        sendFile(File("/storage/self/primary/Pictures/test.txt"))
 
-        runBlocking {
-            launch {
-                println("---------------------------")
-                println(RetrofitInstance().apiUser.getUser().body()?.embedded?.users)
-            }
-        }
+        val load: LoadFileViewModel by viewModels()
 
-        sendFile(File("/storage/self/primary/Pictures/test.txt"))
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    fun sendFile(file: File) {
-
-        Log.e("file", file.absolutePath)
-        val requestFile: RequestBody = create("multipart/form-data".toMediaTypeOrNull(), file)
-
-        val body: MultipartBody.Part =
-            MultipartBody.Part.createFormData("file", file.getName(), requestFile)
-
-        runBlocking {
-            launch {
-                RetrofitInstance().apiUpload.uploadFile(body)
-            }
-        }
     }
 
 }
