@@ -13,7 +13,10 @@ import okhttp3.RequestBody
 import java.io.File
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
+import com.vad.ltale.data.Message
 import com.vad.ltale.presentation.LoadFileViewModel
+import com.vad.ltale.presentation.LoadViewModelFactory
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.create
 
@@ -31,7 +34,10 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController)
 //        sendFile(File("/storage/self/primary/Pictures/test.txt"))
 
-        val load: LoadFileViewModel by viewModels()
+        val factory = LoadViewModelFactory(RetrofitInstance())
+        val load: LoadFileViewModel = ViewModelProvider(this, factory).get(LoadFileViewModel::class.java)
+
+        load.loadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", 1))
 
     }
 

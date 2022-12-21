@@ -9,5 +9,8 @@ import retrofit2.http.Part
 interface UploadService {
     @Multipart
     @POST("/upload")
-    suspend fun uploadFile(@Part file: MultipartBody.Part) //, @Part("description") description: RequestBody
+    suspend fun uploadFile(
+        @Part file: MultipartBody.Part,
+        @Part("title") title: RequestBody,
+        @Part("idUser") user: RequestBody) //, @Part("description") description: RequestBody
 }
