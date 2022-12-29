@@ -6,19 +6,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.vad.ltale.data.remote.RetrofitInstance
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.io.File
-import android.util.Log
-import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.vad.ltale.data.Message
-import com.vad.ltale.presentation.LoadFileViewModel
+import com.vad.ltale.presentation.FileViewModel
 import com.vad.ltale.presentation.LoadViewModelFactory
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.create
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,9 +27,10 @@ class MainActivity : AppCompatActivity() {
 //        sendFile(File("/storage/self/primary/Pictures/test.txt"))
 
         val factory = LoadViewModelFactory(RetrofitInstance())
-        val load: LoadFileViewModel = ViewModelProvider(this, factory).get(LoadFileViewModel::class.java)
+        val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
-        load.loadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", 1))
+        //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", 1))
+        load.downloadFile("fe.png", "1")
 
     }
 

@@ -19,7 +19,11 @@ class RetrofitInstance {
         retrofit.create(JsonPlaceHolderMessage::class.java)
     }
 
-    val apiUpload: UploadService by lazy {
-        retrofit.create(UploadService::class.java)
+    val apiUpload: FileService by lazy {
+        retrofit.create(FileService::class.java)
+    }
+
+    val apiDownload: FileService by lazy {
+        retrofit.create(FileService::class.java)
     }
 }

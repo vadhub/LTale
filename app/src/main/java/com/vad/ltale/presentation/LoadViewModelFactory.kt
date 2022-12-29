@@ -6,6 +6,6 @@ import com.vad.ltale.data.remote.RetrofitInstance
 
 class LoadViewModelFactory(private val retrofitInstance: RetrofitInstance): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LoadFileViewModel(retrofitInstance) as T
+        return FileViewModel(retrofitInstance) as T
     }
 }

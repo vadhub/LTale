@@ -11,22 +11,27 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 
-class LoadFileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel() {
+class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel() {
 
-    fun loadFile(file: File, message: Message) = viewModelScope.launch {
+    fun uploadFile(file: File, message: Message) = viewModelScope.launch {
         Log.e("file", file.absolutePath)
+
         val requestFile: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
 
         val title: RequestBody =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), message.title)
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), message.title)
 
         val userId: RequestBody =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), "1")
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "1")
 
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        retrofitInstance.apiUpload.uploadFile(body, title, userId)
+        retrofitInstance.apiUpload.uploadFile(body, title)
+    }
+
+    fun downloadFile(fileName: String, userId: String) = viewModelScope.launch {
+        println(retrofitInstance.apiUpload.downloadFile(fileName, userId).body())
     }
 }
