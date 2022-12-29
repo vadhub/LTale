@@ -1,11 +1,14 @@
 package com.vad.ltale.presentation.account
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +16,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.presentation.adapter.RecordAdapter
 import com.vad.ltale.data.Message
+import com.vad.ltale.data.remote.RetrofitInstance
+import com.vad.ltale.presentation.FileViewModel
+import com.vad.ltale.presentation.LoadViewModelFactory
 import java.io.File
 import java.io.FilenameFilter
 
@@ -29,25 +35,21 @@ class AccountFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
-
-        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
-        val dir = File(path)
-        val files = dir.listFiles(FilenameFilter {_, name -> name.endsWith(".mp3")})
-
-        println(files.size)
-
-        val listRecord = mutableListOf<Message>()
-//        val listRecord = listOf(
-//            Record(10, "hello", URI(""), Date(123424424), 1000),
-//            Record(10, "hello1", URI(""), Date(123424424), 1000),
-//            Record(10, "hello2", URI(""), Date(123424424), 1000),
-//            Record(10, "hello3", URI(""), Date(123424424), 1000)
-//            )
-
-        val adapter = RecordAdapter()
-        adapter.setRecords(listRecord)
+        val imageIcon: ImageView = view.findViewById(R.id.imageIcon)
+        //val adapter = RecordAdapter()
+        //adapter.setRecords(listRecord)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
-        recyclerView.adapter = adapter
+        //recyclerView.adapter = adapter
+
+        val factory = LoadViewModelFactory(RetrofitInstance())
+        val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
+
+        //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", 1))
+        load.fileResponseBody.observe(viewLifecycleOwner) {
+            imageIcon.setImageBitmap(BitmapFactory.decodeStream(it.byteStream()))
+        }
+        load.downloadFile("fe.png", "1")
+
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
 }

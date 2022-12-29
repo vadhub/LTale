@@ -1,17 +1,22 @@
 package com.vad.ltale.presentation
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.Message
 import com.vad.ltale.data.remote.RetrofitInstance
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import java.io.File
 
 class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel() {
+
+    val fileResponseBody: MutableLiveData<ResponseBody> = MutableLiveData()
 
     fun uploadFile(file: File, message: Message) = viewModelScope.launch {
         Log.e("file", file.absolutePath)
@@ -31,7 +36,7 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
         retrofitInstance.apiUpload.uploadFile(body, title)
     }
 
-    fun downloadFile(fileName: String, userId: String) = viewModelScope.launch {
-        println(retrofitInstance.apiUpload.downloadFile(fileName, userId).body())
+    fun downloadFile(fileName: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
+        fileResponseBody.postValue(retrofitInstance.apiUpload.downloadFile(fileName, userId).body())
     }
 }

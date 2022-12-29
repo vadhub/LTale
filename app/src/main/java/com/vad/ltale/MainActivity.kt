@@ -26,12 +26,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController)
 //        sendFile(File("/storage/self/primary/Pictures/test.txt"))
 
-        val factory = LoadViewModelFactory(RetrofitInstance())
-        val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
-
-        //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", 1))
-        load.downloadFile("fe.png", "1")
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
