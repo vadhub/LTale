@@ -7,10 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.vad.ltale.R
 import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RetrofitInstance
+import com.vad.ltale.data.repository.UserRepository
+import com.vad.ltale.presentation.UserViewModel
+import com.vad.ltale.presentation.UserViewModelFactory
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -36,22 +40,13 @@ class RegistrationFragment : Fragment() {
         email = view.findViewById(R.id.emailEditText)
         password = view.findViewById(R.id.passwordEditText)
 
+        val factory = UserViewModelFactory(UserRepository(RetrofitInstance()))
+        val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
+
         buttonRegistration.setOnClickListener {
-            println(password.text.toString())
-            postValue(User(nikName.text.toString(), email.text.toString(), password.text.toString()))
-            getUser()
+            userViewModel.createUser(User(nikName.text.toString(), email.text.toString(), password.text.toString()))
             view.findNavController().navigate(R.id.accountFragment)
         }
         buttonLogin.setOnClickListener { view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment) }
     }
-
-    fun postValue(user: User) = runBlocking { launch {
-        println("---------------------------")
-        RetrofitInstance().apiUser.postUser(user)
-    } }
-
-    fun getUser() = runBlocking { launch {
-        println("---------------------------")
-        println(RetrofitInstance().apiUser.getUser().body()?.embedded?.users)
-    } }
 }

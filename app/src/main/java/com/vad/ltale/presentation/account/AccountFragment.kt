@@ -48,7 +48,7 @@ class AccountFragment : Fragment() {
         load.fileResponseBody.observe(viewLifecycleOwner) {
             imageIcon.setImageBitmap(BitmapFactory.decodeStream(it.byteStream()))
         }
-        load.downloadFile("fe.png", "1")
+        load.downloadFile("1.jpeg", "2")
 
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
