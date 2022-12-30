@@ -8,9 +8,9 @@ data class User(
     @Expose
     val firstName: String,
 
-    @SerializedName("lastName")
+    @SerializedName("email")
     @Expose
-    val lastName: String,
+    val email: String,
 
     @SerializedName("password")
     @Expose

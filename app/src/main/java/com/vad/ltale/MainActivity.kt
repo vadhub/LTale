@@ -31,7 +31,9 @@ class MainActivity : AppCompatActivity() {
         if (saveDataPref.getId() == -1) {
             setupActionBarWithNavController(navController)
         } else {
-            navController.navigate(R.id.accountFragment)
+            val bundle = Bundle()
+            bundle.putInt("id", saveDataPref.getId())
+            navController.navigate(R.id.accountFragment, bundle)
         }
 
     }

@@ -43,6 +43,8 @@ class AccountFragment : Fragment() {
 
         val factory = LoadViewModelFactory(RetrofitInstance())
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
+        val id = arguments?.get("id")
+        println("$id ---------------------")
 
         //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", 1))
         load.fileResponseBody.observe(viewLifecycleOwner) {
