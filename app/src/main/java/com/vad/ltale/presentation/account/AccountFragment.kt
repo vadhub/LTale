@@ -48,6 +48,7 @@ class AccountFragment : Fragment() {
 
         load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", id))
         load.fileResponseBody.observe(viewLifecycleOwner) {
+
             imageIcon.setImageBitmap(BitmapFactory.decodeStream(it.byteStream()))
         }
         load.downloadFile("gaugehg.png", "audio", "$id")
