@@ -12,15 +12,17 @@ import retrofit2.http.Path
 
 interface FileService {
     @Multipart
-    @POST("/upload")
+    @POST("/upload/audio")
     suspend fun uploadFile(
         @Part file: MultipartBody.Part,
-        @Part("title") title: RequestBody
+        @Part("title") title: RequestBody,
+        @Part("id_user") idUser: RequestBody
     )
 
-    @GET("/files/{user}/{filename}")
+    @GET("/files/{user}/{directory}/{filename}")
     suspend fun downloadFile(
         @Path("filename") fileName: String,
+        @Path("directory") directory: String,
         @Path("user") userId: String
     ) : Response<ResponseBody>
 

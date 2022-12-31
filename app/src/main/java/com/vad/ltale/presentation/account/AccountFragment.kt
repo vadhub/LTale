@@ -43,14 +43,14 @@ class AccountFragment : Fragment() {
 
         val factory = LoadViewModelFactory(RetrofitInstance())
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
-        val id = arguments?.get("id")
+        val id:Int = arguments?.getInt("id") ?: 1
         println("$id ---------------------")
 
-        //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", 1))
+        load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", id))
         load.fileResponseBody.observe(viewLifecycleOwner) {
             imageIcon.setImageBitmap(BitmapFactory.decodeStream(it.byteStream()))
         }
-        load.downloadFile("1.jpeg", "2")
+        load.downloadFile("gaugehg.png", "audio", "$id")
 
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }

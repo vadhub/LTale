@@ -28,13 +28,17 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        if (saveDataPref.getId() == -1) {
-            setupActionBarWithNavController(navController)
-        } else {
-            val bundle = Bundle()
-            bundle.putInt("id", saveDataPref.getId())
-            navController.navigate(R.id.accountFragment, bundle)
-        }
+        val bundle = Bundle()
+        bundle.putInt("id", 2)
+        navController.navigate(R.id.accountFragment, bundle)
+
+//        if (saveDataPref.getId() == -1) {
+//            setupActionBarWithNavController(navController)
+//        } else {
+//            val bundle = Bundle()
+//            bundle.putInt("id", saveDataPref.getId())
+//            navController.navigate(R.id.accountFragment, bundle)
+//        }
 
     }
 

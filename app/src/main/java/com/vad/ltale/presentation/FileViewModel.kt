@@ -28,15 +28,15 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), message.title)
 
         val userId: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "1")
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), message.id.toString())
 
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        retrofitInstance.apiUpload.uploadFile(body, title)
+        retrofitInstance.apiUpload.uploadFile(body, title, userId)
     }
 
-    fun downloadFile(fileName: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
-        fileResponseBody.postValue(retrofitInstance.apiUpload.downloadFile(fileName, userId).body())
+    fun downloadFile(fileName: String, directory: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
+        fileResponseBody.postValue(retrofitInstance.apiUpload.downloadFile(fileName, directory, userId).body())
     }
 }
