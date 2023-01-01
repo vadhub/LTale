@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,13 +13,19 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
+import com.vad.ltale.data.Message
+import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.domain.ChunkTimer
 import com.vad.ltale.domain.RecordAudioHandle
 import com.vad.ltale.domain.TimerHandler
+import com.vad.ltale.presentation.FileViewModel
+import com.vad.ltale.presentation.LoadViewModelFactory
 
 class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
@@ -54,8 +61,10 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
             )
             ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
         } else {
+            val factory = LoadViewModelFactory(RetrofitInstance())
+            val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
             chunkTimer = ChunkTimer(1000 * 60)
-            recorder = RecordAudioHandle(chunkTimer, contextThis)
+            recorder = RecordAudioHandle(chunkTimer, contextThis, load)
         }
     }
 
@@ -77,8 +86,8 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
-            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton)
-            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton)
+            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton, Message("Audio", "", 2))
+            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton, Message("Audio", "", 2))
         }
         return true
     }

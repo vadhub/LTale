@@ -2,28 +2,44 @@ package com.vad.ltale.domain
 
 import android.content.Context
 import android.media.MediaRecorder
+import android.os.Build
 import android.os.Environment
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.navigation.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
+import com.vad.ltale.data.Message
+import com.vad.ltale.presentation.FileViewModel
+import java.io.File
 import java.io.IOException
 
-class RecordAudioHandle(private val chunkTimer: ChunkTimer, private val contextThis: Context) {
 
+class RecordAudioHandle(
+    private val chunkTimer: ChunkTimer,
+    private val contextThis: Context,
+    private val viewModel: FileViewModel
+) {
+
+    private var file: File =
+        File(Environment.getExternalStorageDirectory().absolutePath, "ltale/audio")
     private var output: String = ""
     private var mediaRecorder: MediaRecorder? = null
 
     init {
-        output = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath + "/l"+System.currentTimeMillis()+".mp3"
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+
+        output = file.absolutePath + File.separator + "l" + System.currentTimeMillis() + ".mp3"
+
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setOutputFile(output)
         }
-
     }
 
     fun startRecording() {
@@ -39,10 +55,18 @@ class RecordAudioHandle(private val chunkTimer: ChunkTimer, private val contextT
         }
     }
 
-    fun stopRecording(v: View?, actionButton: FloatingActionButton) {
+    fun stopRecording(v: View?, actionButton: FloatingActionButton, message: Message) {
         chunkTimer.cancelTimer()
         mediaRecorder?.stop()
         mediaRecorder?.release()
+
+        val tempFile = File(output)
+
+        viewModel.uploadFile(tempFile, message)
+
+//        if (tempFile.exists()) {
+//            tempFile.delete()
+//        }
 
         actionButton.isActivated = false
         v?.findNavController()?.navigate(R.id.accountFragment)

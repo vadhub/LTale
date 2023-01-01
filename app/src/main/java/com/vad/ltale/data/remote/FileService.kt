@@ -8,7 +8,6 @@ import retrofit2.http.*
 
 interface FileService {
 
-    @Streaming
     @Multipart
     @POST("/upload/audio")
     suspend fun uploadFile(
@@ -17,7 +16,6 @@ interface FileService {
         @Part("id_user") idUser: RequestBody
     )
 
-    @Streaming
     @GET("/files/{user}/{directory}/{filename}")
     suspend fun downloadFile(
         @Path("filename") fileName: String,
