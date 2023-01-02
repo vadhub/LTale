@@ -13,7 +13,11 @@ data class Message(
     @Expose
     val uri: String,
 
-    @SerializedName("user")
+    @SerializedName("userId")
     @Expose
-    val id: Int
-    )
+    val userId: Int,
+
+    @SerializedName("userId")
+    @Expose
+    val imageId: Int
+)

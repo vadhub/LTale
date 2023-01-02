@@ -14,5 +14,9 @@ data class User(
 
     @SerializedName("password")
     @Expose
-    val password: String
+    val password: String,
+
+    @SerializedName("userIcon")
+    @Expose
+    val userIcon: Int
 )

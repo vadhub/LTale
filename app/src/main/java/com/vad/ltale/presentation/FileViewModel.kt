@@ -28,7 +28,7 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), message.title)
 
         val userId: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), message.id.toString())
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), message.userId.toString())
 
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", file.name, requestFile)
