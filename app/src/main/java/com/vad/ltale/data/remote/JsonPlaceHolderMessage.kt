@@ -11,7 +11,7 @@ interface JsonPlaceHolderMessage {
     suspend fun getMessage(): Response<Main>
 
     @GET("api-v1/messages/{id}")
-    suspend fun getMessage(@Part id: Int): Response<Main>
+    suspend fun getMessageById(@Part id: Int): Response<Main>
 
     @GET("api-v1/messages/search/findAllByUserId")
     suspend fun getMessageByUserId(@Path("userId") userId: Int): Response<Main>

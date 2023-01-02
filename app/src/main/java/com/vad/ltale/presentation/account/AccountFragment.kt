@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.RetrofitInstance
+import com.vad.ltale.domain.Supplier
 import com.vad.ltale.presentation.FileViewModel
 import com.vad.ltale.presentation.LoadViewModelFactory
 import com.vad.ltale.presentation.MainViewModel

@@ -1,23 +1,13 @@
 package com.vad.ltale
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.vad.ltale.data.remote.RetrofitInstance
-import java.io.File
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.ui.navigateUp
-import com.vad.ltale.data.Message
 import com.vad.ltale.domain.SaveDataPref
-import com.vad.ltale.presentation.FileViewModel
-import com.vad.ltale.presentation.LoadViewModelFactory
 import com.vad.ltale.presentation.MainViewModel
-import com.vad.ltale.presentation.account.Supplier
+import com.vad.ltale.domain.Supplier
 
 
 class MainActivity : AppCompatActivity(), Supplier<MainViewModel> {
