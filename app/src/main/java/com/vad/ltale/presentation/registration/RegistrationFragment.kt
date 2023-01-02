@@ -45,7 +45,7 @@ class RegistrationFragment : Fragment() {
         val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonRegistration.setOnClickListener {
-            userViewModel.createUser(User(nikName.text.toString(), email.text.toString(), password.text.toString()))
+            userViewModel.createUser(User(nikName.text.toString(), email.text.toString(), password.text.toString(), -1))
             view.findNavController().navigate(R.id.accountFragment)
         }
         buttonLogin.setOnClickListener { view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment) }
