@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.Message
+import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
 
     val fileResponseBody: MutableLiveData<ResponseBody> = MutableLiveData()
 
-    fun uploadFile(file: File, message: Message) = viewModelScope.launch {
+    fun uploadAudio(file: File, message: Message) = viewModelScope.launch {
         Log.e("file", file.absolutePath)
 
         val requestFile: RequestBody =
@@ -33,7 +34,22 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        retrofitInstance.apiUpload.uploadFile(body, title, userId)
+        retrofitInstance.apiUpload.uploadAudio(body, title, userId)
+    }
+
+    fun uploadImage(file: File, idUser: Int) = viewModelScope.launch {
+        Log.e("file", file.absolutePath)
+
+        val requestFile: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+
+        val userId: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "$idUser")
+
+        val body: MultipartBody.Part =
+            MultipartBody.Part.createFormData("file", file.name, requestFile)
+
+        retrofitInstance.apiUpload.uploadImage(body, userId)
     }
 
     fun downloadFile(fileName: String, directory: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {

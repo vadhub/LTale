@@ -2,11 +2,9 @@ package com.vad.ltale.domain
 
 import android.content.Context
 import android.media.MediaRecorder
-import android.os.Build
 import android.os.Environment
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.navigation.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
@@ -62,7 +60,7 @@ class RecordAudioHandle(
 
         val tempFile = File(output)
 
-        viewModel.uploadFile(tempFile, message)
+        viewModel.uploadAudio(tempFile, message)
 
 //        if (tempFile.exists()) {
 //            tempFile.delete()

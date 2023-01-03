@@ -10,9 +10,16 @@ interface FileService {
 
     @Multipart
     @POST("/upload/audio")
-    suspend fun uploadFile(
+    suspend fun uploadAudio(
         @Part file: MultipartBody.Part,
         @Part("title") title: RequestBody,
+        @Part("id_user") idUser: RequestBody
+    )
+
+    @Multipart
+    @POST("/upload/image")
+    suspend fun uploadImage(
+        @Part file: MultipartBody.Part,
         @Part("id_user") idUser: RequestBody
     )
 
