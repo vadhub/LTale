@@ -8,16 +8,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.RetrofitInstance
+import com.vad.ltale.data.repository.MessageRepository
 import com.vad.ltale.domain.Supplier
-import com.vad.ltale.presentation.FileViewModel
-import com.vad.ltale.presentation.LoadViewModelFactory
-import com.vad.ltale.presentation.MainViewModel
+import com.vad.ltale.presentation.*
+import com.vad.ltale.presentation.adapter.RecordAdapter
 
 
 class AccountFragment : Fragment() {
@@ -40,16 +41,24 @@ class AccountFragment : Fragment() {
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
         val imageIcon: ImageView = view.findViewById(R.id.imageIcon)
-        //val adapter = RecordAdapter()
-        //adapter.setRecords(listRecord)
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
-        //recyclerView.adapter = adapter
+
+        val id:Int = mainViewModel.getUserId()
 
         val factory = LoadViewModelFactory(RetrofitInstance())
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
-        val id:Int = mainViewModel.getUserId()
-        println("$id ---------------------")
+        val factoryMessage = MessageViewModelFactory(MessageRepository(RetrofitInstance()))
+        val messageViewModel = ViewModelProvider(this, factoryMessage).get(MessageViewModel::class.java)
+
+        val adapter = RecordAdapter()
+
+        recyclerView.layoutManager = LinearLayoutManager(view.context)
+        recyclerView.adapter = adapter
+
+        messageViewModel.getMessageByUserId(id)
+        messageViewModel.messages.observe(viewLifecycleOwner) {
+            adapter.setRecords(it)
+        }
 
         //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", id))
 //        load.fileResponseBody.observe(viewLifecycleOwner) {
