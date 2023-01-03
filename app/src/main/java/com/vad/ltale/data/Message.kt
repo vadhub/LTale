@@ -17,7 +17,7 @@ data class Message(
     @Expose
     val userId: Int,
 
-    @SerializedName("userId")
+    @SerializedName("imageId")
     @Expose
     val imageId: Int
 )
