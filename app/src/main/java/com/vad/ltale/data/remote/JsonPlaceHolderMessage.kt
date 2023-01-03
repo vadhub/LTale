@@ -5,6 +5,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface JsonPlaceHolderMessage {
     @GET("api-v1/messages")
@@ -14,5 +15,5 @@ interface JsonPlaceHolderMessage {
     suspend fun getMessageById(@Part id: Int): Response<Main>
 
     @GET("api-v1/messages/search/findAllByUserId")
-    suspend fun getMessageByUserId(@Path("userId") userId: Int): Response<Main>
+    suspend fun getMessageByUserId(@Query("userId") userId: Int): Response<Main>
 }
