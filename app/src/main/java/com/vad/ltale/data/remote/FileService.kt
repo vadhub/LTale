@@ -12,22 +12,23 @@ interface FileService {
     @POST("/upload/audio")
     suspend fun uploadAudio(
         @Part file: MultipartBody.Part,
-        @Part("title") title: RequestBody,
-        @Part("id_user") idUser: RequestBody
+        @Query("title") title: String,
+        @Query("id_user") idUser: Int
     )
 
     @Multipart
     @POST("/upload/image")
     suspend fun uploadImage(
         @Part file: MultipartBody.Part,
-        @Part("id_user") idUser: RequestBody
+        @Query("id_user") idUser: Int,
+        @Query("is_icon") isIcon: Int
     )
 
-    @GET("/files/{user}/{directory}/{filename}")
+    @GET("/files/search")
     suspend fun downloadFile(
-        @Path("filename") fileName: String,
-        @Path("directory") directory: String,
-        @Path("user") userId: String
+        @Query("user") userId: String,
+        @Query("directory") directory: String,
+        @Query("filename") fileName: String
     ) : Response<ResponseBody>
 
 }

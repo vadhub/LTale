@@ -25,34 +25,25 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
         val requestFile: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
 
-        val title: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), message.title)
-
-        val userId: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), message.userId.toString())
-
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        retrofitInstance.apiUpload.uploadAudio(body, title, userId)
+        retrofitInstance.apiUpload.uploadAudio(body, message.title, message.userId)
     }
 
-    fun uploadImage(file: File, idUser: Int) = viewModelScope.launch {
+    fun uploadImage(file: File, userId: Int, isIcon: Int) = viewModelScope.launch {
         Log.e("file", file.absolutePath)
 
         val requestFile: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
 
-        val userId: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "$idUser")
-
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        retrofitInstance.apiUpload.uploadImage(body, userId)
+        retrofitInstance.apiUpload.uploadImage(body, userId, isIcon)
     }
 
     fun downloadFile(fileName: String, directory: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
-        fileResponseBody.postValue(retrofitInstance.apiUpload.downloadFile(fileName, directory, userId).body())
+        fileResponseBody.postValue(retrofitInstance.apiUpload.downloadFile(userId, directory, fileName).body())
     }
 }
