@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.Message
 import com.vad.ltale.data.User
+import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        retrofitInstance.apiUpload.uploadAudio(body, message.title, message.userId)
+        retrofitInstance.apiUpload().uploadAudio(body, message.title, message.userId)
     }
 
     fun uploadImage(file: File, userId: Int, isIcon: Int) = viewModelScope.launch {
@@ -40,10 +41,10 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        retrofitInstance.apiUpload.uploadImage(body, userId, isIcon)
+        retrofitInstance.apiUpload().uploadImage(body, userId, isIcon)
     }
 
     fun downloadFile(fileName: String, directory: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
-        fileResponseBody.postValue(retrofitInstance.apiUpload.downloadFile(userId, directory, fileName).body())
+        fileResponseBody.postValue(retrofitInstance.apiUpload().downloadFile(userId, directory, fileName).body())
     }
 }

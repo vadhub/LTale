@@ -10,7 +10,7 @@ class BasicAuthInterceptor(private val username: String, private val password: S
     override fun intercept(chain: Interceptor.Chain): Response {
         val credential: String = Credentials.basic(username, password)
         val request: Request = chain.request()
-        val authenticatedRequest: Request = chain.request().newBuilder().header("Authorization", credential).build()
+        val authenticatedRequest: Request = request.newBuilder().header("Authorization", credential).build()
         return chain.proceed(authenticatedRequest)
 
     }
