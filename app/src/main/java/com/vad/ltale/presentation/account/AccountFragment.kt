@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.squareup.picasso.Picasso
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.MessageRepository
@@ -53,12 +54,13 @@ class AccountFragment : Fragment() {
         val adapter = RecordAdapter()
 
         recyclerView.layoutManager = LinearLayoutManager(view.context)
-        recyclerView.adapter = adapter
 
         messageViewModel.getMessageByUserId(id)
         messageViewModel.messages.observe(viewLifecycleOwner) {
             adapter.setRecords(it)
+            recyclerView.adapter = adapter
         }
+
 
         //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", id))
 //        load.fileResponseBody.observe(viewLifecycleOwner) {
@@ -67,6 +69,7 @@ class AccountFragment : Fragment() {
 //        }
 //        load.downloadFile("gaugehg.png", "audio", "$id")
 
+        Picasso.get().load("http://10.0.2.2:8080/files/search?userId=1&directory=image&filename=1.jpeg").into(imageIcon)
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
 }
