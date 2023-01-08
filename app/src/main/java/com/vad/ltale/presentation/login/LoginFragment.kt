@@ -44,7 +44,8 @@ class LoginFragment : Fragment() {
             mainViewModel.setRetrofit(RetrofitInstance(UserDetails(username.text.toString(), password.text.toString())))
             val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()))
             val viewModel: UserViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
-            viewModel.getUsers()
+            println(username.text.toString())
+            viewModel.getUserByUsername(username.text.toString())
             viewModel.users.observe(viewLifecycleOwner) {
                 println(it)
             }

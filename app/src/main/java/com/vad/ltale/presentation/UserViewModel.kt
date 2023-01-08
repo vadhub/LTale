@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.User
 import com.vad.ltale.data.repository.UserRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
@@ -20,7 +19,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
     }
 
     fun getUserByUsername(username: String) = viewModelScope.launch {
-        users.postValue(userRepository.getUserByUsername(username))
+        users.postValue(listOf(userRepository.getUserByUsername(username)))
     }
 
     fun createUser(user: User) = viewModelScope.launch {

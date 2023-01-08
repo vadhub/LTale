@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitInstance(private val userDetails: UserDetails) {
 
-    private val interceptor: HttpLoggingInterceptor =
+    private val interceptorBody: HttpLoggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private fun basicAuthInterceptor(username: String, password: String): Interceptor {
@@ -23,6 +23,7 @@ class RetrofitInstance(private val userDetails: UserDetails) {
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
             .addInterceptor(interceptor)
+            .addInterceptor(interceptorBody)
             .build()
 
     private fun retrofit(): Retrofit =

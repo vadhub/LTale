@@ -13,7 +13,7 @@ interface JsonPlaceHolderUser {
     suspend fun getUser(@Part id: Int): Response<Main>
 
     @GET("api-v1/users/search/findByUsername")
-    suspend fun getUserByUsername(@Query("username") username: String): Response<Main>
+    suspend fun getUserByUsername(@Query("username") username: String): User
 
     @POST("api-v1/users")
     suspend fun postUser(@Body user: User)
