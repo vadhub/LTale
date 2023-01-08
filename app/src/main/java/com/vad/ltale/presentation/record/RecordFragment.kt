@@ -23,9 +23,11 @@ import com.vad.ltale.data.Message
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.domain.ChunkTimer
 import com.vad.ltale.domain.RecordAudioHandle
+import com.vad.ltale.domain.Supplier
 import com.vad.ltale.domain.TimerHandler
 import com.vad.ltale.presentation.FileViewModel
 import com.vad.ltale.presentation.LoadViewModelFactory
+import com.vad.ltale.presentation.MainViewModel
 
 class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
@@ -35,10 +37,12 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
     private lateinit var contextThis: Context
     private lateinit var recorder: RecordAudioHandle
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         contextThis = context;
+        mainViewModel = (requireActivity() as Supplier<*>).get() as MainViewModel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +65,7 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
             )
             ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
         } else {
-            val factory = LoadViewModelFactory(RetrofitInstance())
+            val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
             val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
             chunkTimer = ChunkTimer(1000 * 60)
             recorder = RecordAudioHandle(chunkTimer, contextThis, load)

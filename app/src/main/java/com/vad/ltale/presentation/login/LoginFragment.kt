@@ -1,5 +1,6 @@
 package com.vad.ltale.presentation.login
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,14 +9,23 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import com.vad.ltale.R
 import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
-import com.vad.ltale.presentation.FileViewModel
-import com.vad.ltale.presentation.LoadViewModelFactory
+import com.vad.ltale.data.repository.UserRepository
+import com.vad.ltale.domain.Supplier
+import com.vad.ltale.presentation.*
 
 class LoginFragment : Fragment() {
+
+    private lateinit var mainViewModel: MainViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainViewModel = (requireActivity() as Supplier<*>).get() as MainViewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,10 +39,18 @@ class LoginFragment : Fragment() {
 
         val username = view.findViewById(R.id.usernameLoginEditText) as TextView
         val password = view.findViewById(R.id.passwordLoginEditText) as TextView
-        val factory = LoadViewModelFactory(RetrofitInstance(UserDetails(username.text.toString(), password.text.toString())))
-        val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
-        buttonLogin.setOnClickListener { view.findNavController().navigate(R.id.accountFragment) }
+        val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()))
+        val viewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
+
+        buttonLogin.setOnClickListener {
+            mainViewModel.setUserDetails(UserDetails(username.text.toString(), password.text.toString()))
+            viewModel.getUsers()
+            viewModel.users.observe(viewLifecycleOwner) {
+                println(it)
+            }
+            //view.findNavController().navigate(R.id.accountFragment)
+        }
     }
 
 }

@@ -14,6 +14,7 @@ class RetrofitInstance(private val userDetails: UserDetails) {
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private fun basicAuthInterceptor(username: String, password: String): Interceptor {
+        println("$username $password")
         return BasicAuthInterceptor(username, password)
     }
 

@@ -1,5 +1,6 @@
 package com.vad.ltale.presentation.registration
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,8 @@ import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.SaveDataPref
+import com.vad.ltale.domain.Supplier
+import com.vad.ltale.presentation.MainViewModel
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 import kotlinx.coroutines.launch
@@ -25,6 +28,12 @@ class RegistrationFragment : Fragment() {
     private lateinit var nikName: EditText
     private lateinit var password: EditText
     private lateinit var email: EditText
+    private lateinit var mainViewModel: MainViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainViewModel = (requireActivity() as Supplier<*>).get() as MainViewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +50,7 @@ class RegistrationFragment : Fragment() {
         email = view.findViewById(R.id.emailEditText)
         password = view.findViewById(R.id.passwordEditText)
 
-        val factory = UserViewModelFactory(UserRepository(RetrofitInstance()))
+        val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()))
         val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonRegistration.setOnClickListener {

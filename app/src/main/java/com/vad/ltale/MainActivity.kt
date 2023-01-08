@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.vad.ltale.domain.SaveDataPref
 import com.vad.ltale.presentation.MainViewModel
 import com.vad.ltale.domain.Supplier
@@ -25,18 +26,14 @@ class MainActivity : AppCompatActivity(), Supplier<MainViewModel> {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        mainViewModel.setUserId(2)
-        println(mainViewModel.getUserId())
-
         navController.navigate(R.id.accountFragment)
 
-//        if (saveDataPref.getId() == -1) {
-//            setupActionBarWithNavController(navController)
-//        } else {
-//            val bundle = Bundle()
-//            bundle.putInt("id", saveDataPref.getId())
-//            navController.navigate(R.id.accountFragment, bundle)
-//        }
+        if (saveDataPref.getId() == -1) {
+            setupActionBarWithNavController(navController)
+        } else {
+            mainViewModel.setUserId(saveDataPref.getId())
+            navController.navigate(R.id.accountFragment)
+        }
 
     }
 

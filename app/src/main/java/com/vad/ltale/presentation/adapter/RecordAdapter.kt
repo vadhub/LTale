@@ -16,7 +16,7 @@ import com.vad.ltale.data.Message
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
-    private lateinit var records: List<Message>
+    private var records: List<Message> = emptyList()
     private var mediaPlayer: MediaPlayer? = null
 
     @SuppressLint("NotifyDataSetChanged")
