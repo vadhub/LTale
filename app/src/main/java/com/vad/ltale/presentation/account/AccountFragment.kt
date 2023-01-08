@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
 import com.vad.ltale.R
+import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.MessageRepository
 import com.vad.ltale.domain.Supplier
@@ -45,10 +46,10 @@ class AccountFragment : Fragment() {
 
         val id:Int = mainViewModel.getUserId()
 
-        val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
+        val factory = LoadViewModelFactory(RetrofitInstance(UserDetails("", "")))
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
-        val factoryMessage = MessageViewModelFactory(MessageRepository(mainViewModel.getRetrofit()))
+        val factoryMessage = MessageViewModelFactory(MessageRepository(RetrofitInstance(UserDetails("", ""))))
         val messageViewModel = ViewModelProvider(this, factoryMessage).get(MessageViewModel::class.java)
 
         val adapter = RecordAdapter()

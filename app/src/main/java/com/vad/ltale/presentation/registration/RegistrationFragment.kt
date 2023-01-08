@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.vad.ltale.R
 import com.vad.ltale.data.User
+import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.SaveDataPref
@@ -50,7 +51,7 @@ class RegistrationFragment : Fragment() {
         email = view.findViewById(R.id.emailEditText)
         password = view.findViewById(R.id.passwordEditText)
 
-        val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()))
+        val factory = UserViewModelFactory(UserRepository(RetrofitInstance(UserDetails("", ""))))
         val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonRegistration.setOnClickListener {
