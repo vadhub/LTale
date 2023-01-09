@@ -7,10 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.navigation.findNavController
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.vad.ltale.R
 import com.vad.ltale.data.User
 import com.vad.ltale.data.UserDetails
@@ -37,11 +41,23 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val buttonLogin: Button = view.findViewById(R.id.loginButton)
-        val username = view.findViewById(R.id.usernameLoginEditText) as TextView
-        val password = view.findViewById(R.id.passwordLoginEditText) as TextView
+        val username = view.findViewById(R.id.usernameLoginEditText) as TextInputEditText
+        val password = view.findViewById(R.id.passwordLoginEditText) as TextInputEditText
+
+        username.doOnTextChanged { text, start, before, count ->
+            if (text.toString().isEmpty()) {
+                username.error = "must not be empty"
+            }
+        }
+
+        password.doOnTextChanged { text, start, before, count ->
+            if (text.toString().isEmpty()) {
+                password.error = "must not be empty"
+            }
+        }
 
         buttonLogin.setOnClickListener {
-            mainViewModel.setRetrofit(RetrofitInstance(UserDetails(username.text.toString(), password.text.toString())))
+            mainViewModel.setRetrofit(RetrofitInstance(UserDetails(username.text.toString().trim(), password.text.toString().trim())))
             val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()))
             val viewModel: UserViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
             println(username.text.toString())
@@ -49,7 +65,7 @@ class LoginFragment : Fragment() {
             viewModel.users.observe(viewLifecycleOwner) {
                 println(it)
             }
-            //view.findNavController().navigate(R.id.accountFragment)
+            view.findNavController().navigate(R.id.accountFragment)
         }
     }
 

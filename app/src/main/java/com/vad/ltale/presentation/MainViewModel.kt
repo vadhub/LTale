@@ -9,9 +9,6 @@ class MainViewModel : ViewModel() {
     private var userId: Int = 0
     private var retrofitInstance: RetrofitInstance = RetrofitInstance(UserDetails("",""))
 
-    fun setUserDetails(userDetails: UserDetails) {
-    }
-
     fun getRetrofit() = retrofitInstance
     fun setRetrofit(retrofitInstance: RetrofitInstance) {
         this.retrofitInstance = retrofitInstance
