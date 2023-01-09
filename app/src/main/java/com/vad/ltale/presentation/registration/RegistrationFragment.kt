@@ -8,13 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.data.User
 import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.UserRepository
+import com.vad.ltale.domain.CheckEmptyText
 import com.vad.ltale.domain.SaveDataPref
 import com.vad.ltale.domain.Supplier
 import com.vad.ltale.presentation.MainViewModel
@@ -26,9 +29,6 @@ import kotlinx.coroutines.runBlocking
 
 class RegistrationFragment : Fragment() {
 
-    private lateinit var nikName: EditText
-    private lateinit var password: EditText
-    private lateinit var email: EditText
     private lateinit var mainViewModel: MainViewModel
 
     override fun onAttach(context: Context) {
@@ -47,17 +47,27 @@ class RegistrationFragment : Fragment() {
         val buttonRegistration: Button = view.findViewById(R.id.enterRegistrationButton)
         val buttonLogin: Button = view.findViewById(R.id.loginRegistrationButton)
 
-        nikName = view.findViewById(R.id.nikEditText)
-        email = view.findViewById(R.id.emailEditText)
-        password = view.findViewById(R.id.passwordEditText)
+        val username = view.findViewById(R.id.nikEditText) as TextInputEditText
+        val email = view.findViewById(R.id.emailEditText) as TextInputEditText
+        val password = view.findViewById(R.id.passwordEditText) as TextInputEditText
+
+        CheckEmptyText.check(username, email, password)
 
         val factory = UserViewModelFactory(UserRepository(RetrofitInstance(UserDetails("", ""))))
         val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonRegistration.setOnClickListener {
-            userViewModel.createUser(User(nikName.text.toString(), email.text.toString(), password.text.toString()))
+            userViewModel.createUser(
+                User(
+                    username.text.toString(),
+                    email.text.toString(),
+                    password.text.toString()
+                )
+            )
             view.findNavController().navigate(R.id.accountFragment)
         }
-        buttonLogin.setOnClickListener { view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment) }
+        buttonLogin.setOnClickListener {
+            view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+        }
     }
 }

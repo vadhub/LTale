@@ -5,7 +5,7 @@ import com.vad.ltale.data.User
 import retrofit2.Response
 import retrofit2.http.*
 
-interface JsonPlaceHolderUser {
+interface JsonPlaceHolderUser : RegistrationService {
     @GET("api-v1/users")
     suspend fun getUser(): Response<Main>
 
@@ -14,7 +14,4 @@ interface JsonPlaceHolderUser {
 
     @GET("api-v1/users/search/findByUsername")
     suspend fun getUserByUsername(@Query("username") username: String): User
-
-    @POST("api-v1/users")
-    suspend fun postUser(@Body user: User)
 }

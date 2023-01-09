@@ -16,5 +16,5 @@ class UserRepository(private val retrofitInstance: RetrofitInstance) : Repositor
 
 
     suspend fun creteUser(user: User) =
-        retrofitInstance.apiUser().postUser(user)
+        retrofitInstance.apiUser().registration(user)
 }
