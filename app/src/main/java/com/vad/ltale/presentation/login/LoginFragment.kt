@@ -20,6 +20,7 @@ import com.vad.ltale.data.User
 import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.UserRepository
+import com.vad.ltale.domain.CheckEmptyText
 import com.vad.ltale.domain.Supplier
 import com.vad.ltale.presentation.*
 
@@ -44,17 +45,7 @@ class LoginFragment : Fragment() {
         val username = view.findViewById(R.id.usernameLoginEditText) as TextInputEditText
         val password = view.findViewById(R.id.passwordLoginEditText) as TextInputEditText
 
-        username.doOnTextChanged { text, start, before, count ->
-            if (text.toString().isEmpty()) {
-                username.error = "must not be empty"
-            }
-        }
-
-        password.doOnTextChanged { text, start, before, count ->
-            if (text.toString().isEmpty()) {
-                password.error = "must not be empty"
-            }
-        }
+        CheckEmptyText.check(username, password)
 
         buttonLogin.setOnClickListener {
             mainViewModel.setRetrofit(RetrofitInstance(UserDetails(username.text.toString().trim(), password.text.toString().trim())))
