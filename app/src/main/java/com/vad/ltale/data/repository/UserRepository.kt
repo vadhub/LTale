@@ -1,6 +1,7 @@
 package com.vad.ltale.data.repository
 
 import com.vad.ltale.data.User
+import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 
 class UserRepository(private val retrofitInstance: RetrofitInstance) : RepositoryBasic(retrofitInstance) {
@@ -12,8 +13,7 @@ class UserRepository(private val retrofitInstance: RetrofitInstance) : Repositor
         retrofitInstance.apiUser().getUser(id).body()?.embedded?.users
 
     suspend fun getUserByUsername(username: String) =
-        retrofitInstance.apiUser().getUserByUsername(username)
-
+        retrofitInstance.apiUser().login(username).body() ?: UserDetails(0, "", "")
 
     suspend fun creteUser(user: User) =
         retrofitInstance.apiUser().registration(user)

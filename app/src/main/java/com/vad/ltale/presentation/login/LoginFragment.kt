@@ -48,13 +48,15 @@ class LoginFragment : Fragment() {
         CheckEmptyText.check(username, password)
 
         buttonLogin.setOnClickListener {
-            mainViewModel.setRetrofit(RetrofitInstance(UserDetails(username.text.toString().trim(), password.text.toString().trim())))
+
             val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()))
             val viewModel: UserViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
-            println(username.text.toString())
+
             viewModel.getUserByUsername(username.text.toString())
-            viewModel.users.observe(viewLifecycleOwner) {
+            viewModel.userDetails.observe(viewLifecycleOwner) {
                 println(it)
+                mainViewModel.setUserDetails(UserDetails(it.id ,username.text.toString().trim(), password.text.toString().trim()))
+                mainViewModel.setRetrofit(RetrofitInstance(mainViewModel.getUserDetails()))
             }
             view.findNavController().navigate(R.id.accountFragment)
         }

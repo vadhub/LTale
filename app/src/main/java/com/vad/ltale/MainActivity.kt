@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity(), Supplier<MainViewModel> {
         if (saveDataPref.getId() == -1) {
             setupActionBarWithNavController(navController)
         } else {
-            mainViewModel.setUserId(saveDataPref.getId())
             navController.navigate(R.id.accountFragment)
         }
 

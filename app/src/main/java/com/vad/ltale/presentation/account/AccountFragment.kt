@@ -44,23 +44,21 @@ class AccountFragment : Fragment() {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
         val imageIcon: ImageView = view.findViewById(R.id.imageIcon)
 
-        val id:Int = mainViewModel.getUserId()
-
-        val factory = LoadViewModelFactory(RetrofitInstance(UserDetails("", "")))
+        val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
-        val factoryMessage = MessageViewModelFactory(MessageRepository(RetrofitInstance(UserDetails("", ""))))
+        val factoryMessage = MessageViewModelFactory(MessageRepository(mainViewModel.getRetrofit()))
         val messageViewModel = ViewModelProvider(this, factoryMessage).get(MessageViewModel::class.java)
 
         val adapter = RecordAdapter()
 
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
-        messageViewModel.getMessageByUserId(id)
-        messageViewModel.messages.observe(viewLifecycleOwner) {
-            adapter.setRecords(it)
-            recyclerView.adapter = adapter
-        }
+//        messageViewModel.getMessageByUserId(id)
+//        messageViewModel.messages.observe(viewLifecycleOwner) {
+//            adapter.setRecords(it)
+//            recyclerView.adapter = adapter
+//        }
 
 
         //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", id))
@@ -70,7 +68,7 @@ class AccountFragment : Fragment() {
 //        }
 //        load.downloadFile("gaugehg.png", "audio", "$id")
 
-        Picasso.get().load("http://10.0.2.2:8080/files/search?userId=1&directory=image&filename=1.jpeg").into(imageIcon)
+        //Picasso.get().load("http://10.0.2.2:8080/files/search?userId=1&directory=image&filename=1.jpeg").into(imageIcon)
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
 }

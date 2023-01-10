@@ -53,7 +53,7 @@ class RegistrationFragment : Fragment() {
 
         CheckEmptyText.check(username, email, password)
 
-        val factory = UserViewModelFactory(UserRepository(RetrofitInstance(UserDetails("", ""))))
+        val factory = UserViewModelFactory(UserRepository(RetrofitInstance(UserDetails(0,"", ""))))
         val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonRegistration.setOnClickListener {
