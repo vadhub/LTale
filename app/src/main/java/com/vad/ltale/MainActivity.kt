@@ -26,9 +26,8 @@ class MainActivity : AppCompatActivity(), Supplier<MainViewModel> {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        navController.navigate(R.id.accountFragment)
-
         if (saveDataPref.getId() == -1) {
+            println(saveDataPref.getId())
             setupActionBarWithNavController(navController)
         } else {
             navController.navigate(R.id.accountFragment)

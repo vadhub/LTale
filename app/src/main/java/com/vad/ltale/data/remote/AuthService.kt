@@ -14,5 +14,5 @@ interface AuthService {
     suspend fun registration(@Body user: User) : Response<User>
 
     @GET("/login")
-    suspend fun login(@Query("user") user: String) : Response<UserDetails>
+    suspend fun login(@Query("username") user: String) : Response<UserDetails>
 }
