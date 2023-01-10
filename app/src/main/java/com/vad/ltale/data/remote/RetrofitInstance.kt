@@ -26,15 +26,29 @@ class RetrofitInstance(private val userDetails: UserDetails) {
             .addInterceptor(interceptorBody)
             .build()
 
-    private fun retrofit(): Retrofit =
+    private fun clientNoAuth(): OkHttpClient =
+        OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .addInterceptor(interceptorBody)
+            .build()
+
+    fun retrofit(): Retrofit =
         Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .client(client(basicAuthInterceptor(userDetails.username, userDetails.password)))
             .baseUrl("http://10.0.2.2:8080/")
             .build()
 
-    fun apiUser(): JsonPlaceHolderUser =
-        retrofit().create(JsonPlaceHolderUser::class.java)
+    fun retrofitNoAuth(): Retrofit =
+        Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(clientNoAuth())
+            .baseUrl("http://10.0.2.2:8080/")
+            .build()
+
+    fun apiUser(retrofit: Retrofit): JsonPlaceHolderUser =
+        retrofit.create(JsonPlaceHolderUser::class.java)
 
     fun apiMessage(): JsonPlaceHolderMessage =
         retrofit().create(JsonPlaceHolderMessage::class.java)
