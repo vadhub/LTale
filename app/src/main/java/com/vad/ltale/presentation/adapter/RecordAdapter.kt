@@ -11,16 +11,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vad.ltale.R
-import com.vad.ltale.data.Message
+import com.vad.ltale.data.Post
 
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
-    private var records: List<Message> = emptyList()
+    private var records: List<Post> = emptyList()
     private var mediaPlayer: MediaPlayer? = null
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setRecords(records: List<Message>) {
+    fun setRecords(records: List<Post>) {
         this.records = records
         notifyDataSetChanged()
     }

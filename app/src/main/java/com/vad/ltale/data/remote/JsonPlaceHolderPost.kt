@@ -4,10 +4,9 @@ import com.vad.ltale.data.Main
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Part
-import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface JsonPlaceHolderMessage {
+interface JsonPlaceHolderPost {
     @GET("api-v1/messages")
     suspend fun getMessage(): Response<Main>
 

@@ -11,5 +11,5 @@ data class Embedded(
 
     @SerializedName("messages")
     @Expose
-    val messages: List<Message>
+    val messages: List<Post>
     )

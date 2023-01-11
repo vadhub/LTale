@@ -4,7 +4,7 @@ import com.vad.ltale.data.User
 import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 
-class UserRepository(private val retrofitInstance: RetrofitInstance) : RepositoryBasic(retrofitInstance) {
+class UserRepository(private val retrofitInstance: RetrofitInstance) {
 
     suspend fun getUsers() =
         retrofitInstance.apiUser(retrofitInstance.retrofit()).getUser().body()?.embedded?.users

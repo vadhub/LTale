@@ -14,7 +14,6 @@ class RetrofitInstance(private val userDetails: UserDetails) {
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private fun basicAuthInterceptor(username: String, password: String): Interceptor {
-        println("$username $password")
         return BasicAuthInterceptor(username, password)
     }
 
@@ -50,8 +49,8 @@ class RetrofitInstance(private val userDetails: UserDetails) {
     fun apiUser(retrofit: Retrofit): JsonPlaceHolderUser =
         retrofit.create(JsonPlaceHolderUser::class.java)
 
-    fun apiMessage(): JsonPlaceHolderMessage =
-        retrofit().create(JsonPlaceHolderMessage::class.java)
+    fun apiMessage(): JsonPlaceHolderPost =
+        retrofit().create(JsonPlaceHolderPost::class.java)
 
     fun apiUpload(): FileService =
         retrofit().create(FileService::class.java)

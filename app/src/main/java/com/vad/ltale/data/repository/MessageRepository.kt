@@ -2,7 +2,7 @@ package com.vad.ltale.data.repository
 
 import com.vad.ltale.data.remote.RetrofitInstance
 
-class MessageRepository(private val retrofitInstance: RetrofitInstance): RepositoryBasic(retrofitInstance) {
+class MessageRepository(private val retrofitInstance: RetrofitInstance) {
     suspend fun getMessages() =
         retrofitInstance.apiMessage().getMessage().body()?.embedded?.messages ?: emptyList()
 
