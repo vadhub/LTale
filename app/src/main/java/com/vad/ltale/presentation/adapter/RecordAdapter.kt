@@ -11,17 +11,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vad.ltale.R
-import com.vad.ltale.data.Post
+import com.vad.ltale.data.Audio
+import com.vad.ltale.data.AudioRequest
 
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
-    private var records: List<Post> = emptyList()
+    private var audio: List<Audio> = emptyList()
     private var mediaPlayer: MediaPlayer? = null
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setRecords(records: List<Post>) {
-        this.records = records
+    fun setRecords(audios: List<Audio>) {
+        this.audio = audio
         notifyDataSetChanged()
     }
 
@@ -31,14 +32,13 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
         )
 
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
-        holder.bind(records.get(position).title, 0)
+        //holder.bind(records.get(position), 0)
         holder.playButton.setOnClickListener {
-            playAudio(records.get(position).uri)
-            println(records.get(position).uri)
+            playAudio(audio.get(position).uri)
         }
     }
 
-    override fun getItemCount(): Int = records.size
+    override fun getItemCount(): Int = audio.size
 
     class RecordViewHolder(item: View) : ViewHolder(item) {
 

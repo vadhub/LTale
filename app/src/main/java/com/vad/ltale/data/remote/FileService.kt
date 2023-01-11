@@ -1,5 +1,7 @@
 package com.vad.ltale.data.remote;
 
+import com.vad.ltale.data.AudioRequest
+import com.vad.ltale.data.ImageRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -11,17 +13,13 @@ interface FileService {
     @Multipart
     @POST("/upload/audio")
     suspend fun uploadAudio(
-        @Part file: MultipartBody.Part,
-        @Query("title") title: String,
-        @Query("id_user") idUser: Int
+        @Body audioRequest: AudioRequest
     )
 
     @Multipart
     @POST("/upload/image")
     suspend fun uploadImage(
-        @Part file: MultipartBody.Part,
-        @Query("id_user") idUser: Int,
-        @Query("is_icon") isIcon: Int
+        @Body imageRequest: ImageRequest
     )
 
     @GET("/files/search")

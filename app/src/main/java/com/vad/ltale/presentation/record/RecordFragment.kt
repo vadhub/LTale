@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
+import com.vad.ltale.data.Audio
 import com.vad.ltale.data.Post
 import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
@@ -89,8 +90,8 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
-            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton, Post("Audio", "", 2, -1))
-            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton, Post("Audio", "", 2,-1))
+            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton, Audio())
+            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton, Audio())
         }
         return true
     }
