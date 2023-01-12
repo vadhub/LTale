@@ -8,8 +8,7 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
-import com.vad.ltale.data.Audio
-import com.vad.ltale.data.Post
+import com.vad.ltale.data.FileResponse
 import com.vad.ltale.presentation.FileViewModel
 import java.io.File
 import java.io.IOException
@@ -54,7 +53,7 @@ class RecordAudioHandle(
         }
     }
 
-    fun stopRecording(v: View?, actionButton: FloatingActionButton, audio: Audio) {
+    fun stopRecording(v: View?, actionButton: FloatingActionButton, audio: FileResponse) {
         chunkTimer.cancelTimer()
         mediaRecorder?.stop()
         mediaRecorder?.release()

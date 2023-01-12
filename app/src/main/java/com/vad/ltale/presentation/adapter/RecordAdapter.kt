@@ -11,17 +11,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vad.ltale.R
-import com.vad.ltale.data.Audio
-import com.vad.ltale.data.AudioRequest
+import com.vad.ltale.data.FileResponse
 
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
-    private var audio: List<Audio> = emptyList()
+    private var audio: List<FileResponse> = emptyList()
     private var mediaPlayer: MediaPlayer? = null
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setRecords(audios: List<Audio>) {
+    fun setRecords(audios: List<FileResponse>) {
         this.audio = audio
         notifyDataSetChanged()
     }

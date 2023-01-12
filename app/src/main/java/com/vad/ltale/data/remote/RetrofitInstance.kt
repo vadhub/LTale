@@ -1,5 +1,6 @@
 package com.vad.ltale.data.remote
 
+import com.vad.ltale.data.User
 import com.vad.ltale.data.UserDetails
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -8,7 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class RetrofitInstance(private val userDetails: UserDetails) {
+class RetrofitInstance(private val user: User) {
 
     private val interceptorBody: HttpLoggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -35,7 +36,7 @@ class RetrofitInstance(private val userDetails: UserDetails) {
     fun retrofit(): Retrofit =
         Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client(basicAuthInterceptor(userDetails.username, userDetails.password)))
+            .client(client(basicAuthInterceptor(user.username, user.password)))
             .baseUrl("http://10.0.2.2:8080/")
             .build()
 

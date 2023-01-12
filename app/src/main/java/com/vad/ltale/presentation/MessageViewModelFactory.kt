@@ -2,10 +2,10 @@ package com.vad.ltale.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.vad.ltale.data.repository.MessageRepository
+import com.vad.ltale.data.repository.PostRepository
 
-class MessageViewModelFactory(private val messageRepository: MessageRepository) : ViewModelProvider.Factory {
+class MessageViewModelFactory(private val postRepository: PostRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MessageViewModel(messageRepository) as T
+        return MessageViewModel(postRepository) as T
     }
 }

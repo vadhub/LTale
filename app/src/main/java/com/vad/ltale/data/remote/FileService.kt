@@ -1,9 +1,6 @@
 package com.vad.ltale.data.remote;
 
-import com.vad.ltale.data.AudioRequest
-import com.vad.ltale.data.ImageRequest
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import com.vad.ltale.data.FileRequest
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -13,13 +10,13 @@ interface FileService {
     @Multipart
     @POST("/upload/audio")
     suspend fun uploadAudio(
-        @Body audioRequest: AudioRequest
+        @Body file: FileRequest
     )
 
     @Multipart
     @POST("/upload/image")
     suspend fun uploadImage(
-        @Body imageRequest: ImageRequest
+        @Body file: FileRequest
     )
 
     @GET("/files/search")

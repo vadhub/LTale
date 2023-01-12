@@ -5,6 +5,10 @@ import com.google.gson.annotations.SerializedName
 
 data class User(
 
+    @SerializedName("id")
+    @Expose
+    val userId: Int,
+
     @SerializedName("username")
     @Expose
     val username: String,

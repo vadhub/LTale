@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.sql.Date
 
-data class Post(
+data class PostResponse(
 
     @SerializedName("audioId")
     @Expose

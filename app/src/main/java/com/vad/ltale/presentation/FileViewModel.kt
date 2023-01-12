@@ -4,8 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vad.ltale.data.Audio
-import com.vad.ltale.data.Post
+import com.vad.ltale.data.FileResponse
 import com.vad.ltale.data.remote.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,7 +18,7 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
 
     val fileResponseBody: MutableLiveData<ResponseBody> = MutableLiveData()
 
-    fun uploadAudio(file: File, audio: Audio) = viewModelScope.launch {
+    fun uploadAudio(file: File, audio: FileResponse) = viewModelScope.launch {
         Log.e("file", file.absolutePath)
 
         val requestFile: RequestBody =
