@@ -7,17 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.vad.ltale.R
 import com.vad.ltale.data.User
-import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.CheckEmptyText
@@ -55,7 +49,7 @@ class LoginFragment : Fragment() {
             viewModel.getUserByUsername(username.text.toString())
             viewModel.userDetails.observe(viewLifecycleOwner) {
                 println(it)
-                mainViewModel.setUserDetails(UserDetails(it.id ,username.text.toString().trim(), password.text.toString().trim()))
+                mainViewModel.setUserDetails(User(it.id ,username.text.toString().trim(), "", password.text.toString().trim()))
                 mainViewModel.setRetrofit(RetrofitInstance(mainViewModel.getUserDetails()))
             }
             view.findNavController().navigate(R.id.accountFragment)

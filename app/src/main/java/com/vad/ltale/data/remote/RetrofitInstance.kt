@@ -1,7 +1,6 @@
 package com.vad.ltale.data.remote
 
 import com.vad.ltale.data.User
-import com.vad.ltale.data.UserDetails
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

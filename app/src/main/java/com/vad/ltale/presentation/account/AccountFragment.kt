@@ -44,7 +44,7 @@ class AccountFragment : Fragment() {
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
         val factoryMessage = MessageViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
-        val messageViewModel = ViewModelProvider(this, factoryMessage).get(MessageViewModel::class.java)
+        val messageViewModel = ViewModelProvider(this, factoryMessage).get(PostViewModel::class.java)
 
         val adapter = RecordAdapter()
 

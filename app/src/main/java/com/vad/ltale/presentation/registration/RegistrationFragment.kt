@@ -7,14 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.data.User
-import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.CheckEmptyText
@@ -53,12 +50,12 @@ class RegistrationFragment : Fragment() {
 
         CheckEmptyText.check(username, email, password)
 
-        val factory = UserViewModelFactory(UserRepository(RetrofitInstance(UserDetails(0,"", ""))))
+        val factory = UserViewModelFactory(UserRepository(RetrofitInstance(User(0,"", "", ""))))
         val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonRegistration.setOnClickListener {
             userViewModel.createUser(
-                User(
+                User(0,
                     username.text.toString(),
                     email.text.toString(),
                     password.text.toString()

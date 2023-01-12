@@ -2,7 +2,6 @@ package com.vad.ltale.presentation
 
 import androidx.lifecycle.ViewModel
 import com.vad.ltale.data.User
-import com.vad.ltale.data.UserDetails
 import com.vad.ltale.data.remote.RetrofitInstance
 
 class MainViewModel : ViewModel() {

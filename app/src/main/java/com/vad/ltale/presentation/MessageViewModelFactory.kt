@@ -6,6 +6,6 @@ import com.vad.ltale.data.repository.PostRepository
 
 class MessageViewModelFactory(private val postRepository: PostRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MessageViewModel(postRepository) as T
+        return PostViewModel(postRepository) as T
     }
 }

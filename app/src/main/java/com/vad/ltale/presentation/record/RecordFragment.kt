@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.FileResponse
-import com.vad.ltale.data.UserDetails
+import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.domain.ChunkTimer
 import com.vad.ltale.domain.RecordAudioHandle
@@ -64,7 +64,7 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
             )
             ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
         } else {
-            val factory = LoadViewModelFactory(RetrofitInstance(UserDetails(0,"", "")))
+            val factory = LoadViewModelFactory(RetrofitInstance(User(0,"", "", "")))
             val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
             chunkTimer = ChunkTimer(1000 * 60)
             recorder = RecordAudioHandle(chunkTimer, contextThis, load)
@@ -89,8 +89,8 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
-            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton, FileResponse())
-            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton, FileResponse())
+            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton, FileResponse(""))
+            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton, FileResponse(""))
         }
         return true
     }
