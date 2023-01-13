@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
@@ -15,13 +16,14 @@ import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.CheckEmptyText
+import com.vad.ltale.domain.HandleResponse
 import com.vad.ltale.domain.Supplier
 import com.vad.ltale.presentation.MainViewModel
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 
 
-class RegistrationFragment : Fragment() {
+class RegistrationFragment : Fragment(), HandleResponse {
 
     private lateinit var mainViewModel: MainViewModel
 
@@ -45,9 +47,7 @@ class RegistrationFragment : Fragment() {
         val email = view.findViewById(R.id.emailEditText) as TextInputEditText
         val password = view.findViewById(R.id.passwordEditText) as TextInputEditText
 
-
-
-        val factory = UserViewModelFactory(UserRepository(RetrofitInstance(User(0,"", "", ""))))
+        val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
         val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonRegistration.setOnClickListener {
@@ -65,5 +65,9 @@ class RegistrationFragment : Fragment() {
         buttonLogin.setOnClickListener {
             view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
         }
+    }
+
+    override fun error() {
+        Toast.makeText(context, "Illegal registration", Toast.LENGTH_SHORT).show()
     }
 }

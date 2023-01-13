@@ -64,7 +64,7 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
             )
             ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
         } else {
-            val factory = LoadViewModelFactory(RetrofitInstance(User(0,"", "", "")))
+            val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
             val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
             chunkTimer = ChunkTimer(1000 * 60)
             recorder = RecordAudioHandle(chunkTimer, contextThis, load)

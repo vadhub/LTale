@@ -49,7 +49,7 @@ class RetrofitInstance(private val user: User) {
     fun apiUser(retrofit: Retrofit): JsonPlaceHolderUser =
         retrofit.create(JsonPlaceHolderUser::class.java)
 
-    fun apiMessage(): JsonPlaceHolderPost =
+    fun apiPost(): JsonPlaceHolderPost =
         retrofit().create(JsonPlaceHolderPost::class.java)
 
     fun apiUpload(): FileService =
