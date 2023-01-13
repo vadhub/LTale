@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
@@ -15,10 +16,11 @@ import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.CheckEmptyText
+import com.vad.ltale.domain.HandleResponse
 import com.vad.ltale.domain.Supplier
 import com.vad.ltale.presentation.*
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(), HandleResponse {
 
     private lateinit var mainViewModel: MainViewModel
 
@@ -39,21 +41,25 @@ class LoginFragment : Fragment() {
         val username = view.findViewById(R.id.usernameLoginEditText) as TextInputEditText
         val password = view.findViewById(R.id.passwordLoginEditText) as TextInputEditText
 
-        CheckEmptyText.check(username, password)
+        val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
+
+        val viewModel: UserViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonLogin.setOnClickListener {
-
-            val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()))
-            val viewModel: UserViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
-
-            viewModel.getUserByUsername(username.text.toString())
-            viewModel.userDetails.observe(viewLifecycleOwner) {
-                println(it)
-                mainViewModel.setUserDetails(User(it.id ,username.text.toString().trim(), "", password.text.toString().trim()))
-                mainViewModel.setRetrofit(RetrofitInstance(mainViewModel.getUserDetails()))
+            CheckEmptyText.check(username, password) {
+                viewModel.getUserByUsername(username.text.toString())
+                viewModel.userDetails.observe(viewLifecycleOwner) {
+                    println(it)
+                    mainViewModel.setUserDetails(User(it.userId ,username.text.toString().trim(), "", password.text.toString().trim()))
+                    mainViewModel.setRetrofit(RetrofitInstance(mainViewModel.getUserDetails()))
+                }
+                view.findNavController().navigate(R.id.accountFragment)
             }
-            view.findNavController().navigate(R.id.accountFragment)
         }
+    }
+
+    override fun error() {
+        Toast.makeText(context, "Invalid password or username", Toast.LENGTH_SHORT).show()
     }
 
 }

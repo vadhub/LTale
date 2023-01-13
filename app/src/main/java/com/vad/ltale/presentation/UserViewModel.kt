@@ -5,9 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.User
 import com.vad.ltale.data.repository.UserRepository
+import com.vad.ltale.domain.HandleResponse
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
+class UserViewModel(private val userRepository: UserRepository, private val handleResponse: HandleResponse) : ViewModel() {
     var users: MutableLiveData<List<User>> = MutableLiveData()
     var userDetails: MutableLiveData<User> = MutableLiveData()
 
@@ -20,7 +21,12 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
     }
 
     fun getUserByUsername(username: String) = viewModelScope.launch {
-        userDetails.postValue(userRepository.getUserByUsername(username))
+        try {
+            userDetails.postValue(userRepository.login(username))
+        } catch (e: java.lang.Exception) {
+            handleResponse.error()
+        }
+
     }
 
     fun createUser(user: User) = viewModelScope.launch {
