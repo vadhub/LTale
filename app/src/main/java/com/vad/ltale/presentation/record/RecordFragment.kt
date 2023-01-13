@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -27,6 +28,7 @@ import com.vad.ltale.domain.TimerHandler
 import com.vad.ltale.presentation.FileViewModel
 import com.vad.ltale.presentation.LoadViewModelFactory
 import com.vad.ltale.presentation.MainViewModel
+import java.io.File
 
 class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
@@ -66,8 +68,9 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
         } else {
             val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
             val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
+
             chunkTimer = ChunkTimer(1000 * 60)
-            recorder = RecordAudioHandle(chunkTimer, contextThis, load)
+            recorder = RecordAudioHandle(chunkTimer, load)
         }
     }
 
@@ -78,6 +81,7 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
         return inflater.inflate(R.layout.fragment_record, container, false)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         chunkTimer.setTimerHandler(this)
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
@@ -89,8 +93,14 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
-            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton, FileResponse(""))
-            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton, FileResponse(""))
+
+            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton) {
+
+            }
+
+            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton) {
+
+            }
         }
         return true
     }

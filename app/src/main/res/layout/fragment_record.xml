@@ -29,12 +29,6 @@
             android:textSize="24sp"
             android:text="5:00"/>
 
-        <EditText
-            android:id="@+id/titleEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:hint="title" />
     </LinearLayout>
 
     <LinearLayout
