@@ -5,12 +5,12 @@ import androidx.core.widget.doOnTextChanged
 
 class CheckEmptyText {
     companion object {
-        fun check(vararg editText: EditText) {
+        fun check(vararg editText: EditText, runnable: Runnable) {
             editText.forEach {
-                it.doOnTextChanged { text, start, before, count ->
-                    if (text.toString().isEmpty()) {
-                        it.error = "must not be empty"
-                    }
+                if (it.text.isEmpty()) {
+                    it.error = "empty text"
+                } else {
+                    runnable.run()
                 }
             }
         }

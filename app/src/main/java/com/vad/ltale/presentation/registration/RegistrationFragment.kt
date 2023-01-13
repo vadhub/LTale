@@ -15,13 +15,10 @@ import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.CheckEmptyText
-import com.vad.ltale.domain.SaveDataPref
 import com.vad.ltale.domain.Supplier
 import com.vad.ltale.presentation.MainViewModel
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 class RegistrationFragment : Fragment() {
@@ -48,20 +45,22 @@ class RegistrationFragment : Fragment() {
         val email = view.findViewById(R.id.emailEditText) as TextInputEditText
         val password = view.findViewById(R.id.passwordEditText) as TextInputEditText
 
-        CheckEmptyText.check(username, email, password)
+
 
         val factory = UserViewModelFactory(UserRepository(RetrofitInstance(User(0,"", "", ""))))
         val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonRegistration.setOnClickListener {
-            userViewModel.createUser(
-                User(0,
-                    username.text.toString(),
-                    email.text.toString(),
-                    password.text.toString()
+            CheckEmptyText.check(username, email, password) {
+                userViewModel.createUser(
+                    User(0,
+                        username.text.toString(),
+                        email.text.toString(),
+                        password.text.toString()
+                    )
                 )
-            )
-            view.findNavController().navigate(R.id.accountFragment)
+                view.findNavController().navigate(R.id.accountFragment)
+            }
         }
         buttonLogin.setOnClickListener {
             view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
