@@ -46,19 +46,12 @@ class RecordAudioHandle(
         }
     }
 
-    fun stopRecording(v: View?, actionButton: FloatingActionButton) {
+    fun stopRecording() {
         chunkTimer.cancelTimer()
         mediaRecorder?.stop()
         mediaRecorder?.release()
 
         val tempFile = File(output)
         viewModel.uploadAudio(tempFile)
-
-//        if (tempFile.exists()) {
-//            tempFile.delete()
-//        }
-
-        actionButton.isActivated = false
-        v?.findNavController()?.navigate(R.id.accountFragment)
     }
 }

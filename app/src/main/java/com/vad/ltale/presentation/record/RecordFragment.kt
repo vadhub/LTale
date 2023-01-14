@@ -93,14 +93,8 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
-
-            MotionEvent.ACTION_UP -> recorder.stopRecording(v, actionButton) {
-
-            }
-
-            MotionEvent.ACTION_CANCEL -> recorder.stopRecording(v, actionButton) {
-
-            }
+            MotionEvent.ACTION_UP -> recorder.stopRecording()
+            MotionEvent.ACTION_CANCEL -> recorder.stopRecording()
         }
         return true
     }
