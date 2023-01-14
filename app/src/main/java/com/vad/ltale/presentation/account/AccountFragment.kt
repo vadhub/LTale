@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -39,12 +40,19 @@ class AccountFragment : Fragment() {
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
         val imageIcon: ImageView = view.findViewById(R.id.imageIcon)
+        val username: TextView = view.findViewById(R.id.usernameTextView)
 
         val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
         val factoryMessage = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
         val messageViewModel = ViewModelProvider(this, factoryMessage).get(PostViewModel::class.java)
+
+        imageIcon.setOnClickListener {
+        //todo photopiker
+        }
+
+        username.text = mainViewModel.getUserDetails().username
 
         val adapter = RecordAdapter()
 
