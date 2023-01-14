@@ -19,6 +19,7 @@ import java.sql.Date
 class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel() {
 
     val fileResponseBody: MutableLiveData<ResponseBody> = MutableLiveData()
+    var file = File("")
 
     fun uploadAudio(audio: File) = viewModelScope.launch {
 

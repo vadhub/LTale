@@ -12,10 +12,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.FileResponse
@@ -39,6 +42,7 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
     private lateinit var contextThis: Context
     private lateinit var recorder: RecordAudioHandle
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var uploadViewModel: FileViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -67,10 +71,10 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
             ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
         } else {
             val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
-            val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
+            uploadViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
             chunkTimer = ChunkTimer(1000 * 60)
-            recorder = RecordAudioHandle(chunkTimer, load)
+            recorder = RecordAudioHandle(chunkTimer, uploadViewModel)
         }
     }
 
@@ -87,6 +91,11 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
         actionButton = view.findViewById(R.id.recordFloatingButton)
         actionButton.setOnTouchListener(this)
+
+        val buttonSave = view.findViewById(R.id.saveButton) as Button
+        buttonSave.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {

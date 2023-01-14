@@ -2,10 +2,6 @@ package com.vad.ltale.domain
 
 import android.media.MediaRecorder
 import android.os.Environment
-import android.view.View
-import androidx.navigation.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.vad.ltale.R
 import com.vad.ltale.presentation.FileViewModel
 import java.io.File
 import java.io.IOException
@@ -51,7 +47,6 @@ class RecordAudioHandle(
         mediaRecorder?.stop()
         mediaRecorder?.release()
 
-        val tempFile = File(output)
-        viewModel.uploadAudio(tempFile)
+        viewModel.file = File(output)
     }
 }

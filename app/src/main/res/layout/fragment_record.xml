@@ -41,6 +41,11 @@
             app:layout_constraintBaseline_toBottomOf="@id/textView"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/audioRecyclerRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <ImageView
             android:id="@+id/imageViewPostRecord"
             android:layout_width="wrap_content"

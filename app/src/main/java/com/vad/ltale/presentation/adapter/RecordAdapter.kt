@@ -1,8 +1,6 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
-import android.media.AudioAttributes
-import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +10,13 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vad.ltale.R
 import com.vad.ltale.data.FileResponse
+import com.vad.ltale.domain.PlayAudioHandle
 
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
     private var audio: List<FileResponse> = emptyList()
-    private var mediaPlayer: MediaPlayer? = null
+    private val playAudio = PlayAudioHandle()
 
     @SuppressLint("NotifyDataSetChanged")
     fun setRecords(audios: List<FileResponse>) {
@@ -31,9 +30,9 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
         )
 
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
-        //holder.bind(records.get(position), 0)
+        holder.bind("", playAudio.setAudioSource(audio.get(position).uri))
         holder.playButton.setOnClickListener {
-            playAudio(audio.get(position).uri)
+            playAudio.playAudio()
         }
     }
 
@@ -45,29 +44,10 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
         private val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
         val playButton: ImageButton = item.findViewById(R.id.handleAudioImageButton)
 
-        fun bind(title: String, duration: Long) {
+        fun bind(title: String, duration: Int) {
             titleTextView.text = title
             timeTextView.text = "$duration"
         }
     }
 
-    private fun playAudio(audioSource: String) {
-
-        mediaPlayer = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .build()
-            )
-            setDataSource(audioSource)
-            prepare()
-            start()
-        }
-    }
-
-    private fun stopPlaying() {
-        mediaPlayer?.release()
-        mediaPlayer = null
-    }
 }

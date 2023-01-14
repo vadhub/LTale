@@ -7,6 +7,11 @@ import com.vad.ltale.data.PostRequest
 import com.vad.ltale.data.PostResponse
 import com.vad.ltale.data.repository.PostRepository
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
+import java.sql.Date
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
@@ -23,7 +28,28 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         posts.postValue(postRepository.getPostByUserId(userId))
     }
 
-    fun postPost(postRequest: PostRequest) = viewModelScope.launch {
+    fun savePost(audio: File, image: File?, userId: Int) = viewModelScope.launch {
+
+        val requestAudio: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), audio)
+
+        val audioBody: MultipartBody.Part =
+            MultipartBody.Part.createFormData("file", audio.name, requestAudio)
+
+        val requestImage: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), audio)
+
+        val imageBody: MultipartBody.Part =
+            MultipartBody.Part.createFormData("file", audio.name, requestImage)
+
+        val postRequest = PostRequest(
+            audioBody,
+            imageBody,
+            userId,
+            Date(System.currentTimeMillis()),
+            Date(System.currentTimeMillis())
+        )
+
         postRepository.postPost(postRequest)
     }
 }
