@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.data.User
@@ -59,15 +60,18 @@ class RegistrationFragment : Fragment(), HandleResponse {
                         password.text.toString()
                     )
                 )
-                view.findNavController().navigate(R.id.accountFragment)
             }
         }
         buttonLogin.setOnClickListener {
-            view.findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+            findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
         }
     }
 
     override fun error() {
         Toast.makeText(context, "Illegal registration", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun success() {
+        findNavController().navigate(R.id.accountFragment)
     }
 }

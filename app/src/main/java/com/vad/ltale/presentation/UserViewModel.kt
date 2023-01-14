@@ -23,6 +23,7 @@ class UserViewModel(private val userRepository: UserRepository, private val hand
     fun getUserByUsername(username: String) = viewModelScope.launch {
         try {
             userDetails.postValue(userRepository.login(username))
+            handleResponse.success()
         } catch (e: java.lang.Exception) {
             handleResponse.error()
         }

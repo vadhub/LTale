@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.data.User
@@ -53,9 +54,12 @@ class LoginFragment : Fragment(), HandleResponse {
                     mainViewModel.setUserDetails(User(it.userId ,username.text.toString().trim(), "", password.text.toString().trim()))
                     mainViewModel.setRetrofit(RetrofitInstance(mainViewModel.getUserDetails()))
                 }
-                view.findNavController().navigate(R.id.accountFragment)
             }
         }
+    }
+
+    override fun success() {
+        findNavController().navigate(R.id.accountFragment)
     }
 
     override fun error() {
