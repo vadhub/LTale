@@ -17,14 +17,18 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
+import com.vad.ltale.data.FileResponse
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.ChunkTimer
 import com.vad.ltale.domain.RecordAudioHandle
 import com.vad.ltale.domain.Supplier
 import com.vad.ltale.domain.TimerHandler
 import com.vad.ltale.presentation.*
+import com.vad.ltale.presentation.adapter.RecordAdapter
 import java.io.File
 
 class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
@@ -33,6 +37,8 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
     private lateinit var chunkTimer: ChunkTimer
     private lateinit var actionButton: FloatingActionButton
     private lateinit var buttonSave: Button
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: RecordAdapter
 
     private lateinit var contextThis: Context
     private lateinit var recorder: RecordAudioHandle
@@ -87,6 +93,9 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
         actionButton = view.findViewById(R.id.recordFloatingButton)
         actionButton.setOnTouchListener(this)
+        recyclerView = view.findViewById(R.id.audioRecyclerRecord)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = RecordAdapter()
 
         buttonSave = view.findViewById(R.id.saveButton) as Button
         buttonSave.isActivated = false
@@ -101,15 +110,23 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 
+        val listAudio: MutableList<FileResponse> = arrayListOf()
+
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
             MotionEvent.ACTION_UP -> {
                 buttonSave.isActivated = true
                 audio = recorder.stopRecording()
+                listAudio.add(FileResponse(audio?.name ?: ""))
+                adapter.setRecords(listAudio)
+                recyclerView.adapter = adapter
             }
             MotionEvent.ACTION_CANCEL -> {
                 buttonSave.isActivated = true
                 audio = recorder.stopRecording()
+                listAudio.add(FileResponse(audio?.name ?: ""))
+                adapter.setRecords(listAudio)
+                recyclerView.adapter = adapter
             }
         }
         return true
