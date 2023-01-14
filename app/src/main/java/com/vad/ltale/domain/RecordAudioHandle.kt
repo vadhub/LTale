@@ -8,8 +8,7 @@ import java.io.IOException
 
 
 class RecordAudioHandle(
-    private val chunkTimer: ChunkTimer,
-    private val viewModel: FileViewModel
+    private val chunkTimer: ChunkTimer
 ) {
     private var output: String = ""
     private var mediaRecorder: MediaRecorder? = null
@@ -42,11 +41,11 @@ class RecordAudioHandle(
         }
     }
 
-    fun stopRecording() {
+    fun stopRecording(): File {
         chunkTimer.cancelTimer()
         mediaRecorder?.stop()
         mediaRecorder?.release()
 
-        viewModel.file = File(output)
+        return File(output)
     }
 }

@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -17,20 +16,15 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
-import com.vad.ltale.data.FileResponse
-import com.vad.ltale.data.User
-import com.vad.ltale.data.remote.RetrofitInstance
+import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.ChunkTimer
 import com.vad.ltale.domain.RecordAudioHandle
 import com.vad.ltale.domain.Supplier
 import com.vad.ltale.domain.TimerHandler
-import com.vad.ltale.presentation.FileViewModel
-import com.vad.ltale.presentation.LoadViewModelFactory
-import com.vad.ltale.presentation.MainViewModel
+import com.vad.ltale.presentation.*
 import java.io.File
 
 class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
@@ -38,11 +32,13 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
     private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer
     private lateinit var actionButton: FloatingActionButton
+    private lateinit var buttonSave: Button
 
     private lateinit var contextThis: Context
     private lateinit var recorder: RecordAudioHandle
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var uploadViewModel: FileViewModel
+    private lateinit var postViewModel: PostViewModel
+    private var audio: File? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,11 +66,11 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
             )
             ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
         } else {
-            val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
-            uploadViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
+            val factory = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
+            postViewModel = ViewModelProvider(this, factory).get(PostViewModel::class.java)
 
             chunkTimer = ChunkTimer(1000 * 60)
-            recorder = RecordAudioHandle(chunkTimer, uploadViewModel)
+            recorder = RecordAudioHandle(chunkTimer)
         }
     }
 
@@ -92,9 +88,14 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
         actionButton = view.findViewById(R.id.recordFloatingButton)
         actionButton.setOnTouchListener(this)
 
-        val buttonSave = view.findViewById(R.id.saveButton) as Button
+        buttonSave = view.findViewById(R.id.saveButton) as Button
+        buttonSave.isActivated = false
+
         buttonSave.setOnClickListener {
-            findNavController().popBackStack()
+            if (audio != null) {
+                postViewModel.savePost(audio ?: File(""), null, mainViewModel.getUserDetails().userId)
+                findNavController().popBackStack()
+            }
         }
     }
 
@@ -102,8 +103,14 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
-            MotionEvent.ACTION_UP -> recorder.stopRecording()
-            MotionEvent.ACTION_CANCEL -> recorder.stopRecording()
+            MotionEvent.ACTION_UP -> {
+                buttonSave.isActivated = true
+                audio = recorder.stopRecording()
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                buttonSave.isActivated = true
+                audio = recorder.stopRecording()
+            }
         }
         return true
     }
