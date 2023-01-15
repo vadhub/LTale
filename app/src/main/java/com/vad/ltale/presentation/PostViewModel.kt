@@ -28,7 +28,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         posts.postValue(postRepository.getPostByUserId(userId))
     }
 
-    fun savePost(audio: File, image: File?, userId: Int) = viewModelScope.launch {
+    fun savePost(audio: File, image: File, userId: Int) = viewModelScope.launch {
 
         val requestAudio: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), audio)
@@ -36,11 +36,17 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         val audioBody: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", audio.name, requestAudio)
 
-        val requestImage: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), audio)
+        var imageBody: MultipartBody.Part? = null
+        if (image.exists()) {
+            val requestImage: RequestBody =
+                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), image)
 
-        val imageBody: MultipartBody.Part =
-            MultipartBody.Part.createFormData("file", audio.name, requestImage)
+            imageBody =
+                MultipartBody.Part.createFormData("file", audio.name, requestImage)
+        }
+
+
+
 
         val postRequest = PostRequest(
             audioBody,
