@@ -3,20 +3,20 @@ package com.vad.ltale.presentation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vad.ltale.data.PostRequest
 import com.vad.ltale.data.PostResponse
+import com.vad.ltale.data.remote.Post
 import com.vad.ltale.data.repository.PostRepository
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-import java.sql.Date
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
-    var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
+    var posts: MutableLiveData<List<Post>> = MutableLiveData()
 
     fun getPosts() = viewModelScope.launch {
+
         posts.postValue(postRepository.getPosts())
     }
 
@@ -24,7 +24,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         posts.postValue(postRepository.getPostById(id))
     }
 
-    fun getPostByUserId(userId: Int) = viewModelScope.launch {
+    fun getPostsByUserId(userId: Int) = viewModelScope.launch {
         posts.postValue(postRepository.getPostByUserId(userId))
     }
 

@@ -17,7 +17,7 @@ import com.vad.ltale.R
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.Supplier
 import com.vad.ltale.presentation.*
-import com.vad.ltale.presentation.adapter.RecordAdapter
+import com.vad.ltale.presentation.adapter.PostAdapter
 
 
 class AccountFragment : Fragment() {
@@ -39,6 +39,8 @@ class AccountFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
+        recyclerView.layoutManager = LinearLayoutManager(view.context)
+
         val imageIcon: ImageView = view.findViewById(R.id.imageIcon)
         val username: TextView = view.findViewById(R.id.usernameTextView)
 
@@ -46,7 +48,7 @@ class AccountFragment : Fragment() {
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
         val factoryMessage = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
-        val messageViewModel = ViewModelProvider(this, factoryMessage).get(PostViewModel::class.java)
+        val postViewModel = ViewModelProvider(this, factoryMessage).get(PostViewModel::class.java)
 
         imageIcon.setOnClickListener {
         //todo photopiker
@@ -54,16 +56,13 @@ class AccountFragment : Fragment() {
 
         username.text = mainViewModel.getUserDetails().username
 
-        val adapter = RecordAdapter()
+        val adapter = PostAdapter()
 
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
-
-//        messageViewModel.getMessageByUserId(id)
-//        messageViewModel.messages.observe(viewLifecycleOwner) {
-//            adapter.setRecords(it)
-//            recyclerView.adapter = adapter
-//        }
-
+        postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
+        postViewModel.posts.observe(viewLifecycleOwner) {
+            adapter.setPosts(it)
+            recyclerView.adapter = adapter
+        }
 
         //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", id))
 //        load.fileResponseBody.observe(viewLifecycleOwner) {

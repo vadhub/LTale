@@ -42,6 +42,9 @@ class LoginFragment : Fragment(), HandleResponse {
         val username = view.findViewById(R.id.usernameLoginEditText) as TextInputEditText
         val password = view.findViewById(R.id.passwordLoginEditText) as TextInputEditText
 
+        username.setText("anton")
+        password.setText("1234")
+
         val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
 
         val viewModel: UserViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
