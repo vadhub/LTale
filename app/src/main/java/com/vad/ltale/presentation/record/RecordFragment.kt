@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -16,12 +17,14 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.FileResponse
+import com.vad.ltale.data.remote.RetrofitInstance
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.ChunkTimer
 import com.vad.ltale.domain.RecordAudioHandle
@@ -44,6 +47,7 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
     private lateinit var recorder: RecordAudioHandle
     private lateinit var mainViewModel: MainViewModel
     private lateinit var postViewModel: PostViewModel
+    private lateinit var fileViewModel: FileViewModel
     private var audio: File? = null
 
     override fun onAttach(context: Context) {
@@ -75,6 +79,8 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
             val factory = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
             postViewModel = ViewModelProvider(this, factory).get(PostViewModel::class.java)
 
+            val loadViewModelFactory = LoadViewModelFactory(mainViewModel.getRetrofit())
+            fileViewModel = ViewModelProvider(this, loadViewModelFactory).get(FileViewModel::class.java)
             chunkTimer = ChunkTimer(1000 * 60)
             recorder = RecordAudioHandle(chunkTimer)
         }
@@ -101,10 +107,12 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
         buttonSave.isActivated = false
 
         buttonSave.setOnClickListener {
-            if (audio != null) {
-                postViewModel.savePost(audio ?: File(""), null, mainViewModel.getUserDetails().userId)
+//            if (audio != null) {
+                val path = Environment.getExternalStorageDirectory().absolutePath + File.separator + "ltale/audio" + File.separator + "l1673858258427.mp3"
+                fileViewModel.uploadAudio(File(path))
+                //postViewModel.savePost(audio ?: File(""), null, mainViewModel.getUserDetails().userId)
                 findNavController().popBackStack()
-            }
+//            }
         }
     }
 

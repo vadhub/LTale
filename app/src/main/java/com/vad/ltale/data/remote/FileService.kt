@@ -1,6 +1,9 @@
 package com.vad.ltale.data.remote;
 
+
 import com.vad.ltale.data.FileRequest
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -8,9 +11,11 @@ import retrofit2.http.*
 interface FileService {
 
     @Multipart
-    @POST("/upload/audio")
+    @POST("/api-v1/upload/audio")
     suspend fun uploadAudio(
-        @Body file: FileRequest
+        @Part file: MultipartBody.Part,
+        @Part("dateCreated") dateCreated: RequestBody,
+        @Part("dateChanged") dateChanged: RequestBody
     )
 
     @Multipart

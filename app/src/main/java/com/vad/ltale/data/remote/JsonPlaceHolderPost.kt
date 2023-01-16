@@ -6,6 +6,7 @@ import com.vad.ltale.data.PostResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Query
@@ -20,6 +21,7 @@ interface JsonPlaceHolderPost {
     @GET("api-v1/posts/search/findAllByUserId")
     suspend fun getPostByUserId(@Query("userId") userId: Int): Response<Main>
 
+    @Multipart
     @POST("api-v1/post/save")
     suspend fun postPost(@Body postRequest: PostRequest) : Response<PostResponse>
 }

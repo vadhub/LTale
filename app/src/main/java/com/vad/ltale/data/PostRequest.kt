@@ -7,6 +7,6 @@ data class PostRequest(
     val audio: MultipartBody.Part,
     val image: MultipartBody.Part?,
     val userId: Int,
-    val dateCreated: Date,
-    val dateChanged: Date
+    val dateCreated: Long,
+    val dateChanged: Long
     )

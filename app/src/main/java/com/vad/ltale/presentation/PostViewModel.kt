@@ -49,8 +49,8 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             audioBody,
             imageBody,
             userId,
-            Date(System.currentTimeMillis()),
-            Date(System.currentTimeMillis())
+            System.currentTimeMillis(),
+            System.currentTimeMillis()
         )
 
         postRepository.postPost(postRequest)

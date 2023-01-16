@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.FileRequest
-import com.vad.ltale.data.FileResponse
 import com.vad.ltale.data.remote.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,23 +13,28 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import java.io.File
-import java.sql.Date
+
 
 class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel() {
 
     val fileResponseBody: MutableLiveData<ResponseBody> = MutableLiveData()
     var file = File("")
 
-    fun uploadAudio(audio: File) = viewModelScope.launch {
+    fun uploadAudio(file: File) = viewModelScope.launch {
 
         val requestFile: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), audio)
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
 
         val body: MultipartBody.Part =
-            MultipartBody.Part.createFormData("file", audio.name, requestFile)
+            MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        val file = FileRequest(body, Date(System.currentTimeMillis()), Date(System.currentTimeMillis()))
-        retrofitInstance.apiUpload().uploadAudio(file)
+        val requestDateCreated: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+
+        val requestDateChanged: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+
+        retrofitInstance.apiUpload().uploadAudio(body, requestDateCreated, requestDateChanged)
     }
 
     fun uploadImage(file: File, userId: Int, isIcon: Int) = viewModelScope.launch {
