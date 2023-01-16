@@ -1,6 +1,7 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +9,11 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.FileResponse
 import com.vad.ltale.domain.PlayAudioHandle
+import java.io.File
 
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
@@ -20,7 +23,7 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun setRecords(audios: List<FileResponse>) {
-        this.audio = audio
+        this.audio = audios
         notifyDataSetChanged()
     }
 
@@ -30,7 +33,9 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
         )
 
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
-        holder.bind("", playAudio.setAudioSource(audio.get(position).uri))
+        val path = Environment.getExternalStorageDirectory().absolutePath + File.separator + "ltale/audio"
+        holder.bind(audio.get(position).uri, playAudio.setAudioSource(path +"/"+audio.get(position).uri))
+
         holder.playButton.setOnClickListener {
             playAudio.playAudio()
         }
@@ -42,7 +47,7 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
         private val titleTextView: TextView = item.findViewById(R.id.audioTitleTextView)
         private val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
-        val playButton: ImageButton = item.findViewById(R.id.handleAudioImageButton)
+        val playButton: ShapeableImageView = item.findViewById(R.id.handleAudioImageButton)
 
         fun bind(title: String, duration: Int) {
             titleTextView.text = title

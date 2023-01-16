@@ -118,6 +118,7 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
                 buttonSave.isActivated = true
                 audio = recorder.stopRecording()
                 listAudio.add(FileResponse(audio?.name ?: ""))
+                println(listAudio.size)
                 adapter.setRecords(listAudio)
                 recyclerView.adapter = adapter
             }
@@ -127,6 +128,7 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
                 listAudio.add(FileResponse(audio?.name ?: ""))
                 adapter.setRecords(listAudio)
                 recyclerView.adapter = adapter
+                println(listAudio.size)
             }
         }
         return true

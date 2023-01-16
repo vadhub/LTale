@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/audioTitleTextView"
         android:text="24.12.2022"
-        android:textSize="24sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@id/audioTimeTextView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/handleAudioImageButton"
