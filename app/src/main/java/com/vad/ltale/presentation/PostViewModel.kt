@@ -34,7 +34,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), audio)
 
         val audioBody: MultipartBody.Part =
-            MultipartBody.Part.createFormData("file", audio.name, requestAudio)
+            MultipartBody.Part.createFormData("audio", audio.name, requestAudio)
 
         var imageBody: MultipartBody.Part? = null
         if (image?.exists() == true) {
@@ -42,17 +42,19 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
                 RequestBody.create("multipart/form-data".toMediaTypeOrNull(), image)
 
             imageBody =
-                MultipartBody.Part.createFormData("file", audio.name, requestImage)
+                MultipartBody.Part.createFormData("image", audio.name, requestImage)
         }
 
-        val postRequest = PostRequest(
-            audioBody,
-            imageBody,
-            userId,
-            System.currentTimeMillis(),
-            System.currentTimeMillis()
-        )
+        val requestUserId: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "$userId")
 
-        postRepository.postPost(postRequest)
+        val requestDateCreated: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+
+        val requestDateChanged: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+
+
+        postRepository.postPost(audioBody, imageBody, requestUserId, requestDateCreated, requestDateChanged)
     }
 }

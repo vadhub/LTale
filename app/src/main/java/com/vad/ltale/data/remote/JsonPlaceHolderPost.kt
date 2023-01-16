@@ -1,10 +1,10 @@
 package com.vad.ltale.data.remote
 
 import com.vad.ltale.data.Main
-import com.vad.ltale.data.PostRequest
 import com.vad.ltale.data.PostResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -23,5 +23,11 @@ interface JsonPlaceHolderPost {
 
     @Multipart
     @POST("api-v1/post/save")
-    suspend fun postPost(@Body postRequest: PostRequest) : Response<PostResponse>
+    suspend fun postPost(
+        @Part audio: MultipartBody.Part,
+        @Part image: MultipartBody.Part?,
+        @Part("userId") userId: RequestBody,
+        @Part("dateCreated") dateCreated: RequestBody,
+        @Part("dateChanged") dateChanged: RequestBody
+    ) : Response<PostResponse>
 }
