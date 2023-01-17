@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -19,9 +20,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.repository.PostRepository
+import com.vad.ltale.domain.FileUtil
 import com.vad.ltale.domain.Supplier
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.PostAdapter
+import java.io.File
 
 
 class AccountFragment : Fragment() {
@@ -56,13 +59,14 @@ class AccountFragment : Fragment() {
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-                val selectedImage = it.data!!.data
-                imageIcon.setImageURI(selectedImage)
+                val selectedImage = it.data
+                imageIcon.setImageURI(selectedImage!!.data)
+                load.uploadIcon(File(FileUtil.getPath(selectedImage.data, context)), mainViewModel.getUserDetails().userId)
             }
         }
 
         imageIcon.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             resultLauncher.launch(intent)
         }
 

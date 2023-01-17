@@ -49,6 +49,26 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
         //retrofitInstance.apiUpload().uploadImage(body, userId, isIcon)
     }
 
+    fun uploadIcon(icon: File, userId: Int) = viewModelScope.launch {
+
+        val requestIcon: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), icon)
+
+        val body: MultipartBody.Part =
+            MultipartBody.Part.createFormData("file", icon.name, requestIcon)
+
+        val requestDateCreated: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+
+        val requestDateChanged: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+
+        val requestUserId: RequestBody =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "$userId")
+
+        retrofitInstance.apiUpload().uploadIcon(body, requestDateCreated, requestDateChanged, requestUserId)
+    }
+
     fun downloadFile(fileName: String, directory: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
         fileResponseBody.postValue(retrofitInstance.apiUpload().downloadFile(userId, directory, fileName).body())
     }

@@ -17,15 +17,15 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     fun getPosts() = viewModelScope.launch {
 
-        posts.postValue(postRepository.getPosts())
+       // posts.postValue(postRepository.getPosts())
     }
 
     fun getPostById(id: Int) = viewModelScope.launch {
-        posts.postValue(postRepository.getPostById(id))
+        //posts.postValue(postRepository.getPostById(id))
     }
 
     fun getPostsByUserId(userId: Int) = viewModelScope.launch {
-        posts.postValue(postRepository.getPostByUserId(userId))
+        //posts.postValue(postRepository.getPostByUserId(userId))
     }
 
     fun savePost(audio: File, image: File?, userId: Int) = viewModelScope.launch {

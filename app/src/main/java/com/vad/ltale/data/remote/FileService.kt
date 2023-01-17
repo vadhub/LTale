@@ -19,9 +19,18 @@ interface FileService {
     )
 
     @Multipart
-    @POST("/upload/image")
+    @POST("/api-v1/upload/image")
     suspend fun uploadImage(
         @Body file: FileRequest
+    )
+
+    @Multipart
+    @POST("/api-v1/upload/icon")
+    suspend fun uploadIcon(
+        @Part file: MultipartBody.Part,
+        @Part("dateCreated") dateCreated: RequestBody,
+        @Part("dateChanged") dateChanged: RequestBody,
+        @Part("userId") userId: RequestBody
     )
 
     @GET("/files/search")
