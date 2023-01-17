@@ -2,15 +2,15 @@ package com.vad.ltale.presentation
 
 import androidx.lifecycle.ViewModel
 import com.vad.ltale.data.User
-import com.vad.ltale.data.remote.RetrofitInstance
+import com.vad.ltale.data.remote.RemoteInstance
 
 class MainViewModel : ViewModel() {
 
     private var user: User = User(0, "","","")
-    private var retrofitInstance: RetrofitInstance = RetrofitInstance(user)
+    private var retrofitInstance: RemoteInstance = RemoteInstance(user)
 
     fun getRetrofit() = retrofitInstance
-    fun setRetrofit(retrofitInstance: RetrofitInstance) {
+    fun setRetrofit(retrofitInstance: RemoteInstance) {
         this.retrofitInstance = retrofitInstance
     }
 

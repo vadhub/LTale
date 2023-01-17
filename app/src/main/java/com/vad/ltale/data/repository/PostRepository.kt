@@ -1,10 +1,10 @@
 package com.vad.ltale.data.repository
 
-import com.vad.ltale.data.remote.RetrofitInstance
+import com.vad.ltale.data.remote.RemoteInstance
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
-class PostRepository(private val retrofitInstance: RetrofitInstance) {
+class PostRepository(private val retrofitInstance: RemoteInstance) {
     suspend fun getPosts() =
         retrofitInstance.apiPost().getPost().body()?.embedded?.messages ?: emptyList()
 

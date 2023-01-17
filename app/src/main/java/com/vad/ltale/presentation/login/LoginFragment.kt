@@ -9,12 +9,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.data.User
-import com.vad.ltale.data.remote.RetrofitInstance
+import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.CheckEmptyText
 import com.vad.ltale.domain.HandleResponse
@@ -55,7 +54,7 @@ class LoginFragment : Fragment(), HandleResponse {
                 viewModel.userDetails.observe(viewLifecycleOwner) {
                     println(it)
                     mainViewModel.setUserDetails(User(it.userId ,username.text.toString().trim(), "", password.text.toString().trim()))
-                    mainViewModel.setRetrofit(RetrofitInstance(mainViewModel.getUserDetails()))
+                    mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
                 }
             }
         }

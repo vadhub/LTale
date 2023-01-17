@@ -65,6 +65,8 @@ class AccountFragment : Fragment() {
             }
         }
 
+        load.getIcon(mainViewModel.getUserDetails().userId, context)!!.into(imageIcon)
+
         imageIcon.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             resultLauncher.launch(intent)

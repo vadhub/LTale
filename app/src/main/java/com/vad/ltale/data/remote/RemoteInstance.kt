@@ -1,5 +1,8 @@
 package com.vad.ltale.data.remote
 
+import android.content.Context
+import com.squareup.picasso.OkHttp3Downloader
+import com.squareup.picasso.Picasso
 import com.vad.ltale.data.User
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -8,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class RetrofitInstance(private val user: User) {
+class RemoteInstance(private val user: User) {
 
     private val interceptorBody: HttpLoggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -45,6 +48,17 @@ class RetrofitInstance(private val user: User) {
             .client(clientNoAuth())
             .baseUrl("http://10.0.2.2:8080/")
             .build()
+
+    fun picasso(context: Context): Picasso {
+        return Picasso.Builder(context)
+            .downloader(
+                OkHttp3Downloader(
+                    client(
+                        basicAuthInterceptor(user.username, user.password)
+                    )
+                )
+            ).build()
+    }
 
     fun apiUser(retrofit: Retrofit): JsonPlaceHolderUser =
         retrofit.create(JsonPlaceHolderUser::class.java)

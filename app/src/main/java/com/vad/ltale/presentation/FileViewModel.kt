@@ -1,11 +1,12 @@
 package com.vad.ltale.presentation
 
+import android.content.Context
 import android.util.Log
+import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vad.ltale.data.FileRequest
-import com.vad.ltale.data.remote.RetrofitInstance
+import com.vad.ltale.data.remote.RemoteInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -15,7 +16,7 @@ import okhttp3.ResponseBody
 import java.io.File
 
 
-class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel() {
+class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
 
     val fileResponseBody: MutableLiveData<ResponseBody> = MutableLiveData()
     var file = File("")
@@ -34,7 +35,7 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
         val requestDateChanged: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
 
-        retrofitInstance.apiUpload().uploadAudio(body, requestDateCreated, requestDateChanged)
+        remoteInstance.apiUpload().uploadAudio(body, requestDateCreated, requestDateChanged)
     }
 
     fun uploadImage(file: File, userId: Int, isIcon: Int) = viewModelScope.launch {
@@ -66,10 +67,14 @@ class FileViewModel(private val retrofitInstance: RetrofitInstance) : ViewModel(
         val requestUserId: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "$userId")
 
-        retrofitInstance.apiUpload().uploadIcon(body, requestDateCreated, requestDateChanged, requestUserId)
+        remoteInstance.apiUpload().uploadIcon(body, requestDateCreated, requestDateChanged, requestUserId)
     }
 
+    fun getIcon(userId: Int, context: Context?) =
+        context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/search/icon?userId=$userId") }
+
+
     fun downloadFile(fileName: String, directory: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
-        fileResponseBody.postValue(retrofitInstance.apiUpload().downloadFile(userId, directory, fileName).body())
+        fileResponseBody.postValue(remoteInstance.apiUpload().downloadFile(userId, directory, fileName).body())
     }
 }
