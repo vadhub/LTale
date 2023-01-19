@@ -6,23 +6,19 @@ import java.sql.Date
 
 data class PostResponse(
 
-    @SerializedName("audioId")
-    @Expose
-    val audioId: Long,
-
-    @SerializedName("imageId")
-    @Expose
-    val imageId: Long,
-
     @SerializedName("userId")
     @Expose
-    val userId: Long,
+    val userId: Int,
 
     @SerializedName("dateCreated")
     @Expose
-    val dateCreated: Date,
+    val dateCreated: String,
 
     @SerializedName("dateChanged")
     @Expose
-    val dateChanged: Date
+    val dateChanged: String,
+
+    @SerializedName("_links")
+    @Expose
+    val links: Links
 )

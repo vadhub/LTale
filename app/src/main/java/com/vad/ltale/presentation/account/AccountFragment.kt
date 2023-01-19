@@ -82,14 +82,6 @@ class AccountFragment : Fragment() {
             recyclerView.adapter = adapter
         }
 
-        //load.uploadFile(File("/storage/self/primary/Pictures/test.txt"), Message("Hello world!", "", id))
-//        load.fileResponseBody.observe(viewLifecycleOwner) {
-//
-//            imageIcon.setImageBitmap(BitmapFactory.decodeStream(it.byteStream()))
-//        }
-//        load.downloadFile("gaugehg.png", "audio", "$id")
-
-        //Picasso.get().load("http://10.0.2.2:8080/files/search?userId=1&directory=image&filename=1.jpeg").into(imageIcon)
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
 }

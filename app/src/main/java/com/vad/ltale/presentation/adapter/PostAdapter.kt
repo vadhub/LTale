@@ -1,7 +1,6 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
-import android.provider.MediaStore.Audio
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.squareup.picasso.Picasso
 import com.vad.ltale.R
 import com.vad.ltale.data.FileResponse
-import com.vad.ltale.data.remote.Post
+import com.vad.ltale.data.Post
 
 class PostAdapter : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
@@ -43,9 +42,9 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
         private val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
 
-        fun bind(date: String, pathImage: String, audios: List<FileResponse>) {
+        fun bind(date: String, pathImage: String?, audios: List<FileResponse>) {
             textViewDate.text = date
-            Picasso.get().load(pathImage).into(imageViewPost)
+            Picasso.get().load(pathImage).error(R.drawable.ic_launcher_foreground).into(imageViewPost)
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             val adapter = RecordAdapter()
             adapter.setRecords(audios)

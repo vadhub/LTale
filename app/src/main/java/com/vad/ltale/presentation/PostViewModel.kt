@@ -3,8 +3,7 @@ package com.vad.ltale.presentation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vad.ltale.data.PostResponse
-import com.vad.ltale.data.remote.Post
+import com.vad.ltale.data.Post
 import com.vad.ltale.data.repository.PostRepository
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -25,7 +24,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun getPostsByUserId(userId: Int) = viewModelScope.launch {
-        //posts.postValue(postRepository.getPostByUserId(userId))
+        posts.postValue(postRepository.getPostByUserId(userId))
     }
 
     fun savePost(audio: File, image: File?, userId: Int) = viewModelScope.launch {
