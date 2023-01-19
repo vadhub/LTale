@@ -6,6 +6,14 @@ import java.sql.Date
 
 data class PostResponse(
 
+    @SerializedName("audioId")
+    @Expose
+    val audioId: Int,
+
+    @SerializedName("imageId")
+    @Expose
+    val imageId: Int,
+
     @SerializedName("userId")
     @Expose
     val userId: Int,
@@ -17,8 +25,4 @@ data class PostResponse(
     @SerializedName("dateChanged")
     @Expose
     val dateChanged: String,
-
-    @SerializedName("_links")
-    @Expose
-    val links: Links
 )
