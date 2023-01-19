@@ -30,8 +30,8 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.bind(
             posts.get(position).date,
-            posts.get(position).pathImage,
-            posts.get(position).audios
+            null,
+            posts.get(position).audio
         )
     }
 

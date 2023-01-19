@@ -16,8 +16,8 @@ class PlayAudioHandle {
     }
 
     fun setAudioSource(audioSource: String): Int {
-        mediaPlayer.setDataSource(audioSource)
-        return mediaPlayer.duration
+        //mediaPlayer.setDataSource(audioSource)
+        return 9//mediaPlayer.duration
     }
 
     fun playAudio() {

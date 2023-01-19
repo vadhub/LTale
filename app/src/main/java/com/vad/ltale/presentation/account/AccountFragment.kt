@@ -50,6 +50,7 @@ class AccountFragment : Fragment() {
 
         val imageIcon: ImageView = view.findViewById(R.id.imageIcon)
         val username: TextView = view.findViewById(R.id.usernameTextView)
+        val countPost: TextView = view.findViewById(R.id.countPosts)
 
         val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
@@ -80,6 +81,7 @@ class AccountFragment : Fragment() {
         postViewModel.posts.observe(viewLifecycleOwner) {
             adapter.setPosts(it)
             recyclerView.adapter = adapter
+            countPost.text = "${it.size}"
         }
 
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }

@@ -1,5 +1,6 @@
 package com.vad.ltale.data.repository
 
+import com.vad.ltale.data.FileResponse
 import com.vad.ltale.data.Post
 import com.vad.ltale.data.remote.RemoteInstance
 import okhttp3.MultipartBody
@@ -14,7 +15,7 @@ class PostRepository(private val retrofitInstance: RemoteInstance) {
 
     suspend fun getPostByUserId(userId: Int): List<Post> {
         val postResponse = retrofitInstance.apiPost().getPostsByUserId(userId).body()?.embedded?.messages ?: emptyList()
-        return postResponse.map { p -> Post(p.dateChanged) }
+        return postResponse.map { p -> Post(p.dateChanged, listOf(FileResponse(""))) }
     }
 
 
