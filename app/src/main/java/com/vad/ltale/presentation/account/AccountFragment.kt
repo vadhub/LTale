@@ -1,7 +1,6 @@
 package com.vad.ltale.presentation.account
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
@@ -11,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,20 +18,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.FileUtil
-import com.vad.ltale.domain.Supplier
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.PostAdapter
 import java.io.File
 
 
-class AccountFragment : Fragment() {
-
-    private lateinit var mainViewModel: MainViewModel
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mainViewModel = (requireActivity() as Supplier<*>).get() as MainViewModel
-    }
+class AccountFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

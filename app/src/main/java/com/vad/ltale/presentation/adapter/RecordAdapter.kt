@@ -13,13 +13,14 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.FileResponse
 import com.vad.ltale.domain.PlayAudioHandle
+import com.vad.ltale.domain.RecyclerOnClickListener
 import java.io.File
 
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
     private var audio: List<FileResponse> = emptyList()
-    private val playAudio = PlayAudioHandle()
+    private var clickListener: RecyclerOnClickListener? = null
 
     @SuppressLint("NotifyDataSetChanged")
     fun setRecords(audios: List<FileResponse>) {
@@ -33,18 +34,14 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
         )
 
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
-        val path = Environment.getExternalStorageDirectory().absolutePath + File.separator + "ltale/audio"
-        holder.bind(audio.get(position).uri, playAudio.setAudioSource(path +"/"+audio.get(position).uri))
-
         holder.playButton.setOnClickListener {
-            playAudio.playAudio()
+            clickListener?.onItemClick(position)
         }
     }
 
     override fun getItemCount(): Int = audio.size
 
     class RecordViewHolder(item: View) : ViewHolder(item) {
-
         private val titleTextView: TextView = item.findViewById(R.id.audioTitleTextView)
         private val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
         val playButton: ShapeableImageView = item.findViewById(R.id.handleAudioImageButton)

@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.vad.ltale'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.vad.ltale"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -54,7 +54,7 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.8'
 
-//    implementation 'com.google.android.exoplayer:exoplayer:2.18.2'
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.2'
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'

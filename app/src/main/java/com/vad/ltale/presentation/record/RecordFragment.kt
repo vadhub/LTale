@@ -3,12 +3,10 @@ package com.vad.ltale.presentation.record
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -34,7 +32,7 @@ import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.RecordAdapter
 import java.io.File
 
-class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
+class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
     private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer
@@ -43,28 +41,20 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecordAdapter
 
-    private lateinit var contextThis: Context
     private lateinit var recorder: RecordAudioHandle
-    private lateinit var mainViewModel: MainViewModel
     private lateinit var postViewModel: PostViewModel
     private var audio: File? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        contextThis = context;
-        mainViewModel = (requireActivity() as Supplier<*>).get() as MainViewModel
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (ContextCompat.checkSelfPermission(
-                contextThis,
+                requireContext(),
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                contextThis,
+                requireContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                contextThis,
+                requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {

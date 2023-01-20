@@ -1,8 +1,6 @@
 package com.vad.ltale.presentation.login
 
-import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,17 +15,11 @@ import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.CheckEmptyText
 import com.vad.ltale.domain.HandleResponse
-import com.vad.ltale.domain.Supplier
-import com.vad.ltale.presentation.*
+import com.vad.ltale.presentation.BaseFragment
+import com.vad.ltale.presentation.UserViewModel
+import com.vad.ltale.presentation.UserViewModelFactory
 
-class LoginFragment : Fragment(), HandleResponse {
-
-    private lateinit var mainViewModel: MainViewModel
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mainViewModel = (requireActivity() as Supplier<*>).get() as MainViewModel
-    }
+class LoginFragment : BaseFragment(), HandleResponse {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
