@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -75,7 +74,7 @@ class AccountFragment : Fragment() {
 
         username.text = mainViewModel.getUserDetails().username
 
-        val adapter = PostAdapter()
+        val adapter = PostAdapter(load)
 
         postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
         postViewModel.posts.observe(viewLifecycleOwner) {

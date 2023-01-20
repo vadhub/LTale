@@ -15,7 +15,7 @@ class PostRepository(private val retrofitInstance: RemoteInstance) {
 
     suspend fun getPostByUserId(userId: Int): List<Post> {
         val postResponse = retrofitInstance.apiPost().getPostsByUserId(userId).body()?.embedded?.messages ?: emptyList()
-        return postResponse.map { p -> Post(p.dateChanged, listOf(FileResponse(""))) }
+        return postResponse.map { p -> Post(p.dateChanged, p.imageId, listOf(FileResponse(""))) }
     }
 
 

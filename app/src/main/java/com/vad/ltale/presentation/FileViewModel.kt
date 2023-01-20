@@ -73,6 +73,8 @@ class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
     fun getIcon(userId: Int, context: Context?) =
         context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/search/icon?userId=$userId") }
 
+    fun getImage(imageId: Int, context: Context?) =
+        context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/search?imageId=$imageId") }
 
     fun downloadFile(fileName: String, directory: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
         fileResponseBody.postValue(remoteInstance.apiUpload().downloadFile(userId, directory, fileName).body())

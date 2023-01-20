@@ -2,9 +2,12 @@ package com.vad.ltale.presentation.record
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -12,7 +15,10 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -23,10 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.FileResponse
 import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.domain.ChunkTimer
-import com.vad.ltale.domain.RecordAudioHandle
-import com.vad.ltale.domain.Supplier
-import com.vad.ltale.domain.TimerHandler
+import com.vad.ltale.domain.*
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.RecordAdapter
 import java.io.File
@@ -88,6 +91,11 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
+        val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
+        var selectedImage: Intent? = null
+
         chunkTimer.setTimerHandler(this)
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
         actionButton = view.findViewById(R.id.recordFloatingButton)
@@ -99,12 +107,25 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
         buttonSave = view.findViewById(R.id.saveButton) as Button
         buttonSave.isActivated = false
 
+        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK && it.data != null) {
+                selectedImage = it.data!!
+                image.setImageURI(selectedImage!!.data)
+            }
+        }
+
         buttonSave.setOnClickListener {
             if (audio != null) {
-                postViewModel.savePost(audio ?: File(""), null, mainViewModel.getUserDetails().userId)
+                postViewModel.savePost(audio ?: File(""), File(FileUtil.getPath(selectedImage!!.data, context)) , mainViewModel.getUserDetails().userId)
                 findNavController().popBackStack()
             }
         }
+
+        imageButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            resultLauncher.launch(intent)
+        }
+
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
@@ -113,24 +134,19 @@ class RecordFragment : Fragment(), OnTouchListener, TimerHandler {
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
-            MotionEvent.ACTION_UP -> {
-                buttonSave.isActivated = true
-                audio = recorder.stopRecording()
-                listAudio.add(FileResponse(audio?.name ?: ""))
-                println(listAudio.size)
-                adapter.setRecords(listAudio)
-                recyclerView.adapter = adapter
-            }
-            MotionEvent.ACTION_CANCEL -> {
-                buttonSave.isActivated = true
-                audio = recorder.stopRecording()
-                listAudio.add(FileResponse(audio?.name ?: ""))
-                adapter.setRecords(listAudio)
-                recyclerView.adapter = adapter
-                println(listAudio.size)
-            }
+            MotionEvent.ACTION_UP -> saveAudio(listAudio)
+            MotionEvent.ACTION_CANCEL -> saveAudio(listAudio)
         }
         return true
+    }
+
+    private fun saveAudio(listAudio: MutableList<FileResponse>) {
+        buttonSave.isActivated = true
+        audio = recorder.stopRecording()
+        listAudio.add(FileResponse(audio?.name ?: ""))
+        println(listAudio.size)
+        adapter.setRecords(listAudio)
+        recyclerView.adapter = adapter
     }
 
     @SuppressLint("SetTextI18n")
