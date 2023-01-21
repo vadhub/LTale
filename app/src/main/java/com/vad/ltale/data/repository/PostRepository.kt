@@ -19,7 +19,7 @@ class PostRepository(private val retrofitInstance: RemoteInstance) {
     }
 
 
-    suspend fun postPost(audio: MultipartBody.Part,
+    suspend fun postPost(audio: List<MultipartBody.Part>,
                          image: MultipartBody.Part?,
                          userId: RequestBody,
                          dateCreated: RequestBody,

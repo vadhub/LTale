@@ -27,13 +27,13 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         posts.postValue(postRepository.getPostByUserId(userId))
     }
 
-    fun savePost(audio: File, image: File?, userId: Int) = viewModelScope.launch {
+    fun savePost(audio: List<File>, image: File?, userId: Int) = viewModelScope.launch {
 
-        val requestAudio: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), audio)
-
-        val audioBody: MultipartBody.Part =
-            MultipartBody.Part.createFormData("audio", audio.name, requestAudio)
+        val listAudio = audio.map{ a ->
+            MultipartBody.Part.createFormData("audio", a.name,
+                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), a)
+            )
+        }.toList()
 
         var imageBody: MultipartBody.Part? = null
         if (image?.exists() == true) {
@@ -41,7 +41,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
                 RequestBody.create("multipart/form-data".toMediaTypeOrNull(), image)
 
             imageBody =
-                MultipartBody.Part.createFormData("image", audio.name, requestImage)
+                MultipartBody.Part.createFormData("image", image.name, requestImage)
         }
 
         val requestUserId: RequestBody =
@@ -54,6 +54,6 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
 
 
-        postRepository.postPost(audioBody, imageBody, requestUserId, requestDateCreated, requestDateChanged)
+        postRepository.postPost(listAudio, imageBody, requestUserId, requestDateCreated, requestDateChanged)
     }
 }

@@ -54,6 +54,7 @@ class LoginFragment : BaseFragment(), HandleResponse {
 
     override fun success() {
         findNavController().navigate(R.id.accountFragment)
+        findNavController().popBackStack()
     }
 
     override fun error() {
