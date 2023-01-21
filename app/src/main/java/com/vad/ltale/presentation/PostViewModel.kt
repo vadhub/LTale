@@ -14,20 +14,11 @@ import java.io.File
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var posts: MutableLiveData<List<Post>> = MutableLiveData()
 
-    fun getPosts() = viewModelScope.launch {
-
-       // posts.postValue(postRepository.getPosts())
-    }
-
-    fun getPostById(id: Int) = viewModelScope.launch {
-        //posts.postValue(postRepository.getPostById(id))
-    }
-
     fun getPostsByUserId(userId: Int) = viewModelScope.launch {
         posts.postValue(postRepository.getPostByUserId(userId))
     }
 
-    fun savePost(audio: List<File>, image: File?, userId: Int) = viewModelScope.launch {
+    fun savePost(audio: MutableList<File>, image: File?, userId: Int) = viewModelScope.launch {
 
         val listAudio = audio.map{ a ->
             MultipartBody.Part.createFormData("audio", a.name,

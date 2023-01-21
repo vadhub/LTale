@@ -1,31 +1,30 @@
 package com.vad.ltale.domain
 
-import android.media.AudioAttributes
 import android.media.MediaPlayer
-
 
 class PlayAudioHandle {
 
-    private var mediaPlayer = MediaPlayer().apply {
-        setAudioAttributes(
-            AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .build()
-        )
-    }
+    private var player: MediaPlayer? = null
+    private var play = false
 
-    fun setAudioSource(audioSource: String): Int {
-        //mediaPlayer.setDataSource(audioSource)
-        return 9//mediaPlayer.duration
+    fun initializePlayer(source: String) {
+        player = MediaPlayer().also {
+            it.setDataSource(source)
+        }
     }
 
     fun playAudio() {
-        mediaPlayer.prepare()
-        mediaPlayer.start()
+        try {
+            player?.prepare()
+            player?.start()
+            play = true
+        } catch (e: java.lang.Exception) {
+            println(e)
+        }
     }
 
     fun stopPlaying() {
-        mediaPlayer.release()
+        player?.release()
+        play = false
     }
 }

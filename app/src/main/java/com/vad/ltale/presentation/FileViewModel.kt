@@ -21,35 +21,6 @@ class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
     val fileResponseBody: MutableLiveData<ResponseBody> = MutableLiveData()
     var file = File("")
 
-    fun uploadAudio(file: File) = viewModelScope.launch {
-
-        val requestFile: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-
-        val body: MultipartBody.Part =
-            MultipartBody.Part.createFormData("file", file.name, requestFile)
-
-        val requestDateCreated: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
-
-        val requestDateChanged: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
-
-        remoteInstance.apiUpload().uploadAudio(body, requestDateCreated, requestDateChanged)
-    }
-
-    fun uploadImage(file: File, userId: Int, isIcon: Int) = viewModelScope.launch {
-        Log.e("file", file.absolutePath)
-
-        val requestFile: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-
-        val body: MultipartBody.Part =
-            MultipartBody.Part.createFormData("file", file.name, requestFile)
-
-        //retrofitInstance.apiUpload().uploadImage(body, userId, isIcon)
-    }
-
     fun uploadIcon(icon: File, userId: Int) = viewModelScope.launch {
 
         val requestIcon: RequestBody =
@@ -70,13 +41,12 @@ class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
         remoteInstance.apiUpload().uploadIcon(body, requestDateCreated, requestDateChanged, requestUserId)
     }
 
-    fun getIcon(userId: Int, context: Context?) =
+    fun getIcon(userId: Int, context: Context?) = viewModelScope.launch {
         context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/search/icon?userId=$userId") }
-
-    fun getImage(imageId: Int, context: Context?) =
-        context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/search?imageId=$imageId") }
-
-    fun downloadFile(fileName: String, directory: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
-        fileResponseBody.postValue(remoteInstance.apiUpload().downloadFile(userId, directory, fileName).body())
     }
+
+    fun getImage(imageId: Int, context: Context?, imageView: ImageView) = viewModelScope.launch {
+        context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/search?imageId=$imageId").into(imageView) }
+    }
+
 }

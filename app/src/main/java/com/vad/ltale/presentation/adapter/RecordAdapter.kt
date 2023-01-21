@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.FileResponse
@@ -19,11 +20,11 @@ import java.io.File
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
-    private var audio: List<FileResponse> = emptyList()
+    private var audio: List<File> = emptyList()
     private var clickListener: RecyclerOnClickListener? = null
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setRecords(audios: List<FileResponse>) {
+    fun setRecords(audios: List<File>) {
         this.audio = audios
         notifyDataSetChanged()
     }

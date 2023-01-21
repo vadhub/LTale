@@ -32,7 +32,7 @@ import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.RecordAdapter
 import java.io.File
 
-class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
+class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOnClickListener {
 
     private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer
@@ -40,10 +40,12 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
     private lateinit var buttonSave: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecordAdapter
+    private val player by lazy { PlayAudioHandle() }
 
     private lateinit var recorder: RecordAudioHandle
     private lateinit var postViewModel: PostViewModel
     private var audio: File? = null
+    private val listAudio: MutableList<File> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +108,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
         buttonSave.setOnClickListener {
             if (audio != null) {
-                postViewModel.savePost(audio ?: File(""), File(FileUtil.getPath(selectedImage!!.data, context)) , mainViewModel.getUserDetails().userId)
+                postViewModel.savePost(listAudio, File(FileUtil.getPath(selectedImage!!.data, context)) , mainViewModel.getUserDetails().userId)
                 findNavController().popBackStack()
             }
         }
@@ -120,8 +122,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 
-        val listAudio: MutableList<FileResponse> = arrayListOf()
-
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
             MotionEvent.ACTION_UP -> saveAudio(listAudio)
@@ -130,10 +130,10 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
         return true
     }
 
-    private fun saveAudio(listAudio: MutableList<FileResponse>) {
+    private fun saveAudio(listAudio: MutableList<File>) {
         buttonSave.isActivated = true
         audio = recorder.stopRecording()
-        listAudio.add(FileResponse(audio?.name ?: ""))
+        listAudio.add(audio!!)
         println(listAudio.size)
         adapter.setRecords(listAudio)
         recyclerView.adapter = adapter
@@ -148,6 +148,11 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
     override fun finishTime() {
         timeRecordTextView.text = "end"
+    }
+
+    override fun onItemClick(position: Int){
+        player.initializePlayer(listAudio.get(position).absolutePath)
+        player.playAudio()
     }
 
 }
