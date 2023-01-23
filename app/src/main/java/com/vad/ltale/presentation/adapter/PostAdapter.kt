@@ -3,18 +3,16 @@ package com.vad.ltale.presentation.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.squareup.picasso.Picasso
 import com.vad.ltale.R
-import com.vad.ltale.data.FileResponse
 import com.vad.ltale.data.Post
 import com.vad.ltale.presentation.FileViewModel
+import java.io.File
 
 class PostAdapter(private val load: FileViewModel) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
@@ -31,11 +29,11 @@ class PostAdapter(private val load: FileViewModel) : RecyclerView.Adapter<PostAd
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        load.getImage(posts.get(position).idImage, holder.itemView.context)?.into(holder.imageViewPost)
+        load.getImage(posts.get(position).idImage, holder.itemView.context, holder.imageViewPost)
 
         holder.bind(
             posts.get(position).date,
-            posts.get(position).audio
+           null
         )
     }
 
@@ -46,11 +44,11 @@ class PostAdapter(private val load: FileViewModel) : RecyclerView.Adapter<PostAd
         val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
 
-        fun bind(date: String, audios: List<FileResponse>) {
+        fun bind(date: String, audios: List<File>?) {
             textViewDate.text = date
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             val adapter = RecordAdapter()
-            adapter.setRecords(audios)
+            adapter.setRecords(audios!!)
             recyclerViewAudio.adapter = adapter
         }
     }
