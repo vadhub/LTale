@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName
 data class Audio(
     @SerializedName("id")
     @Expose
-    val id: Int,
+    val id: Int = -1,
 
     @SerializedName("uri")
     @Expose
-    val uri: String,
+    val uri: String = "",
 
     @SerializedName("duration")
     @Expose

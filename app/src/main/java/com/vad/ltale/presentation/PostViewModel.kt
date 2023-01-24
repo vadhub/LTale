@@ -14,7 +14,7 @@ import okhttp3.RequestBody
 import java.io.File
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
-    var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
+    var posts: MutableLiveData<List<Post>> = MutableLiveData()
 
     fun getPostsByUserId(userId: Int) = viewModelScope.launch {
         posts.postValue(postRepository.getPostByUserId(userId))

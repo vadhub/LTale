@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vad.ltale.R
+import com.vad.ltale.data.Audio
 import com.vad.ltale.data.Post
 import com.vad.ltale.presentation.FileViewModel
 import java.io.File
+import java.sql.Date
 
 class PostAdapter(private val load: FileViewModel) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
@@ -29,11 +31,11 @@ class PostAdapter(private val load: FileViewModel) : RecyclerView.Adapter<PostAd
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        load.getImage(posts.get(position).idImage, holder.itemView.context, holder.imageViewPost)
+        load.getImage(posts.get(position).image.id, holder.itemView.context, holder.imageViewPost)
 
         holder.bind(
             posts.get(position).date,
-           null
+            posts.get(position).audio
         )
     }
 
@@ -44,11 +46,11 @@ class PostAdapter(private val load: FileViewModel) : RecyclerView.Adapter<PostAd
         val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
 
-        fun bind(date: String, audios: List<File>?) {
-            textViewDate.text = date
+        fun bind(date: Date, audios: MutableList<Audio>) {
+            textViewDate.text = "$date"
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             val adapter = RecordAdapter()
-            adapter.setRecords(audios!!)
+            adapter.setRecords(audios)
             recyclerViewAudio.adapter = adapter
         }
     }

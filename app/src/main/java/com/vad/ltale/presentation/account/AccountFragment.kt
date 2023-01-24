@@ -55,7 +55,7 @@ class AccountFragment : BaseFragment() {
             }
         }
 
-        load.getIcon(mainViewModel.getUserDetails().userId, context)!!.error(R.drawable.ic_launcher_foreground).into(imageIcon)
+        load.getIcon(mainViewModel.getUserDetails().userId, context, imageIcon)
 
         imageIcon.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)

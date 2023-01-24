@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
+import com.vad.ltale.data.Audio
 import com.vad.ltale.data.AudioRequest
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.*
@@ -45,7 +46,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     private lateinit var recorder: RecordAudioHandle
     private lateinit var postViewModel: PostViewModel
     private var audio: File? = null
-    private val listAudio: MutableList<AudioRequest> = arrayListOf()
+    private val listAudioRequest: MutableList<AudioRequest> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +109,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
 
         buttonSave.setOnClickListener {
             if (audio != null) {
-                postViewModel.savePost(listAudio, File(FileUtil.getPath(selectedImage!!.data, context)) , mainViewModel.getUserDetails().userId)
+                postViewModel.savePost(listAudioRequest, File(FileUtil.getPath(selectedImage!!.data, context)) , mainViewModel.getUserDetails().userId)
                 findNavController().popBackStack()
             }
         }
@@ -132,7 +133,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
 
     private fun saveAudio() {
         buttonSave.isActivated = true
-        listAudio.add(recorder.stopRecording())
+        listAudioRequest.add(recorder.stopRecording())
+        val listAudio = listAudioRequest.map { la -> Audio(duration = la.duration) }.toMutableList()
         adapter.setRecords(listAudio)
         recyclerView.adapter = adapter
     }
@@ -149,7 +151,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     }
 
     override fun onItemClick(position: Int){
-        player.initializePlayer(listAudio.get(position).file.absolutePath)
+        player.initializePlayer(listAudioRequest.get(position).file.absolutePath)
         player.playAudio()
     }
 
