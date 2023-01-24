@@ -24,7 +24,8 @@ interface JsonPlaceHolderPost {
     @Multipart
     @POST("api-v1/post/save")
     suspend fun postPost(
-        @Part("audio") audio: RequestBody,
+        @Part audio: List<MultipartBody.Part>,
+        @Part("duration") duration: List<RequestBody>,
         @Part image: MultipartBody.Part?,
         @Part("userId") userId: RequestBody,
         @Part("dateCreated") dateCreated: RequestBody,

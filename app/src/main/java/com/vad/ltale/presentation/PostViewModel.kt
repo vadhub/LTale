@@ -23,10 +23,12 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     fun savePost(audio: MutableList<AudioRequest>, image: File?, userId: Int) = viewModelScope.launch {
 
         val listAudio = audio.map{ a ->
-            MultipartBody.Part.createFormData("audio", a.file.name,
-                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), a.file)
-            )
-        }.toList()
+                MultipartBody.Part.createFormData("audio", a.file.name, RequestBody.create("multipart/form-data".toMediaTypeOrNull(), a.file))
+        }
+
+        val listDuration = audio.map {
+            a -> RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${a.duration}")
+        }
 
         var imageBody: MultipartBody.Part? = null
         if (image?.exists() == true) {
@@ -47,6 +49,6 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
 
 
-        postRepository.postPost(listAudio, imageBody, requestUserId, requestDateCreated, requestDateChanged)
+        postRepository.postPost(listAudio, listDuration, imageBody, requestUserId, requestDateCreated, requestDateChanged)
     }
 }
