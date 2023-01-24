@@ -1,30 +1,26 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
-import com.vad.ltale.data.FileResponse
-import com.vad.ltale.domain.PlayAudioHandle
+import com.vad.ltale.data.AudioRequest
 import com.vad.ltale.domain.RecyclerOnClickListener
 import java.io.File
 
 
 class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
-    private var audio: List<File> = emptyList()
+    private var audio: List<AudioRequest> = emptyList()
     private var clickListener: RecyclerOnClickListener? = null
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setRecords(audios: List<File>) {
+    fun setRecords(audios: MutableList<AudioRequest>) {
         this.audio = audios
         notifyDataSetChanged()
     }
@@ -35,6 +31,7 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
         )
 
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
+        holder.bind(duration = audio.get(position).duration)
         holder.playButton.setOnClickListener {
             clickListener?.onItemClick(position)
         }
@@ -47,9 +44,12 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
         private val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
         val playButton: ShapeableImageView = item.findViewById(R.id.handleAudioImageButton)
 
-        fun bind(title: String, duration: Int) {
+        @SuppressLint("SetTextI18n")
+        fun bind(title: String = "", duration: Long) {
             titleTextView.text = title
-            timeTextView.text = "$duration"
+            val minutes = duration / 1000 / 60
+            val seconds = duration / 1000 % 60
+            timeTextView.text = "$minutes:$seconds"
         }
     }
 

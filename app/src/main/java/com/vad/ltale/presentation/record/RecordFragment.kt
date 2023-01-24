@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
-import com.vad.ltale.data.FileResponse
+import com.vad.ltale.data.AudioRequest
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.*
 import com.vad.ltale.presentation.*
@@ -45,7 +45,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     private lateinit var recorder: RecordAudioHandle
     private lateinit var postViewModel: PostViewModel
     private var audio: File? = null
-    private val listAudio: MutableList<File> = arrayListOf()
+    private val listAudio: MutableList<AudioRequest> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,17 +124,15 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
-            MotionEvent.ACTION_UP -> saveAudio(listAudio)
-            MotionEvent.ACTION_CANCEL -> saveAudio(listAudio)
+            MotionEvent.ACTION_UP -> saveAudio()
+            MotionEvent.ACTION_CANCEL -> saveAudio()
         }
         return true
     }
 
-    private fun saveAudio(listAudio: MutableList<File>) {
+    private fun saveAudio() {
         buttonSave.isActivated = true
-        audio = recorder.stopRecording()
-        listAudio.add(audio!!)
-        println(listAudio.size)
+        listAudio.add(recorder.stopRecording())
         adapter.setRecords(listAudio)
         recyclerView.adapter = adapter
     }
@@ -151,7 +149,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     }
 
     override fun onItemClick(position: Int){
-        player.initializePlayer(listAudio.get(position).absolutePath)
+        player.initializePlayer(listAudio.get(position).file.absolutePath)
         player.playAudio()
     }
 

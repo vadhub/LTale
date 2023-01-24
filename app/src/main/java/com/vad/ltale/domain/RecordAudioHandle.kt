@@ -2,7 +2,7 @@ package com.vad.ltale.domain
 
 import android.media.MediaRecorder
 import android.os.Environment
-import com.vad.ltale.presentation.FileViewModel
+import com.vad.ltale.data.AudioRequest
 import java.io.File
 import java.io.IOException
 
@@ -41,11 +41,12 @@ class RecordAudioHandle(
         }
     }
 
-    fun stopRecording(): File {
-        chunkTimer.cancelTimer()
+    fun stopRecording(): AudioRequest {
+        val duration = chunkTimer.cancelTimer()
+
         mediaRecorder?.stop()
         mediaRecorder?.release()
 
-        return File(output)
+        return AudioRequest(File(output), duration)
     }
 }
