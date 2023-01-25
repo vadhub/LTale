@@ -68,9 +68,11 @@ class AccountFragment : BaseFragment() {
 
         postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
         postViewModel.posts.observe(viewLifecycleOwner) {
-            adapter.setPosts(it)
-            recyclerView.adapter = adapter
-            countPost.text = "${it.size}"
+            if (!it.isEmpty()) {
+                adapter.setPosts(it)
+                recyclerView.adapter = adapter
+                countPost.text = "${it.size}"
+            }
         }
 
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }

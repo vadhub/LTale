@@ -16,7 +16,8 @@ import com.vad.ltale.presentation.FileViewModel
 import java.io.File
 import java.sql.Date
 
-class PostAdapter(private val load: FileViewModel) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
+class PostAdapter(private val load: FileViewModel) :
+    RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
     private var posts: List<Post> = emptyList()
 
@@ -30,13 +31,19 @@ class PostAdapter(private val load: FileViewModel) : RecyclerView.Adapter<PostAd
         MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false))
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
-        load.getImage(posts.get(position).image.id, holder.itemView.context, holder.imageViewPost)
+        posts.get(position).image?.let {
+            load.getImage(
+                it.id,
+                holder.itemView.context,
+                holder.imageViewPost
+            )
+        }
 
         holder.bind(
             posts.get(position).date,
             posts.get(position).audio
         )
+
     }
 
     override fun getItemCount() = posts.size

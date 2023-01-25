@@ -4,5 +4,5 @@ import java.sql.Date
 
 
 data class Post(
-    val image: Image, val date: Date, val audio: MutableList<Audio>
+    val image: Image?, val date: Date, val audio: MutableList<Audio>
     )

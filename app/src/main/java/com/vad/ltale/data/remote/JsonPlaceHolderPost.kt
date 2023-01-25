@@ -30,5 +30,5 @@ interface JsonPlaceHolderPost {
         @Part("userId") userId: RequestBody,
         @Part("dateCreated") dateCreated: RequestBody,
         @Part("dateChanged") dateChanged: RequestBody
-    ) : Response<PostResponse>
+    ) : Response<PostResponse?>
 }
