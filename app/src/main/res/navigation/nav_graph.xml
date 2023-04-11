@@ -12,6 +12,8 @@
         tools:layout="@layout/fragment_account" >
         <action
             android:id="@+id/action_accountFragment_to_recordFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"
             app:destination="@id/recordFragment" />
     </fragment>
     <fragment
