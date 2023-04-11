@@ -15,11 +15,16 @@ import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.CheckEmptyText
 import com.vad.ltale.domain.HandleResponse
+import com.vad.ltale.domain.SaveConfiguration
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 
 class LoginFragment : BaseFragment(), HandleResponse {
+
+    private lateinit var configuration: SaveConfiguration
+    private lateinit var username: TextInputEditText
+    private lateinit var password: TextInputEditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,15 +34,17 @@ class LoginFragment : BaseFragment(), HandleResponse {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        configuration = SaveConfiguration(thisContext)
+
         val buttonLogin: Button = view.findViewById(R.id.loginButton)
-        val username = view.findViewById(R.id.usernameLoginEditText) as TextInputEditText
-        val password = view.findViewById(R.id.passwordLoginEditText) as TextInputEditText
+        username = view.findViewById(R.id.usernameLoginEditText) as TextInputEditText
+        password = view.findViewById(R.id.passwordLoginEditText) as TextInputEditText
 
         username.setText("anton")
         password.setText("1234")
 
         val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
-
         val viewModel: UserViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonLogin.setOnClickListener {
@@ -53,7 +60,8 @@ class LoginFragment : BaseFragment(), HandleResponse {
     }
 
     override fun success() {
-
+        configuration.saveLogin(username.text.toString())
+        configuration.savePass(password.text.toString())
         findNavController().navigate(R.id.accountFragment)
     }
 
