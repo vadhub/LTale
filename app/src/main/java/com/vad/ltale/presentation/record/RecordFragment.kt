@@ -7,11 +7,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
+import android.util.Log
+import android.view.*
 import android.view.View.OnTouchListener
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -72,6 +70,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
             postViewModel = ViewModelProvider(this, factory).get(PostViewModel::class.java)
             chunkTimer = ChunkTimer(1000 * 60)
             recorder = RecordAudioHandle(chunkTimer)
+            chunkTimer.setTimerHandler(this)
         }
     }
 
@@ -79,6 +78,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_record, container, false)
     }
 
@@ -89,7 +89,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
         var selectedImage: Intent? = null
 
-        chunkTimer.setTimerHandler(this)
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
         actionButton = view.findViewById(R.id.recordFloatingButton)
         actionButton.setOnTouchListener(this)
@@ -109,6 +108,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
 
         buttonSave.setOnClickListener {
             if (audio != null) {
+                Log.d("##bustsave", "save")
                 postViewModel.savePost(listAudioRequest, File(FileUtil.getPath(selectedImage!!.data, context)) , mainViewModel.getUserDetails().userId)
                 findNavController().popBackStack()
             }
@@ -119,6 +119,18 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
             resultLauncher.launch(intent)
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_navigation, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.done) {
+            findNavController().navigate(R.id.action_to_accountFragment)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
