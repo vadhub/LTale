@@ -25,7 +25,7 @@
     <fragment
         android:id="@+id/recordFragment"
         android:name="com.vad.ltale.presentation.record.RecordFragment"
-        android:label="fragment_record"
+        android:label="Record"
         tools:layout="@layout/fragment_record" >
         <action
             android:id="@+id/action_to_accountFragment"

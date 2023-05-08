@@ -12,9 +12,10 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.sql.Date
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
-    var posts: MutableLiveData<List<Post>> = MutableLiveData()
+    var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
 
     fun getPostsByUserId(userId: Int) = viewModelScope.launch {
         posts.postValue(postRepository.getPostByUserId(userId))
@@ -43,12 +44,11 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "$userId")
 
         val requestDateCreated: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${Date(System.currentTimeMillis())}")
 
         val requestDateChanged: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${Date(System.currentTimeMillis())}")
 
-
-        postRepository.postPost(listAudio, listDuration, imageBody, requestUserId, requestDateCreated, requestDateChanged)
+        postRepository.sendPost(listAudio, listDuration, imageBody, requestUserId, requestDateCreated, requestDateChanged)
     }
 }

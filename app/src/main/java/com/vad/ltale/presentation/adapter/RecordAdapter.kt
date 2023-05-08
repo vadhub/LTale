@@ -21,7 +21,7 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
     private var clickListener: RecyclerOnClickListener? = null
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setRecords(audios: MutableList<Audio>) {
+    fun setRecords(audios: List<Audio>) {
         this.audio = audios
         notifyDataSetChanged()
     }

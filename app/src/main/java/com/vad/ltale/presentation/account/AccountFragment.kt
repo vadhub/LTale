@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,7 +69,9 @@ class AccountFragment : BaseFragment() {
 
         postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
         postViewModel.posts.observe(viewLifecycleOwner) {
-            if (!it.isEmpty()) {
+            Log.d("##account", "-------------------------")
+            if (it.isNotEmpty()) {
+                Log.d("##account", "${it}-------------------------")
                 adapter.setPosts(it)
                 recyclerView.adapter = adapter
                 countPost.text = "${it.size}"

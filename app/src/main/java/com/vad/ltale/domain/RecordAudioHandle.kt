@@ -15,6 +15,10 @@ class RecordAudioHandle(
     private val file =  File(Environment.getExternalStorageDirectory().absolutePath, "ltale/audio")
 
     init {
+        initMediaRecorder()
+    }
+
+    private fun initMediaRecorder() {
         if (!file.exists()) {
             file.mkdirs()
         }
@@ -30,6 +34,9 @@ class RecordAudioHandle(
     }
 
     fun startRecording() {
+        if (mediaRecorder == null) {
+            initMediaRecorder()
+        }
         try {
             chunkTimer.startTimer()
             mediaRecorder?.prepare()
@@ -46,6 +53,7 @@ class RecordAudioHandle(
 
         mediaRecorder?.stop()
         mediaRecorder?.release()
+        mediaRecorder = null
 
         return AudioRequest(File(output), duration)
     }

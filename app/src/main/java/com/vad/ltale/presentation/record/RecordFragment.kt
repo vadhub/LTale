@@ -10,10 +10,10 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,14 +36,13 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer
     private lateinit var actionButton: FloatingActionButton
-    private lateinit var buttonSave: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecordAdapter
+    private var selectedImage: Intent? = null
     private val player by lazy { PlayAudioHandle() }
 
     private lateinit var recorder: RecordAudioHandle
     private lateinit var postViewModel: PostViewModel
-    private var audio: File? = null
     private val listAudioRequest: MutableList<AudioRequest> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,7 +86,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
 
         val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
-        var selectedImage: Intent? = null
 
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
         actionButton = view.findViewById(R.id.recordFloatingButton)
@@ -96,23 +94,14 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = RecordAdapter()
 
-        buttonSave = view.findViewById(R.id.saveButton) as Button
-        buttonSave.isActivated = false
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                 selectedImage = it.data!!
-                image.setImageURI(selectedImage!!.data)
+                image.setImageURI(selectedImage?.data)
             }
         }
 
-        buttonSave.setOnClickListener {
-            if (audio != null) {
-                Log.d("##bustsave", "save")
-                postViewModel.savePost(listAudioRequest, File(FileUtil.getPath(selectedImage!!.data, context)) , mainViewModel.getUserDetails().userId)
-                findNavController().popBackStack()
-            }
-        }
 
         imageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
@@ -127,6 +116,16 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.done) {
+            if (listAudioRequest.isNotEmpty()) {
+                var file: File? = null
+                Log.d("##bustsave", "save")
+                if (selectedImage != null) {
+                    file = File(FileUtil.getPath(selectedImage?.data, context))
+                }
+                postViewModel.savePost(listAudioRequest, file, mainViewModel.getUserDetails().userId)
+            } else {
+                Toast.makeText(thisContext, "Record audio", Toast.LENGTH_SHORT).show()
+            }
             findNavController().navigate(R.id.action_to_accountFragment)
             return true
         }
@@ -144,8 +143,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     }
 
     private fun saveAudio() {
-        buttonSave.isActivated = true
-        listAudioRequest.add(recorder.stopRecording())
+        val audio: AudioRequest = recorder.stopRecording()
+        listAudioRequest.add(audio)
         val listAudio = listAudioRequest.map { la -> Audio(duration = la.duration) }.toMutableList()
         adapter.setRecords(listAudio)
         recyclerView.adapter = adapter

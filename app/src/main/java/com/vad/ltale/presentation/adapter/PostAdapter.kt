@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
 import com.vad.ltale.data.Post
+import com.vad.ltale.data.PostResponse
 import com.vad.ltale.presentation.FileViewModel
 import java.io.File
 import java.sql.Date
@@ -19,10 +20,10 @@ import java.sql.Date
 class PostAdapter(private val load: FileViewModel) :
     RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
-    private var posts: List<Post> = emptyList()
+    private var posts: List<PostResponse> = emptyList()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setPosts(posts: List<Post>) {
+    fun setPosts(posts: List<PostResponse>) {
         this.posts = posts
         notifyDataSetChanged()
     }
@@ -40,8 +41,8 @@ class PostAdapter(private val load: FileViewModel) :
         }
 
         holder.bind(
-            posts.get(position).date,
-            posts.get(position).audio
+            posts[position].dateCreated,
+            posts[position].listAudio
         )
 
     }
@@ -53,8 +54,8 @@ class PostAdapter(private val load: FileViewModel) :
         val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
 
-        fun bind(date: Date, audios: MutableList<Audio>) {
-            textViewDate.text = "$date"
+        fun bind(date: String, audios: List<Audio>) {
+            textViewDate.text = date
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             val adapter = RecordAdapter()
             adapter.setRecords(audios)
