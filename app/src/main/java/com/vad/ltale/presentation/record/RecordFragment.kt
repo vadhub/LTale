@@ -22,19 +22,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
 import com.vad.ltale.data.AudioRequest
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.*
-import com.vad.ltale.domain.audiohandle.PlayAudioHandle
-import com.vad.ltale.domain.audiohandle.RecordAudioHandle
+import com.vad.ltale.domain.audiohandle.PlayHandler
+import com.vad.ltale.domain.audiohandle.Player
+import com.vad.ltale.domain.audiohandle.Recorder
 import com.vad.ltale.domain.timehandle.ChunkTimer
 import com.vad.ltale.domain.timehandle.TimerHandler
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.RecordAdapter
 import com.vad.ltale.presentation.adapter.RecyclerOnClickListener
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOnClickListener {
 
@@ -44,22 +47,22 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecordAdapter
     private var selectedImage: Intent? = null
-    private val player by lazy { PlayAudioHandle() }
-
-    private lateinit var recorder: RecordAudioHandle
+    private lateinit var playHandler: PlayHandler
+    private lateinit var listAudio: List<Audio>
+    private lateinit var recorder: Recorder
     private lateinit var postViewModel: PostViewModel
     private val listAudioRequest: MutableList<AudioRequest> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (ContextCompat.checkSelfPermission(
-                requireContext(),
+                thisContext,
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                requireContext(),
+                thisContext,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                requireContext(),
+                thisContext,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -73,7 +76,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
             val factory = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
             postViewModel = ViewModelProvider(this, factory).get(PostViewModel::class.java)
             chunkTimer = ChunkTimer(1000 * 60)
-            recorder = RecordAudioHandle(chunkTimer)
+            recorder = Recorder(chunkTimer)
             chunkTimer.setTimerHandler(this)
         }
     }
@@ -97,7 +100,9 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         actionButton.setOnTouchListener(this)
         recyclerView = view.findViewById(R.id.audioRecyclerRecord)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = RecordAdapter()
+        adapter = RecordAdapter(this)
+
+        playHandler = PlayHandler(Player(), recyclerView)
 
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -106,7 +111,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
                 image.setImageURI(selectedImage?.data)
             }
         }
-
 
         imageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
@@ -137,6 +141,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         return super.onOptionsItemSelected(item)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 
         when (event?.action) {
@@ -150,25 +155,25 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     private fun saveAudio() {
         val audio: AudioRequest = recorder.stopRecording()
         listAudioRequest.add(audio)
-        val listAudio = listAudioRequest.map { la -> Audio(duration = la.duration) }.toMutableList()
+        listAudio = listAudioRequest.map { la -> Audio(duration = la.duration) }.toMutableList()
         adapter.setRecords(listAudio)
         recyclerView.adapter = adapter
     }
 
-    @SuppressLint("SetTextI18n")
     override fun showTime(time: Long) {
-        val minutes = time / 1000 / 60
-        val seconds = time / 1000 % 60
-        timeRecordTextView.text = "$minutes:$seconds"
+        val mTime = String.format("%02d :%02d",
+            TimeUnit.MILLISECONDS.toMinutes(time),
+            TimeUnit.MILLISECONDS.toSeconds(time) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)))
+        timeRecordTextView.text = mTime
     }
 
     override fun finishTime() {
         timeRecordTextView.text = "end"
     }
 
-    override fun onItemClick(position: Int){
-        player.initializePlayer(listAudioRequest.get(position).file.absolutePath)
-        player.playAudio()
+    override fun onItemClick(position: Int, playButton: ShapeableImageView){
+        playHandler.handle(position, playButton, listAudio.get(position).uri)
     }
 
 }

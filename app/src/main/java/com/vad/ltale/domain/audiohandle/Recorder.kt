@@ -8,7 +8,7 @@ import java.io.File
 import java.io.IOException
 
 
-class RecordAudioHandle(
+class Recorder(
     private val chunkTimer: ChunkTimer
 ) {
     private var output: String = ""

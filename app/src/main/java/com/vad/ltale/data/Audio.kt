@@ -14,5 +14,8 @@ data class Audio(
 
     @SerializedName("duration")
     @Expose
-    val duration: Long
-    )
+    val duration: Long,
+
+    var isPlay: Boolean = false
+
+)

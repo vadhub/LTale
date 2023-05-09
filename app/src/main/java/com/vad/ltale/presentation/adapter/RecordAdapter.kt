@@ -12,10 +12,9 @@ import com.vad.ltale.R
 import com.vad.ltale.data.Audio
 
 
-class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
+class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapter<RecordAdapter.RecordViewHolder>() {
 
     private var audio: List<Audio> = emptyList()
-    private var clickListener: RecyclerOnClickListener? = null
 
     @SuppressLint("NotifyDataSetChanged")
     fun setRecords(audios: List<Audio>) {
@@ -30,8 +29,11 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
         holder.bind(duration = audio.get(position).duration)
-        holder.playButton.setOnClickListener {
-            clickListener?.onItemClick(position)
+
+        holder.also { h ->
+            h.playButton.setOnClickListener {
+                clickListener.onItemClick(position, h.playButton)
+            }
         }
     }
 
@@ -39,7 +41,7 @@ class RecordAdapter : Adapter<RecordAdapter.RecordViewHolder>() {
 
     class RecordViewHolder(item: View) : ViewHolder(item) {
         private val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
-        val playButton: ShapeableImageView = item.findViewById(R.id.handleAudioImageButton)
+        val playButton: ShapeableImageView = item.findViewById(R.id.playButton)
 
         @SuppressLint("SetTextI18n")
         fun bind(duration: Long) {
