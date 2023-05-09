@@ -1,4 +1,4 @@
-package com.vad.ltale.domain
+package com.vad.ltale.data.local
 
 import android.content.Context
 import android.content.SharedPreferences

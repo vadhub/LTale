@@ -1,4 +1,4 @@
-package com.vad.ltale.domain
+package com.vad.ltale.domain.audiohandle
 
 import android.media.MediaPlayer
 

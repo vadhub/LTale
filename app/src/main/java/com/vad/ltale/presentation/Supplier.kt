@@ -1,4 +1,4 @@
-package com.vad.ltale.domain
+package com.vad.ltale.presentation
 
 interface Supplier<T> {
     fun get(): T

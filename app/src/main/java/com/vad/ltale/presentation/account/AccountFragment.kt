@@ -26,6 +26,8 @@ import java.io.File
 
 class AccountFragment : BaseFragment() {
 
+    private lateinit var postViewModel: PostViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,7 +48,7 @@ class AccountFragment : BaseFragment() {
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
         val factoryMessage = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
-        val postViewModel = ViewModelProvider(this, factoryMessage).get(PostViewModel::class.java)
+        postViewModel = ViewModelProvider(this, factoryMessage).get(PostViewModel::class.java)
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data != null) {
@@ -67,7 +69,7 @@ class AccountFragment : BaseFragment() {
 
         val adapter = PostAdapter(load)
 
-        postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
+
         postViewModel.posts.observe(viewLifecycleOwner) {
             Log.d("##account", "-------------------------")
             if (it.isNotEmpty()) {
@@ -79,5 +81,10 @@ class AccountFragment : BaseFragment() {
         }
 
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
     }
 }

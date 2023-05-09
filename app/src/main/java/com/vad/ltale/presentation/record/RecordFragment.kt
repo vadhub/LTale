@@ -27,8 +27,13 @@ import com.vad.ltale.data.Audio
 import com.vad.ltale.data.AudioRequest
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.*
+import com.vad.ltale.domain.audiohandle.PlayAudioHandle
+import com.vad.ltale.domain.audiohandle.RecordAudioHandle
+import com.vad.ltale.domain.timehandle.ChunkTimer
+import com.vad.ltale.domain.timehandle.TimerHandler
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.RecordAdapter
+import com.vad.ltale.presentation.adapter.RecyclerOnClickListener
 import java.io.File
 
 class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOnClickListener {

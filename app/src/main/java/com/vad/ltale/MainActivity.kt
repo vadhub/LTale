@@ -1,7 +1,6 @@
 package com.vad.ltale
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,14 +11,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView
 import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.domain.HandleResponse
-import com.vad.ltale.domain.SaveConfiguration
-import com.vad.ltale.domain.Supplier
+import com.vad.ltale.data.local.SaveConfiguration
+import com.vad.ltale.presentation.Supplier
+import com.vad.ltale.presentation.HandleResponse
 import com.vad.ltale.presentation.MainViewModel
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory

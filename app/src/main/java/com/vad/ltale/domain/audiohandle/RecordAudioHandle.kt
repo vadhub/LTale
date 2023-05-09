@@ -1,8 +1,9 @@
-package com.vad.ltale.domain
+package com.vad.ltale.domain.audiohandle
 
 import android.media.MediaRecorder
 import android.os.Environment
 import com.vad.ltale.data.AudioRequest
+import com.vad.ltale.domain.timehandle.ChunkTimer
 import java.io.File
 import java.io.IOException
 

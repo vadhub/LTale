@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.User
 import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.domain.HandleResponse
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val userRepository: UserRepository, private val handleResponse: HandleResponse) : ViewModel() {
