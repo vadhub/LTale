@@ -6,21 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
+import java.util.concurrent.TimeUnit
 
 
 class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapter<RecordAdapter.RecordViewHolder>() {
 
     private var audio: List<Audio> = emptyList()
+    private lateinit var parentRecyclerView: RecyclerView
 
     @SuppressLint("NotifyDataSetChanged")
     fun setRecords(audios: List<Audio>) {
         this.audio = audios
         notifyDataSetChanged()
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+
+        this.parentRecyclerView = recyclerView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordViewHolder =
@@ -33,7 +42,7 @@ class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapte
 
         holder.also { h ->
             h.playButton.setOnClickListener {
-                clickListener.onItemClick(position, h.playButton, h.seekBar)
+                clickListener.onItemClick(position, audio.get(position).uri, h.playButton, h.seekBar, parentRecyclerView)
             }
         }
     }
@@ -47,9 +56,11 @@ class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapte
 
         @SuppressLint("SetTextI18n")
         fun bind(duration: Long) {
-            val minutes = duration / 1000 / 60
-            val seconds = duration / 1000 % 60
-            timeTextView.text = "$minutes:$seconds"
+            val mTime = String.format("%02d :%02d",
+                TimeUnit.MILLISECONDS.toMinutes(duration),
+                TimeUnit.MILLISECONDS.toSeconds(duration) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)))
+            timeTextView.text = mTime
         }
     }
 

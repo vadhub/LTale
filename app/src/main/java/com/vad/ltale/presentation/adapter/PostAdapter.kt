@@ -11,13 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
-import com.vad.ltale.data.Post
 import com.vad.ltale.data.PostResponse
 import com.vad.ltale.presentation.FileViewModel
-import java.io.File
-import java.sql.Date
 
-class PostAdapter(private val load: FileViewModel) :
+class PostAdapter(private val load: FileViewModel, private val onClickListener: RecyclerOnClickListener) :
     RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
     private var posts: List<PostResponse> = emptyList()
@@ -29,10 +26,10 @@ class PostAdapter(private val load: FileViewModel) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false))
+        MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false), onClickListener)
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        posts.get(position).image?.let {
+        posts.get(position).image.let {
             load.getImage(
                 it.id,
                 holder.itemView.context,
@@ -49,7 +46,7 @@ class PostAdapter(private val load: FileViewModel) :
 
     override fun getItemCount() = posts.size
 
-    class MyViewHolder(itemView: View) : ViewHolder(itemView) {
+    class MyViewHolder(itemView: View, private val onClickListener: RecyclerOnClickListener) : ViewHolder(itemView) {
         private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
         val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
@@ -57,7 +54,7 @@ class PostAdapter(private val load: FileViewModel) :
         fun bind(date: String, audios: List<Audio>) {
             textViewDate.text = date
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
-            val adapter = RecordAdapter()
+            val adapter = RecordAdapter(onClickListener)
             adapter.setRecords(audios)
             recyclerViewAudio.adapter = adapter
         }

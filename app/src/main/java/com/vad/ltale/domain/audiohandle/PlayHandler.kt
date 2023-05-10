@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 
-class PlayHandler(private val player: Player, private val recyclerView: RecyclerView) {
+class PlayHandler(private val player: Player) {
 
     private lateinit var handler: Handler
     private var oldPosition = -1
@@ -19,7 +19,7 @@ class PlayHandler(private val player: Player, private val recyclerView: Recycler
         playButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
 
-    fun handle(position: Int, playButton: ShapeableImageView, uri: String, seekBar: SeekBar) {
+    fun handle(position: Int, playButton: ShapeableImageView, uri: String, seekBar: SeekBar, recyclerView: RecyclerView) {
         handler = Handler(Looper.getMainLooper())
 
         if (oldPosition != -1 && oldPosition != position) {

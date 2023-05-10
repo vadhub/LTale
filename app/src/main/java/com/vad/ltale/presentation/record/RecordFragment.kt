@@ -103,7 +103,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = RecordAdapter(this)
 
-        playHandler = PlayHandler(Player(), recyclerView)
+        playHandler = PlayHandler(Player())
 
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -173,8 +173,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         timeRecordTextView.text = "end"
     }
 
-    override fun onItemClick(position: Int, playButton: ShapeableImageView, seekBar: SeekBar){
-        playHandler.handle(position, playButton, listAudio.get(position).uri, seekBar)
+    override fun onItemClick(position: Int, uri: String, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView){
+        playHandler.handle(position, playButton, uri, seekBar, parentRecyclerView)
     }
 
 }

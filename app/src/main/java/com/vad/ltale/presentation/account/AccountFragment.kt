@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
@@ -16,17 +17,22 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.FileUtil
+import com.vad.ltale.domain.audiohandle.PlayHandler
+import com.vad.ltale.domain.audiohandle.Player
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.PostAdapter
+import com.vad.ltale.presentation.adapter.RecyclerOnClickListener
 import java.io.File
 
 
-class AccountFragment : BaseFragment() {
+class AccountFragment : BaseFragment(), RecyclerOnClickListener {
 
     private lateinit var postViewModel: PostViewModel
+    private lateinit var playHandler: PlayHandler
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,8 +73,7 @@ class AccountFragment : BaseFragment() {
 
         username.text = mainViewModel.getUserDetails().username
 
-        val adapter = PostAdapter(load)
-
+        val adapter = PostAdapter(load, this)
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             Log.d("##account", "-------------------------")
@@ -80,11 +85,17 @@ class AccountFragment : BaseFragment() {
             }
         }
 
+        playHandler = PlayHandler(Player())
+
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
 
     override fun onResume() {
         super.onResume()
         postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
+    }
+
+    override fun onItemClick(position: Int, uri: String, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView) {
+        playHandler.handle(position, playButton, uri, seekBar, parentRecyclerView)
     }
 }

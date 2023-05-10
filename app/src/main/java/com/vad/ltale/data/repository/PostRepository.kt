@@ -1,6 +1,5 @@
 package com.vad.ltale.data.repository
 
-import com.vad.ltale.data.Post
 import com.vad.ltale.data.PostResponse
 import com.vad.ltale.data.remote.RemoteInstance
 import okhttp3.MultipartBody
