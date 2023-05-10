@@ -5,7 +5,7 @@ import android.util.Log
 
 class Player() {
 
-    private lateinit var mp: MediaPlayer
+    lateinit var mp: MediaPlayer
     var isPlay = false
 
     fun play(uri: String) {

@@ -16,7 +16,7 @@
         android:layout_height="45dp"/>
 
     <SeekBar
-        android:id="@+id/lengthSoundSeekBar"
+        android:id="@+id/seekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
