@@ -155,8 +155,9 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
 
     private fun saveAudio() {
         val audio: AudioRequest = recorder.stopRecording()
+        Log.d("##record", "play ${audio.file}")
         listAudioRequest.add(audio)
-        listAudio = listAudioRequest.map { la -> Audio(duration = la.duration) }.toMutableList()
+        listAudio = listAudioRequest.map { la -> Audio(uri = audio.file.absolutePath, duration = la.duration) }.toMutableList()
         adapter.setRecords(listAudio)
         recyclerView.adapter = adapter
     }

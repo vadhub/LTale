@@ -9,13 +9,19 @@ class Player() {
     var isPlay = false
 
     fun play(uri: String) {
-        mp = MediaPlayer().also {
-            it.setDataSource(uri)
-            it.start()
-            isPlay = it.isPlaying
+
+        if (uri.isEmpty()) {
+            Log.d("##Player", "uri empty")
+            return
         }
 
-        Log.d("##Player", "play")
+        mp = MediaPlayer()
+        mp.setDataSource(uri)
+        mp.prepare()
+        mp.start()
+        isPlay = mp.isPlaying
+
+        Log.d("##Player", "play $isPlay $uri")
     }
 
     fun stop() {
