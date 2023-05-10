@@ -1,20 +1,21 @@
 package com.vad.ltale.presentation
 
 import android.content.Context
+import android.os.Environment
 import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.exoplayer2.source.smoothstreaming.R
 import com.vad.ltale.data.remote.RemoteInstance
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 
 class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
@@ -54,6 +55,30 @@ class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
             .error(com.vad.ltale.R.drawable.ic_launcher_foreground)
             .into(imageView)
         }
+    }
+
+    fun getAudioById(id: Long) = viewModelScope.launch {
+        val inputStream: InputStream? = remoteInstance.apiUpload().downloadAudio(id).body()?.byteStream()
+        val path = Environment.getExternalStorageDirectory()
+        val file = File(path, "ok121")
+
+        try {
+            val fileOutputStream = FileOutputStream(file)
+
+            val buffer = ByteArray(1024) // or other buffer size
+
+            var read: Int
+
+            while (inputStream!!.read(buffer).also { read = it } != -1) {
+                fileOutputStream.write(buffer, 0, read)
+            }
+
+            fileOutputStream.flush()
+            Log.d("##444", "control")
+        } catch (e: java.lang.Exception) {
+            e.stackTrace
+        }
+
     }
 
 }

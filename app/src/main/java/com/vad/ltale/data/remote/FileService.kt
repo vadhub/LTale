@@ -33,11 +33,10 @@ interface FileService {
         @Part("userId") userId: RequestBody
     )
 
-    @GET("/files/search")
-    suspend fun downloadFile(
-        @Query("user") userId: String,
-        @Query("directory") directory: String,
-        @Query("filename") fileName: String
+    @GET("/api-v1/files/audio/search")
+    @Streaming
+    suspend fun downloadAudio(
+        @Query("id") id: Long,
     ) : Response<ResponseBody>
 
 }

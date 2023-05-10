@@ -53,6 +53,8 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
         val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
+        load.getAudioById(40)
+
         val factoryMessage = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
         postViewModel = ViewModelProvider(this, factoryMessage).get(PostViewModel::class.java)
 
