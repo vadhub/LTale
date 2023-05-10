@@ -12,6 +12,7 @@ import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -172,8 +173,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         timeRecordTextView.text = "end"
     }
 
-    override fun onItemClick(position: Int, playButton: ShapeableImageView){
-        playHandler.handle(position, playButton, listAudio.get(position).uri)
+    override fun onItemClick(position: Int, playButton: ShapeableImageView, seekBar: SeekBar){
+        playHandler.handle(position, playButton, listAudio.get(position).uri, seekBar)
     }
 
 }

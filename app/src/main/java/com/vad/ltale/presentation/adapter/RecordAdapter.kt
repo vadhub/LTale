@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -32,7 +33,7 @@ class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapte
 
         holder.also { h ->
             h.playButton.setOnClickListener {
-                clickListener.onItemClick(position, h.playButton)
+                clickListener.onItemClick(position, h.playButton, h.seekBar)
             }
         }
     }
@@ -42,6 +43,7 @@ class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapte
     class RecordViewHolder(item: View) : ViewHolder(item) {
         private val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
         val playButton: ShapeableImageView = item.findViewById(R.id.playButton)
+        val seekBar: SeekBar = item.findViewById(R.id.seekBar)
 
         @SuppressLint("SetTextI18n")
         fun bind(duration: Long) {
