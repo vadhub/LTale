@@ -22,6 +22,7 @@ class PlayHandler(private val player: Player) {
     fun handle(position: Int, playButton: ShapeableImageView, uri: String, seekBar: SeekBar, recyclerView: RecyclerView) {
         handler = Handler(Looper.getMainLooper())
 
+        Log.d("##r", "onItemClick: $uri")
         if (oldPosition != -1 && oldPosition != position) {
             val button = recyclerView.findViewHolderForAdapterPosition(oldPosition)?.itemView?.findViewById<ShapeableImageView>(R.id.playButton)
             val tempSeekBar = recyclerView.findViewHolderForAdapterPosition(oldPosition)?.itemView?.findViewById<SeekBar>(R.id.seekBar)

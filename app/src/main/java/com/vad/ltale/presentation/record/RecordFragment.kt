@@ -174,8 +174,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         timeRecordTextView.text = "end"
     }
 
-    override fun onItemClick(position: Int, uri: String, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView){
-        playHandler.handle(position, playButton, uri, seekBar, parentRecyclerView)
+    override fun onItemClick(position: Int, audio: Audio, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView){
+        playHandler.handle(position, playButton, audio.uri, seekBar, parentRecyclerView)
     }
 
 }

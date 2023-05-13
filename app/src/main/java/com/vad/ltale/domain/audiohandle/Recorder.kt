@@ -1,6 +1,5 @@
 package com.vad.ltale.domain.audiohandle
 
-import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.Environment
 import com.vad.ltale.data.AudioRequest

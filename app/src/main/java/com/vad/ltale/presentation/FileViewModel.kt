@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vad.ltale.data.Audio
 import com.vad.ltale.data.remote.RemoteInstance
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -20,8 +21,7 @@ import java.io.InputStream
 
 class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
 
-    val fileResponseBody: MutableLiveData<ResponseBody> = MutableLiveData()
-    var file = File("")
+    val uriAudio: MutableLiveData<String> = MutableLiveData()
 
     fun uploadIcon(icon: File, userId: Int) = viewModelScope.launch {
 
@@ -57,10 +57,10 @@ class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
         }
     }
 
-    fun getAudioById(id: Long) = viewModelScope.launch {
-        val inputStream: InputStream? = remoteInstance.apiUpload().downloadAudio(id).body()?.byteStream()
-        val path = Environment.getExternalStorageDirectory()
-        val file = File(path, "ok121")
+    fun getAudioById(audio: Audio) = viewModelScope.launch {
+        val inputStream: InputStream? = remoteInstance.apiUpload().downloadAudio(audio.id).body()?.byteStream()
+
+        val file = File(Environment.getExternalStorageDirectory().absolutePath+File.separator+"ltale/audio"+File.separator+audio.uri)
 
         try {
             val fileOutputStream = FileOutputStream(file)
@@ -72,6 +72,8 @@ class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
             while (inputStream!!.read(buffer).also { read = it } != -1) {
                 fileOutputStream.write(buffer, 0, read)
             }
+
+            uriAudio.postValue(file.absolutePath)
 
             fileOutputStream.flush()
             Log.d("##444", "control")

@@ -2,10 +2,17 @@ package com.vad.ltale.domain.audiohandle
 
 import android.media.MediaPlayer
 import android.util.Log
+import com.vad.ltale.data.Audio
+import com.vad.ltale.presentation.FileViewModel
 
 class Player() {
 
-    lateinit var mp: MediaPlayer
+    var mp: MediaPlayer
+
+    init {
+        mp = MediaPlayer()
+    }
+
     var isPlay = false
 
     fun play(uri: String) {

@@ -3,7 +3,6 @@ package com.vad.ltale.presentation.account
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
+import com.vad.ltale.data.Audio
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.FileUtil
 import com.vad.ltale.domain.audiohandle.PlayHandler
@@ -34,6 +34,7 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
 
     private lateinit var postViewModel: PostViewModel
     private lateinit var playHandler: PlayHandler
+    private lateinit var load: FileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +53,7 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         val countPost: TextView = view.findViewById(R.id.countPosts)
 
         val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
-        val load: FileViewModel = ViewModelProvider(this, factory).get(FileViewModel::class.java)
+        load = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
         val factoryMessage = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
         postViewModel = ViewModelProvider(this, factoryMessage).get(PostViewModel::class.java)
@@ -96,7 +97,8 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
     }
 
-    override fun onItemClick(position: Int, uri: String, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView) {
-        playHandler.handle(position, playButton, uri, seekBar, parentRecyclerView)
+    override fun onItemClick(position: Int, audio: Audio, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView) {
+        load.getAudioById(audio)
+        playHandler.handle(position, playButton, load.uriAudio.value ?: "", seekBar, parentRecyclerView)
     }
 }

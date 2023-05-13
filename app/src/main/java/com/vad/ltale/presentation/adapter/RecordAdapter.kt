@@ -42,7 +42,7 @@ class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapte
 
         holder.also { h ->
             h.playButton.setOnClickListener {
-                clickListener.onItemClick(position, audio.get(position).uri, h.playButton, h.seekBar, parentRecyclerView)
+                clickListener.onItemClick(position, audio.get(position), h.playButton, h.seekBar, parentRecyclerView)
             }
         }
     }
