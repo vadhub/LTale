@@ -29,12 +29,11 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
         MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false), onClickListener)
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        posts.get(position).image.let {
-            load.getImage(
-                it.id,
-                holder.itemView.context,
-                holder.imageViewPost
-            )
+
+        val image = posts.get(position).image
+        
+        if (image != null) {
+            load.getImage(image.id, holder.itemView.context, holder.imageViewPost)
         }
 
         holder.bind(
