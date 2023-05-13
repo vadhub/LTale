@@ -51,7 +51,7 @@ class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
     }
 
     fun getImage(imageId: Int, context: Context?, imageView: ImageView) = viewModelScope.launch {
-        context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/search?imageId=$imageId")
+        context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/image/search?id=$imageId")
             .error(com.vad.ltale.R.drawable.ic_launcher_foreground)
             .into(imageView)
         }
