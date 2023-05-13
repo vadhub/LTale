@@ -17,6 +17,7 @@ import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.sql.Date
 
 
 class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
@@ -32,10 +33,10 @@ class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
             MultipartBody.Part.createFormData("file", icon.name, requestIcon)
 
         val requestDateCreated: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${Date(System.currentTimeMillis())}")
 
         val requestDateChanged: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${System.currentTimeMillis()}")
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${Date(System.currentTimeMillis())}")
 
         val requestUserId: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "$userId")
@@ -44,7 +45,7 @@ class FileViewModel(private val remoteInstance: RemoteInstance) : ViewModel() {
     }
 
     fun getIcon(userId: Int, context: Context?, imageView: ImageView) = viewModelScope.launch {
-        context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/search/icon?userId=$userId")
+        context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/icon/search?userId=$userId")
             .error(com.vad.ltale.R.drawable.ic_launcher_foreground)
             .into(imageView)
         }

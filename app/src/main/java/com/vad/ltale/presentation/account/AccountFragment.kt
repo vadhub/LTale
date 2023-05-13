@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,15 +39,17 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d("##acc", "onCreateView: ")
         return inflater.inflate(R.layout.fragment_account, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("##acc", "onViewCreated: ")
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
-        val imageIcon: ImageView = view.findViewById(R.id.imageIcon)
+        val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIcon)
         val username: TextView = view.findViewById(R.id.usernameTextView)
         val countPost: TextView = view.findViewById(R.id.countPosts)
 
@@ -83,7 +84,7 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
                 Log.d("##account", "${it}-------------------------")
                 adapter.setPosts(it)
                 recyclerView.adapter = adapter
-                countPost.text = "${it.size}"
+                countPost.text = "posts: ${it.size}"
             }
         }
 
@@ -95,6 +96,7 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
     override fun onResume() {
         super.onResume()
         postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
+        Log.d("##acc", "onResume: ")
     }
 
     override fun onItemClick(position: Int, audio: Audio, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView) {
