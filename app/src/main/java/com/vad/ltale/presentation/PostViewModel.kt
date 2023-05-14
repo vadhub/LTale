@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.AudioRequest
-import com.vad.ltale.data.Post
 import com.vad.ltale.data.PostResponse
 import com.vad.ltale.data.repository.PostRepository
 import kotlinx.coroutines.launch
