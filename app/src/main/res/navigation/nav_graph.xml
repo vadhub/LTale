@@ -8,12 +8,10 @@
     <fragment
         android:id="@+id/accountFragment"
         android:name="com.vad.ltale.presentation.account.AccountFragment"
-        android:label="fragment_account"
+        android:label=""
         tools:layout="@layout/fragment_account" >
         <action
             android:id="@+id/action_accountFragment_to_recordFragment"
-            app:popUpTo="@+id/nav_graph"
-            app:popUpToInclusive="true"
             app:destination="@id/recordFragment" />
     </fragment>
     <fragment
@@ -21,6 +19,12 @@
         android:name="com.vad.ltale.presentation.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_accountFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"
+            app:destination="@id/accountFragment" />
     </fragment>
     <fragment
         android:id="@+id/recordFragment"
@@ -39,5 +43,11 @@
         <action
             android:id="@+id/action_registrationFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_registrationFragment_to_accountFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/registrationFragment"
+            app:popUpToInclusive="true"
+            app:destination="@id/accountFragment" />
     </fragment>
 </navigation>

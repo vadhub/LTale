@@ -25,7 +25,7 @@ import com.vad.ltale.presentation.UserViewModelFactory
 class MainActivity : AppCompatActivity(), Supplier<MainViewModel>, HandleResponse {
 
     private lateinit var navController: NavController
-    private lateinit var appBarConfiguration : AppBarConfiguration
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +36,8 @@ class MainActivity : AppCompatActivity(), Supplier<MainViewModel>, HandleRespons
         setSupportActionBar(toolbar)
 
         val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
-        val viewModel: UserViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
+        val viewModel: UserViewModel =
+            ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         val configuration = SaveConfiguration(this)
         val navHostFragment =
@@ -44,21 +45,26 @@ class MainActivity : AppCompatActivity(), Supplier<MainViewModel>, HandleRespons
 
         navController = navHostFragment.navController
 
-        appBarConfiguration = AppBarConfiguration(navController.graph)
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.accountFragment))
+
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
         if (configuration.getFirstStart()) {
             configuration.saveFirstStart(true)
-            setupActionBarWithNavController(navController)
         } else {
-            if (configuration.getLogin() == "") {
-                setupActionBarWithNavController(navController)
-            } else {
-                viewModel.getUserByUsername(configuration.getLogin())
-                viewModel.userDetails.observe(this) {
-                    println(it)
-                    mainViewModel.setUserDetails(User(it.userId ,configuration.getLogin(), "", configuration.getPass()))
-                    mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
-                }
+            viewModel.getUserByUsername(configuration.getLogin())
+            viewModel.userDetails.observe(this) {
+                println(it)
+                mainViewModel.setUserDetails(
+                    User(
+                        it.userId,
+                        configuration.getLogin(),
+                        "",
+                        configuration.getPass()
+                    )
+                )
+                mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
+
             }
         }
     }
@@ -78,7 +84,7 @@ class MainActivity : AppCompatActivity(), Supplier<MainViewModel>, HandleRespons
     }
 
     override fun success() {
-        navController.navigate(R.id.accountFragment)
+        navController.navigate(R.id.action_registrationFragment_to_accountFragment)
     }
 
 }
