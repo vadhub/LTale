@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.sql.Date
 
 @Entity(tableName = "audio_table")
 data class Audio(
@@ -21,5 +22,8 @@ data class Audio(
     @SerializedName("duration")
     @Expose
     @ColumnInfo(name = "duration")
-    val duration: Long
+    val duration: Long,
+
+    @ColumnInfo(name = "date")
+    val date: Date
 )
