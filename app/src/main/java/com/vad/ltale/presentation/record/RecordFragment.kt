@@ -38,6 +38,7 @@ import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.RecordAdapter
 import com.vad.ltale.presentation.adapter.RecyclerOnClickListener
 import java.io.File
+import java.sql.Date
 import java.util.concurrent.TimeUnit
 
 class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOnClickListener {
@@ -157,7 +158,11 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         val audio: AudioRequest = recorder.stopRecording()
         Log.d("##record", "play ${audio.file}")
         listAudioRequest.add(audio)
-        listAudio = listAudioRequest.map { la -> Audio(uri = audio.file.absolutePath, duration = la.duration) }.toMutableList()
+        listAudio = listAudioRequest.map { la -> Audio(
+            uri = audio.file.absolutePath,
+            duration = la.duration,
+            date = Date(System.currentTimeMillis())
+        ) }.toMutableList()
         adapter.setRecords(listAudio)
         recyclerView.adapter = adapter
     }

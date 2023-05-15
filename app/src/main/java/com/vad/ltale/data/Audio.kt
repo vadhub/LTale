@@ -11,7 +11,7 @@ import java.sql.Date
 data class Audio(
     @SerializedName("id")
     @Expose
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long = -1,
 
     @SerializedName("uri")
