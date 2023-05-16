@@ -17,8 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
+import com.vad.ltale.App
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
+import com.vad.ltale.data.local.AppDatabase
+import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.FileUtil
 import com.vad.ltale.domain.audiohandle.PlayHandler
@@ -53,7 +56,7 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         val username: TextView = view.findViewById(R.id.usernameTextView)
         val countPost: TextView = view.findViewById(R.id.countPosts)
 
-        val factory = LoadViewModelFactory(mainViewModel.getRetrofit())
+        val factory = LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit()))
         load = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
         val factoryMessage = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
