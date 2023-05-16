@@ -56,7 +56,7 @@ class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapte
 
         @SuppressLint("SetTextI18n")
         fun bind(duration: Long) {
-            val mTime = String.format("%02d :%02d",
+            val mTime = String.format("%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(duration),
                 TimeUnit.MILLISECONDS.toSeconds(duration) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)))

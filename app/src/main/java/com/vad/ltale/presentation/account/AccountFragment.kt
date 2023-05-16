@@ -20,7 +20,6 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.App
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
-import com.vad.ltale.data.local.AppDatabase
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.FileUtil
@@ -103,7 +102,7 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
     }
 
     override fun onItemClick(position: Int, audio: Audio, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView) {
-        load.getAudioById(audio)
+        load.getUriByAudio(audio)
         playHandler.handle(position, playButton, load.uriAudio.value ?: "", seekBar, parentRecyclerView)
     }
 }

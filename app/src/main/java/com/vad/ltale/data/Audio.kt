@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.sql.Date
+import java.sql.Timestamp
 
 @Entity(tableName = "audio_table")
 data class Audio(
@@ -24,6 +25,8 @@ data class Audio(
     @ColumnInfo(name = "duration")
     val duration: Long,
 
+    @SerializedName("dateCreate")
+    @Expose
     @ColumnInfo(name = "date")
-    val date: Date
+    val date: String
 )

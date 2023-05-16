@@ -19,13 +19,21 @@ class FileRepository(private val audioDao: AudioDao, private val remoteInstance:
 
     suspend fun getUriByAudio(audio: Audio): String {
 
-        if (audioDao.getById(audio.id).value != null) {
-            return audioDao.getById(audio.id).value?.uri ?: ""
-        }
+        Log.d("##1", "getUriByAudio: " + audioDao.getById(audio.id))
 
-        val inputStream: InputStream? = remoteInstance.apiUpload().downloadAudio(audio.id).body()?.byteStream()
+        Log.d("##fileRepos", "getUriByAudio: "+ audio.uri +" " +audio.id + " " + audio.date +" " + audio.duration)
 
         val file = File(Environment.getExternalStorageDirectory().absolutePath+File.separator+"ltale/audio"+File.separator+audio.uri)
+        if (audioDao.getById(audio.id) == null) {
+            downloadAudio(file, audio)
+            insert(audio)
+        }
+
+        return file.absolutePath
+    }
+
+    private suspend fun downloadAudio(file: File, audio: Audio) {
+        val inputStream: InputStream? = remoteInstance.apiUpload().downloadAudio(audio.id).body()?.byteStream()
 
         try {
             val fileOutputStream = FileOutputStream(file)
@@ -38,17 +46,15 @@ class FileRepository(private val audioDao: AudioDao, private val remoteInstance:
                 fileOutputStream.write(buffer, 0, read)
             }
 
-            insert(audio)
             fileOutputStream.flush()
             Log.d("##444", "control")
         } catch (e: java.lang.Exception) {
             e.stackTrace
         }
-
-        return file.absolutePath
     }
 
     suspend fun insert(audio: Audio) {
+        Log.d("##fileRepos", "insert")
         audioDao.insert(audio)
     }
 

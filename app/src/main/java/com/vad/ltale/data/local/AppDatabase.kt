@@ -7,8 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.vad.ltale.data.Audio
 
-@Database(entities = [Audio::class], version = 1, exportSchema = false)
-@TypeConverters(DateConvertor::class)
+@Database(entities = [Audio::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun audioDao(): AudioDao
@@ -24,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }

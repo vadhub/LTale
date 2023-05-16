@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 interface AudioDao {
 
     @Query("SELECT * FROM audio_table")
-    fun getAllAudio(): Flow<List<Audio>>
+    suspend fun getAllAudio(): List<Audio>
 
-    @Query("SELECT * FROM audio_table WHERE id=:id")
-    fun getById(id: Long): LiveData<Audio>
+    @Query("SELECT * FROM audio_table WHERE id =:id")
+    suspend fun getById(id: Long): Audio?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(audio: Audio)
