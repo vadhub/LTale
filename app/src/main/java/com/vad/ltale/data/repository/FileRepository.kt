@@ -19,11 +19,8 @@ class FileRepository(private val audioDao: AudioDao, private val remoteInstance:
 
     suspend fun getUriByAudio(audio: Audio): String {
 
-        Log.d("##1", "getUriByAudio: " + audioDao.getById(audio.id))
-
-        Log.d("##fileRepos", "getUriByAudio: "+ audio.uri +" " +audio.id + " " + audio.date +" " + audio.duration)
-
         val file = File(Environment.getExternalStorageDirectory().absolutePath+File.separator+"ltale/audio"+File.separator+audio.uri)
+
         if (audioDao.getById(audio.id) == null) {
             downloadAudio(file, audio)
             insert(audio)

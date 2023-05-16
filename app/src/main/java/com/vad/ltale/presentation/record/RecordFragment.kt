@@ -176,7 +176,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     }
 
     override fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar, progressBar: ProgressBar){
-        playHandler.handle(position, audio, audioAdapter, seekBar)
+        playHandler.handle(position, audio, "", audioAdapter, seekBar)
     }
 
 }

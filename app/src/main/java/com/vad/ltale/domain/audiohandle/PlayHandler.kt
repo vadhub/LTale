@@ -19,7 +19,7 @@ class PlayHandler(private val player: Player) {
     private var audioTemp = Audio(-1, "", 0, "", false)
     private var oldAdapter: AudioAdapter? = null
 
-    fun handle(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar) {
+    fun handle(position: Int, audio: Audio, localUri: String, audioAdapter: AudioAdapter, seekBar: SeekBar) {
         handler = Handler(Looper.getMainLooper())
         if (oldPosition != -1 && oldPosition != position) {
             oldAdapter?.notifyItemChanged(oldPosition, audioTemp)
@@ -29,7 +29,7 @@ class PlayHandler(private val player: Player) {
             player.stop()
             audioAdapter.notifyItemChanged(position, audio)
         } else {
-            player.play(audio.uri)
+            player.play(localUri)
 
             ran = Runnable {
                 seekBar.progress = ((player.mp.currentPosition*100)/player.mp.duration).toInt()

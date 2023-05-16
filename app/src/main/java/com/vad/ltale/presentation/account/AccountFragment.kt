@@ -107,8 +107,7 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         progressBar.visibility = View.VISIBLE
         load.getUriByAudio(audio).isCompleted
         load.uriAudio.observe(viewLifecycleOwner) {
-            audio.uri = it
-            playHandler.handle(position, audio, audioAdapter, seekBar)
+            playHandler.handle(position, audio, it, audioAdapter, seekBar)
             progressBar.visibility = View.GONE
         }
     }
