@@ -61,7 +61,6 @@ class AudioAdapter(private var clickListener: RecyclerOnClickListener) : Adapter
 
         fun reset() {
             playButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-            seekBar.progress = 0
         }
 
         @SuppressLint("SetTextI18n")

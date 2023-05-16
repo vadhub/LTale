@@ -39,6 +39,15 @@ class PlayHandler(private val player: Player) {
             handler.post(ran)
         }
 
+        player.mp.addListener(object : androidx.media3.common.Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == androidx.media3.common.Player.STATE_ENDED) {
+                    audioAdapter.notifyItemChanged(position, audio.also { it.isPlay = false })
+                    seekBar.progress = 0
+                }
+            }
+        })
+
         oldAdapter = audioAdapter
 
         oldPosition = position
