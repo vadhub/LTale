@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -102,8 +103,13 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         Log.d("##acc", "onResume: ")
     }
 
-    override fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar) {
-        load.getUriByAudio(audio)
-        playHandler.handle(position, audio, audioAdapter, seekBar)
+    override fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar, progressBar: ProgressBar) {
+        progressBar.visibility = View.VISIBLE
+        load.getUriByAudio(audio).isCompleted
+        load.uriAudio.observe(viewLifecycleOwner) {
+            audio.uri = it
+            playHandler.handle(position, audio, audioAdapter, seekBar)
+            progressBar.visibility = View.GONE
+        }
     }
 }

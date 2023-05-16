@@ -19,7 +19,7 @@ data class Audio(
     @SerializedName("uri")
     @Expose
     @ColumnInfo(name = "uri")
-    val uri: String = "",
+    var uri: String = "",
 
     @SerializedName("duration")
     @Expose

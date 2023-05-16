@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -44,7 +45,7 @@ class AudioAdapter(private var clickListener: RecyclerOnClickListener) : Adapter
 
         holder.also { h ->
             h.playButton.setOnClickListener {
-                clickListener.onItemClick(position, audio.get(position), this, h.seekBar)
+                clickListener.onItemClick(position, audio.get(position), this, h.seekBar, h.progressBar)
                 h.playButton.setImageResource(R.drawable.ic_baseline_pause_24)
             }
         }
@@ -56,6 +57,7 @@ class AudioAdapter(private var clickListener: RecyclerOnClickListener) : Adapter
         private val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
         val playButton: ShapeableImageView = item.findViewById(R.id.playButton)
         val seekBar: SeekBar = item.findViewById(R.id.seekBar)
+        val progressBar: ProgressBar = item.findViewById(R.id.loadingProgressBar)
 
         fun reset() {
             playButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)

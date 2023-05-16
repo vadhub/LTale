@@ -10,11 +10,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.SeekBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -168,7 +164,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     }
 
     override fun showTime(time: Long) {
-        val mTime = String.format("%02d :%02d",
+        val mTime = String.format("%02d:%02d",
             TimeUnit.MILLISECONDS.toMinutes(time),
             TimeUnit.MILLISECONDS.toSeconds(time) -
                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)))
@@ -179,7 +175,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         timeRecordTextView.text = "end"
     }
 
-    override fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar){
+    override fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar, progressBar: ProgressBar){
         playHandler.handle(position, audio, audioAdapter, seekBar)
     }
 

@@ -18,7 +18,7 @@ class Player(context: Context) {
             return
         }
 
-        mp.setMediaItem(MediaItem.fromUri("/storage/emulated/0/ltale/audio/76295173dfc6318ce2fc03ba5b2a9387"))
+        mp.setMediaItem(MediaItem.fromUri(uri))
         mp.prepare()
         mp.play()
         isPlay = mp.isPlaying

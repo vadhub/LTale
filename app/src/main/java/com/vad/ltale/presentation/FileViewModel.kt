@@ -1,6 +1,7 @@
 package com.vad.ltale.presentation
 
 import android.content.Context
+import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

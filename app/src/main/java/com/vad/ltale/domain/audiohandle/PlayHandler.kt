@@ -17,12 +17,12 @@ class PlayHandler(private val player: Player) {
 
     private var oldPosition = -1
     private var audioTemp = Audio(-1, "", 0, "", false)
-    private lateinit var oldAdapter: AudioAdapter
+    private var oldAdapter: AudioAdapter? = null
 
     fun handle(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar) {
         handler = Handler(Looper.getMainLooper())
-        if (oldPosition != -1) {
-            oldAdapter.notifyItemChanged(oldPosition, audioTemp)
+        if (oldPosition != -1 && oldPosition != position) {
+            oldAdapter?.notifyItemChanged(oldPosition, audioTemp)
         }
 
         if (player.isPlay) {
@@ -39,8 +39,10 @@ class PlayHandler(private val player: Player) {
             handler.post(ran)
         }
 
-        oldPosition = position
         oldAdapter = audioAdapter
+
+        oldPosition = position
+
         audioTemp = audio.also { it.isPlay = false }
     }
 }
