@@ -2,6 +2,7 @@ package com.vad.ltale.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
@@ -28,5 +29,10 @@ data class Audio(
     @SerializedName("dateCreate")
     @Expose
     @ColumnInfo(name = "date")
-    val date: String
-)
+    val date: String,
+
+    @Ignore
+    var isPlay: Boolean = false
+) {
+    constructor(id: Long, uri: String, duration: Long, date: String) : this(id, uri, duration, date, false)
+}

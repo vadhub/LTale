@@ -1,17 +1,13 @@
 package com.vad.ltale.domain.audiohandle
 
-import android.media.MediaPlayer
+import android.content.Context
 import android.util.Log
-import com.vad.ltale.data.Audio
-import com.vad.ltale.presentation.FileViewModel
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
 
-class Player() {
+class Player(context: Context) {
 
-    var mp: MediaPlayer
-
-    init {
-        mp = MediaPlayer()
-    }
+    var mp: ExoPlayer = ExoPlayer.Builder(context).build()
 
     var isPlay = false
 
@@ -22,19 +18,18 @@ class Player() {
             return
         }
 
-        mp = MediaPlayer()
-        mp.setDataSource(uri)
+        mp.setMediaItem(MediaItem.fromUri("/storage/emulated/0/ltale/audio/76295173dfc6318ce2fc03ba5b2a9387"))
         mp.prepare()
-        mp.start()
+        mp.play()
         isPlay = mp.isPlaying
 
         Log.d("##Player", "play $isPlay $uri")
     }
 
     fun stop() {
-        mp.reset()
+        mp.pause()
         isPlay = mp.isPlaying
-        Log.d("##Player", "stop")
+        Log.d("##Player", "stop"+isPlay)
     }
 
     fun cancel() {

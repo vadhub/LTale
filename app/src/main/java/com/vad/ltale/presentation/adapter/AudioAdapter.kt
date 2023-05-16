@@ -15,7 +15,7 @@ import com.vad.ltale.data.Audio
 import java.util.concurrent.TimeUnit
 
 
-class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapter<RecordAdapter.RecordViewHolder>() {
+class AudioAdapter(private var clickListener: RecyclerOnClickListener) : Adapter<AudioAdapter.RecordViewHolder>() {
 
     private var audio: List<Audio> = emptyList()
     private lateinit var parentRecyclerView: RecyclerView
@@ -40,9 +40,12 @@ class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapte
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
         holder.bind(duration = audio.get(position).duration)
 
+        if (!audio.get(0).isPlay) holder.reset()
+
         holder.also { h ->
             h.playButton.setOnClickListener {
-                clickListener.onItemClick(position, audio.get(position), h.playButton, h.seekBar, parentRecyclerView)
+                clickListener.onItemClick(position, audio.get(position), this, h.seekBar)
+                h.playButton.setImageResource(R.drawable.ic_baseline_pause_24)
             }
         }
     }
@@ -53,6 +56,11 @@ class RecordAdapter(private var clickListener: RecyclerOnClickListener) : Adapte
         private val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
         val playButton: ShapeableImageView = item.findViewById(R.id.playButton)
         val seekBar: SeekBar = item.findViewById(R.id.seekBar)
+
+        fun reset() {
+            playButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+            seekBar.progress = 0
+        }
 
         @SuppressLint("SetTextI18n")
         fun bind(duration: Long) {

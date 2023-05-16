@@ -26,6 +26,7 @@ import com.vad.ltale.domain.FileUtil
 import com.vad.ltale.domain.audiohandle.PlayHandler
 import com.vad.ltale.domain.audiohandle.Player
 import com.vad.ltale.presentation.*
+import com.vad.ltale.presentation.adapter.AudioAdapter
 import com.vad.ltale.presentation.adapter.PostAdapter
 import com.vad.ltale.presentation.adapter.RecyclerOnClickListener
 import java.io.File
@@ -90,7 +91,7 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
             }
         }
 
-        playHandler = PlayHandler(Player())
+        playHandler = PlayHandler(Player(thisContext))
 
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
@@ -101,8 +102,8 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         Log.d("##acc", "onResume: ")
     }
 
-    override fun onItemClick(position: Int, audio: Audio, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView) {
+    override fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar) {
         load.getUriByAudio(audio)
-        playHandler.handle(position, playButton, load.uriAudio.value ?: "", seekBar, parentRecyclerView)
+        playHandler.handle(position, audio, audioAdapter, seekBar)
     }
 }

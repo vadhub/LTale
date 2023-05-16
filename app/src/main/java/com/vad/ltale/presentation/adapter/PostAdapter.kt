@@ -53,7 +53,7 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
         fun bind(date: String, audios: List<Audio>) {
             textViewDate.text = date
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
-            val adapter = RecordAdapter(onClickListener)
+            val adapter = AudioAdapter(onClickListener)
             adapter.setRecords(audios)
             recyclerViewAudio.adapter = adapter
         }

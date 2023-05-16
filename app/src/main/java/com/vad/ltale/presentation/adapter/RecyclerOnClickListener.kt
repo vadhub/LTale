@@ -6,5 +6,5 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.data.Audio
 
 interface RecyclerOnClickListener {
-    fun onItemClick(position: Int, audio: Audio, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView)
+    fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar)
 }

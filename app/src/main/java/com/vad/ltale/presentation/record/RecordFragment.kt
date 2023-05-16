@@ -35,10 +35,9 @@ import com.vad.ltale.domain.audiohandle.Recorder
 import com.vad.ltale.domain.timehandle.ChunkTimer
 import com.vad.ltale.domain.timehandle.TimerHandler
 import com.vad.ltale.presentation.*
-import com.vad.ltale.presentation.adapter.RecordAdapter
+import com.vad.ltale.presentation.adapter.AudioAdapter
 import com.vad.ltale.presentation.adapter.RecyclerOnClickListener
 import java.io.File
-import java.sql.Date
 import java.sql.Timestamp
 import java.util.concurrent.TimeUnit
 
@@ -48,7 +47,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     private lateinit var chunkTimer: ChunkTimer
     private lateinit var actionButton: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: RecordAdapter
+    private lateinit var adapter: AudioAdapter
     private var selectedImage: Intent? = null
     private lateinit var playHandler: PlayHandler
     private lateinit var listAudio: List<Audio>
@@ -103,9 +102,9 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         actionButton.setOnTouchListener(this)
         recyclerView = view.findViewById(R.id.audioRecyclerRecord)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = RecordAdapter(this)
+        adapter = AudioAdapter(this)
 
-        playHandler = PlayHandler(Player())
+        playHandler = PlayHandler(Player(thisContext))
 
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -180,8 +179,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         timeRecordTextView.text = "end"
     }
 
-    override fun onItemClick(position: Int, audio: Audio, playButton: ShapeableImageView, seekBar: SeekBar, parentRecyclerView: RecyclerView){
-        playHandler.handle(position, playButton, audio.uri, seekBar, parentRecyclerView)
+    override fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar){
+        playHandler.handle(position, audio, audioAdapter, seekBar)
     }
 
 }

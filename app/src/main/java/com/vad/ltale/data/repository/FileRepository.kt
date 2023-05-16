@@ -29,7 +29,9 @@ class FileRepository(private val audioDao: AudioDao, private val remoteInstance:
             insert(audio)
         }
 
-        return file.absolutePath
+        Log.d("##1", "getUriByAudio: " + file.absolutePath)
+
+        return file.path
     }
 
     private suspend fun downloadAudio(file: File, audio: Audio) {

@@ -7,49 +7,40 @@ import android.widget.SeekBar
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
+import com.vad.ltale.data.Audio
+import com.vad.ltale.presentation.adapter.AudioAdapter
 
 class PlayHandler(private val player: Player) {
 
     private lateinit var handler: Handler
-    private var oldPosition = -1
     private lateinit var ran: Runnable
 
-    private fun stop(playButton: ShapeableImageView) {
-        player.stop()
-        playButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-    }
+    private var oldPosition = -1
+    private var audioTemp = Audio(-1, "", 0, "", false)
+    private lateinit var oldAdapter: AudioAdapter
 
-    fun handle(position: Int, playButton: ShapeableImageView, uri: String, seekBar: SeekBar, recyclerView: RecyclerView) {
+    fun handle(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar) {
         handler = Handler(Looper.getMainLooper())
-
-        Log.d("##r", "onItemClick: $uri")
-        if (oldPosition != -1 && oldPosition != position) {
-            val button = recyclerView.findViewHolderForAdapterPosition(oldPosition)?.itemView?.findViewById<ShapeableImageView>(R.id.playButton)
-            val tempSeekBar = recyclerView.findViewHolderForAdapterPosition(oldPosition)?.itemView?.findViewById<SeekBar>(R.id.seekBar)
-            tempSeekBar?.progress = 0
-            stop(button!!)
-            Log.d("##r", "onItemClick: ")
+        if (oldPosition != -1) {
+            oldAdapter.notifyItemChanged(oldPosition, audioTemp)
         }
-        Log.d("##r", "onItemClick: 2")
 
         if (player.isPlay) {
-            stop(playButton)
-            handler.obtainMessage()
+            player.stop()
+            audioAdapter.notifyItemChanged(position, audio)
         } else {
-            player.play(uri)
-
-            seekBar.max = player.mp.duration
+            player.play(audio.uri)
 
             ran = Runnable {
-                seekBar.progress = player.mp.currentPosition
+                seekBar.progress = ((player.mp.currentPosition*100)/player.mp.duration).toInt()
                 handler.postDelayed(ran, 100)
             }
 
             handler.post(ran)
-
-
-            playButton.setImageResource(R.drawable.ic_baseline_pause_24)
         }
+
         oldPosition = position
+        oldAdapter = audioAdapter
+        audioTemp = audio.also { it.isPlay = false }
     }
 }
