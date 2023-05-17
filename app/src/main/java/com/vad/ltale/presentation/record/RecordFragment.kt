@@ -50,7 +50,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     private lateinit var listAudio: List<Audio>
     private lateinit var recorder: Recorder
     private lateinit var postViewModel: PostViewModel
-    private val listAudioRequest: MutableList<AudioRequest> = arrayListOf()
+    private val listAudioRequest: MutableList<AudioRequest> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,7 +156,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         Log.d("##record", "play ${audio.file}")
         listAudioRequest.add(audio)
         listAudio = listAudioRequest.map { la -> Audio(
-            uri = audio.file.absolutePath,
+            uri = la.file.absolutePath,
             duration = la.duration,
             date = "${Timestamp(System.currentTimeMillis())}"
         ) }.toMutableList()
