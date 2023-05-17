@@ -21,6 +21,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.App
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
+import com.vad.ltale.data.PlayView
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.FileUtil
@@ -94,6 +95,12 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
 
         playHandler = PlayHandler(Player(thisContext))
 
+        load.uriAudio.observe(viewLifecycleOwner) {
+            playHandler.handle(it.first.position, it.second, it.first.audioAdapter, it.first.seekBar)
+            Log.d("!!mv", "onViewCreated: ${it.second}")
+            it.first.progressBar.visibility = View.GONE
+        }
+
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
 
@@ -103,12 +110,8 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         Log.d("##acc", "onResume: ")
     }
 
-    override fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar, progressBar: ProgressBar) {
-        progressBar.visibility = View.VISIBLE
-        load.getUriByAudio(audio).isCompleted
-        load.uriAudio.observe(viewLifecycleOwner) {
-            playHandler.handle(position, audio, it, audioAdapter, seekBar)
-            progressBar.visibility = View.GONE
-        }
+    override fun onItemClick(playView: PlayView) {
+        playView.progressBar.visibility = View.VISIBLE
+        load.getUriByAudio(playView)
     }
 }

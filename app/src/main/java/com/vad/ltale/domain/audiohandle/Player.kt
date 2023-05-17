@@ -9,7 +9,6 @@ class Player(context: Context) {
 
     var mp: ExoPlayer = ExoPlayer.Builder(context).build()
 
-    var isPlay = false
 
     fun play(uri: String) {
 
@@ -20,16 +19,14 @@ class Player(context: Context) {
 
         mp.setMediaItem(MediaItem.fromUri(uri))
         mp.prepare()
-        mp.play()
-        isPlay = mp.isPlaying
+        mp.playWhenReady = true
 
-        Log.d("##Player", "play $isPlay $uri")
+        Log.d("##Player", "play $uri")
     }
 
     fun stop() {
-        mp.pause()
-        isPlay = mp.isPlaying
-        Log.d("##Player", "stop"+isPlay)
+        mp.playWhenReady = false
+        Log.d("##Player", "stop")
     }
 
     fun cancel() {

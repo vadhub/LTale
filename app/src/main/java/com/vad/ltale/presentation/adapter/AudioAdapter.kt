@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
+import com.vad.ltale.data.PlayView
 import java.util.concurrent.TimeUnit
 
 
@@ -45,7 +46,7 @@ class AudioAdapter(private var clickListener: RecyclerOnClickListener) : Adapter
 
         holder.also { h ->
             h.playButton.setOnClickListener {
-                clickListener.onItemClick(position, audio.get(position), this, h.seekBar, h.progressBar)
+                clickListener.onItemClick(PlayView(position, audio.get(position), this, h.seekBar, h.progressBar))
                 h.playButton.setImageResource(R.drawable.ic_baseline_pause_24)
             }
         }
@@ -61,6 +62,7 @@ class AudioAdapter(private var clickListener: RecyclerOnClickListener) : Adapter
 
         fun reset() {
             playButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+            seekBar.progress = 0
         }
 
         @SuppressLint("SetTextI18n")

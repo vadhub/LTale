@@ -23,6 +23,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
 import com.vad.ltale.data.AudioRequest
+import com.vad.ltale.data.PlayView
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.*
 import com.vad.ltale.domain.audiohandle.PlayHandler
@@ -175,8 +176,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
         timeRecordTextView.text = "end"
     }
 
-    override fun onItemClick(position: Int, audio: Audio, audioAdapter: AudioAdapter, seekBar: SeekBar, progressBar: ProgressBar){
-        playHandler.handle(position, audio, "", audioAdapter, seekBar)
+    override fun onItemClick(playView: PlayView){
+        playHandler.handle(playView.position, "", playView.audioAdapter, playView.seekBar)
     }
 
 }
