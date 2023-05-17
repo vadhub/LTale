@@ -3,6 +3,7 @@ package com.vad.ltale.domain.audiohandle
 import android.os.Handler
 import android.os.Looper
 import android.widget.SeekBar
+import com.vad.ltale.data.PlayView
 import com.vad.ltale.presentation.adapter.AudioAdapter
 
 class PlayHandler(private val player: Player) {
@@ -68,6 +69,54 @@ class PlayHandler(private val player: Player) {
 
         oldAdapter = audioAdapter
         oldPosition = position
+
+    }
+
+    fun handlePlayView (
+        playView: PlayView
+    ) {
+
+        handler = Handler(Looper.getMainLooper())
+
+        if (oldPosition != -1 && isPlay) {
+            oldAdapter?.notifyItemChanged(oldPosition)
+        }
+
+        if (playView.audio.uri != uriTemp) {
+            isPlay = false
+            playView.audioAdapter.notifyItemChanged(oldPosition)
+        }
+
+        uriTemp = playView.audio.uri
+
+        if (isPlay) {
+            player.stop()
+            isPlay = false
+            if (oldPosition == playView.position) {
+                playView.audioAdapter.notifyItemChanged(playView.position)
+            }
+        } else {
+            isPlay = true
+            player.play(playView.audio.uri)
+            ran = Runnable {
+                playView.seekBar.progress = ((player.mp.currentPosition*100)/player.mp.duration).toInt()
+                handler.postDelayed(ran, 100)
+            }
+
+            handler.post(ran)
+
+            player.mp.addListener(object : androidx.media3.common.Player.Listener {
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    if (playbackState == androidx.media3.common.Player.STATE_ENDED) {
+                        isPlay = false
+                        playView.audioAdapter.notifyItemChanged(oldPosition)
+                        playView.seekBar.progress = 0
+                    }
+                }
+            })
+        }
+
+        oldPosition = playView.position
 
     }
 }

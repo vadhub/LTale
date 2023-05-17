@@ -177,7 +177,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOn
     }
 
     override fun onItemClick(playView: PlayView){
-        playHandler.handle(playView.position, "", playView.audioAdapter, playView.seekBar)
+        playHandler.handlePlayView(playView)
     }
 
 }
