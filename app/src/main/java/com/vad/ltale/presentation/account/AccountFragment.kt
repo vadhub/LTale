@@ -104,10 +104,10 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
+        Log.d("##acc", "onStart: ")
         postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
-        Log.d("##acc", "onResume: ")
     }
 
     override fun onItemClick(playView: PlayView) {
