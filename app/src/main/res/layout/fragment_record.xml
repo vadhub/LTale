@@ -1,50 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.record.RecordFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="To Record Voce!"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/timeLastTextView"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/timeLastTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="5:00"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            app:layout_constraintBaseline_toBottomOf="@id/textView"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="To Record Voce!"
+                android:textAlignment="center"
+                android:textSize="24sp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/audioRecyclerRecord"
-            android:layout_width="match_parent"
-            tools:listitem="@layout/item_audio"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/timeLastTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5:00"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                />
 
-        <ImageView
-            android:id="@+id/imageViewPostRecord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:elevation="4dp"
+                app:cardCornerRadius="8dp">
 
-    </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/audioRecyclerRecord"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_audio" />
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/imageViewPostRecord"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintDimensionRatio="H,1:1" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/linearLayout"
