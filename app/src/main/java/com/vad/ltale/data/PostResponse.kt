@@ -22,6 +22,14 @@ data class PostResponse(
     @Expose
     val listAudio: List<Audio>,
 
+    @SerializedName("liked")
+    @Expose
+    val isLiked: Boolean,
+
+    @SerializedName("countLike")
+    @Expose
+    val countLike: Int,
+
     @SerializedName("dateCreated")
     @Expose
     val dateCreated: String,

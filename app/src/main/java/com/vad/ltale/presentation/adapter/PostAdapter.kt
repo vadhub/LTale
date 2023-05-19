@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,7 +39,9 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
 
         holder.bind(
             posts[position].dateCreated,
-            posts[position].listAudio
+            posts[position].listAudio,
+            posts[position].countLike,
+            posts[position].isLiked
         )
 
     }
@@ -49,13 +52,21 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
         private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
         val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
+        private val textViewCountLike = itemView.findViewById(R.id.countLikes) as TextView
+        private val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
 
-        fun bind(date: String, audios: List<Audio>) {
+        fun bind(date: String, audios: List<Audio>, countLike: Int, isLiked: Boolean) {
             textViewDate.text = date
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             val adapter = AudioAdapter(onClickListener)
             adapter.setRecords(audios)
             recyclerViewAudio.adapter = adapter
+            textViewCountLike.text = "$countLike"
+
+            if (isLiked) {
+                imageViewLike.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_baseline_favorite_24))
+            }
+
         }
     }
 
