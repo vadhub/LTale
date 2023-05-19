@@ -19,7 +19,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
 import com.vad.ltale.data.AudioRequest
@@ -33,12 +32,12 @@ import com.vad.ltale.domain.timehandle.ChunkTimer
 import com.vad.ltale.domain.timehandle.TimerHandler
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.AudioAdapter
-import com.vad.ltale.presentation.adapter.RecyclerOnClickListener
+import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import java.io.File
 import java.sql.Timestamp
 import java.util.concurrent.TimeUnit
 
-class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, RecyclerOnClickListener {
+class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClickListener {
 
     private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer

@@ -7,10 +7,11 @@ import retrofit2.http.DELETE
 import retrofit2.http.POST
 
 interface LikeService {
+
     @POST("/like")
     suspend fun likePost(@Body like: Like) : Response<Like>
 
     @DELETE("/delete-like")
-    suspend fun deleteLike() : Response<String>
+    suspend fun deleteLike(@Body like: Like) : Response<String>
 
 }

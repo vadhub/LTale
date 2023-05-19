@@ -15,7 +15,7 @@ import com.vad.ltale.data.Audio
 import com.vad.ltale.data.PostResponse
 import com.vad.ltale.presentation.FileViewModel
 
-class PostAdapter(private val load: FileViewModel, private val onClickListener: RecyclerOnClickListener) :
+class PostAdapter(private val load: FileViewModel, private val onClickListener: PlayOnClickListener, private val likeOnClickListener: LikeOnClickListener) :
     RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
     private var posts: List<PostResponse> = emptyList()
@@ -37,6 +37,10 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
             load.getImage(image.id, holder.itemView.context, holder.imageViewPost)
         }
 
+        holder.imageViewLike.setOnClickListener {
+            likeOnClickListener.onLike(posts[position].postId)
+        }
+
         holder.bind(
             posts[position].dateCreated,
             posts[position].listAudio,
@@ -48,12 +52,12 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
 
     override fun getItemCount() = posts.size
 
-    class MyViewHolder(itemView: View, private val onClickListener: RecyclerOnClickListener) : ViewHolder(itemView) {
+    class MyViewHolder(itemView: View, private val onClickListener: PlayOnClickListener) : ViewHolder(itemView) {
         private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
         val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
         private val textViewCountLike = itemView.findViewById(R.id.countLikes) as TextView
-        private val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
+        val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
 
         fun bind(date: String, audios: List<Audio>, countLike: Int, isLiked: Boolean) {
             textViewDate.text = date
@@ -65,6 +69,8 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
 
             if (isLiked) {
                 imageViewLike.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_baseline_favorite_24))
+            } else {
+                imageViewLike.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_outline_favorite_border_24))
             }
 
         }

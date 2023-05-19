@@ -8,8 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
@@ -20,23 +18,25 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.App
 import com.vad.ltale.R
-import com.vad.ltale.data.Audio
+import com.vad.ltale.data.Like
 import com.vad.ltale.data.PlayView
 import com.vad.ltale.data.repository.FileRepository
+import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.FileUtil
 import com.vad.ltale.domain.audiohandle.PlayHandler
 import com.vad.ltale.domain.audiohandle.Player
 import com.vad.ltale.presentation.*
-import com.vad.ltale.presentation.adapter.AudioAdapter
+import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
-import com.vad.ltale.presentation.adapter.RecyclerOnClickListener
+import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import java.io.File
 
 
-class AccountFragment : BaseFragment(), RecyclerOnClickListener {
+class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener {
 
     private lateinit var postViewModel: PostViewModel
+    private lateinit var likeViewModel: LikeViewModel
     private lateinit var playHandler: PlayHandler
     private lateinit var load: FileViewModel
 
@@ -61,8 +61,11 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
         val factory = LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit()))
         load = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
-        val factoryMessage = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
-        postViewModel = ViewModelProvider(this, factoryMessage).get(PostViewModel::class.java)
+        val factoryPost = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
+        postViewModel = ViewModelProvider(this, factoryPost).get(PostViewModel::class.java)
+
+        val factoryLike = LikeViewModelFactory(LikeRepository(mainViewModel.getRetrofit()))
+        likeViewModel = ViewModelProvider(this, factoryLike).get(LikeViewModel::class.java)
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data != null) {
@@ -81,7 +84,7 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
 
         username.text = mainViewModel.getUserDetails().username
 
-        val adapter = PostAdapter(load, this)
+        val adapter = PostAdapter(load, this, this)
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             Log.d("##account", "-------------------------")
@@ -113,5 +116,9 @@ class AccountFragment : BaseFragment(), RecyclerOnClickListener {
     override fun onItemClick(playView: PlayView) {
         playView.progressBar.visibility = View.VISIBLE
         load.getUriByAudio(playView)
+    }
+
+    override fun onLike(idPost: Int) {
+        likeViewModel.addLike(Like(mainViewModel.getUserDetails().userId, idPost))
     }
 }

@@ -17,7 +17,7 @@ import com.vad.ltale.data.PlayView
 import java.util.concurrent.TimeUnit
 
 
-class AudioAdapter(private var clickListener: RecyclerOnClickListener) : Adapter<AudioAdapter.RecordViewHolder>() {
+class AudioAdapter(private var clickListener: PlayOnClickListener) : Adapter<AudioAdapter.RecordViewHolder>() {
 
     private var audio: List<Audio> = emptyList()
     private lateinit var parentRecyclerView: RecyclerView
