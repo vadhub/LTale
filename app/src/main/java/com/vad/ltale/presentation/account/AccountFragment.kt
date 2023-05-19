@@ -119,6 +119,7 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
     }
 
     override fun onLike(idPost: Int) {
+        //todo #1 need udpate like if it already exist
         likeViewModel.addLike(Like(mainViewModel.getUserDetails().userId, idPost))
     }
 }
