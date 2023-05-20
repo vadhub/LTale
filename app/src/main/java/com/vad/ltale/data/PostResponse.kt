@@ -23,11 +23,11 @@ data class PostResponse(
 
     @SerializedName("liked")
     @Expose
-    val isLiked: Boolean,
+    var isLiked: Boolean,
 
     @SerializedName("countLike")
     @Expose
-    val countLike: Int,
+    var countLike: Int,
 
     @SerializedName("dateCreated")
     @Expose

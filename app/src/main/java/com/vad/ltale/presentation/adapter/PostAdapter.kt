@@ -1,6 +1,7 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,47 +33,49 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         val image = posts.get(position).image
+
+        Log.d("", "onBindViewHolder: $position")
+        holder.likeHandle(posts[position].isLiked, posts[position].countLike)
         
         if (image != null) {
             load.getImage(image.id, holder.itemView.context, holder.imageViewPost)
         }
 
         holder.imageViewLike.setOnClickListener {
-            likeOnClickListener.onLike(posts[position].postId)
+            likeOnClickListener.onLike(posts[position], position)
         }
 
         holder.bind(
             posts[position].dateCreated,
-            posts[position].listAudio,
-            posts[position].countLike,
-            posts[position].isLiked
+            posts[position].listAudio
         )
-
     }
 
     override fun getItemCount() = posts.size
 
-    class MyViewHolder(itemView: View, private val onClickListener: PlayOnClickListener) : ViewHolder(itemView) {
+    class MyViewHolder(itemView: View, private val onClickListener: PlayOnClickListener) : ViewHolder(itemView){
         private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
         val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
         private val textViewCountLike = itemView.findViewById(R.id.countLikes) as TextView
         val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
 
-        fun bind(date: String, audios: List<Audio>, countLike: Int, isLiked: Boolean) {
+        fun bind(date: String, audios: List<Audio>) {
             textViewDate.text = date
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             val adapter = AudioAdapter(onClickListener)
             adapter.setRecords(audios)
             recyclerViewAudio.adapter = adapter
-            textViewCountLike.text = "$countLike"
+        }
 
+        fun likeHandle(isLiked: Boolean, countLike: Int) {
+            Log.d("##postAdapter", "likeHandle: $isLiked")
             if (isLiked) {
                 imageViewLike.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_baseline_favorite_24))
             } else {
                 imageViewLike.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_outline_favorite_border_24))
             }
-
+            textViewCountLike.text = "$countLike"
         }
     }
 

@@ -15,9 +15,15 @@ import java.sql.Date
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
+    val post: MutableLiveData<Int> = MutableLiveData()
 
     fun getPostsByUserId(userId: Int) = viewModelScope.launch {
         posts.postValue(postRepository.getPostByUserId(userId))
+    }
+
+    fun getPostById(postId: Int, position: Int) = viewModelScope.launch {
+        postRepository.getPostById(postId)
+        post.postValue(position)
     }
 
     fun savePost(audio: List<AudioRequest>, image: File?, userId: Int) = viewModelScope.launch {

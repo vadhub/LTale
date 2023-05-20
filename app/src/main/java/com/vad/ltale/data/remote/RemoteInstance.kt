@@ -1,6 +1,7 @@
 package com.vad.ltale.data.remote
 
 import android.content.Context
+import com.google.gson.GsonBuilder
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import com.vad.ltale.data.User
@@ -9,6 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
 class RemoteInstance(private val user: User) {
@@ -35,11 +37,14 @@ class RemoteInstance(private val user: User) {
             .addInterceptor(interceptorBody)
             .build()
 
+    private val gson = GsonBuilder().setLenient().create()
+
     fun retrofit(): Retrofit =
         Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client(basicAuthInterceptor(user.username, user.password)))
             .baseUrl("http://10.0.2.2:8080/")
+            .client(client(basicAuthInterceptor(user.username, user.password)))
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
     fun retrofitNoAuth(): Retrofit =
