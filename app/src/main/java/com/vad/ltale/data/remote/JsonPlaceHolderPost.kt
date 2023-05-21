@@ -17,10 +17,10 @@ interface JsonPlaceHolderPost {
     suspend fun getPost(): Response<Main>
 
     @GET("api-v1/posts/{id}")
-    suspend fun getPostById(@Path("id") id: Int): Response<Main>
+    suspend fun getPostById(@Path("id") id: Long): Response<Main>
 
     @GET("api-v1/posts/search/findAllByUserId")
-    suspend fun getPostsByUserId(@Query("userId") userId: Int): Response<Main>
+    suspend fun getPostsByUserId(@Query("userId") userId: Long): Response<Main>
 
     @Multipart
     @POST("api-v1/post/save")

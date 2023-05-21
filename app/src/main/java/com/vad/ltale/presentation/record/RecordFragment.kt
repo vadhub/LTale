@@ -85,13 +85,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
 
             limitViewModel.getLimit(mainViewModel.getUserDetails().userId)
 
-            limitViewModel.limit.observe(viewLifecycleOwner) {
-                limit = it
-                chunkTimer = ChunkTimer(it.time)
-                recorder = Recorder(chunkTimer)
-                chunkTimer.setTimerHandler(this)
-            }
-
         }
     }
 
@@ -115,6 +108,13 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
         recyclerView = view.findViewById(R.id.audioRecyclerRecord)
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = AudioAdapter(this)
+
+        limitViewModel.limit.observe(viewLifecycleOwner) {
+            limit = it
+            chunkTimer = ChunkTimer(it.time)
+            recorder = Recorder(chunkTimer)
+            chunkTimer.setTimerHandler(this)
+        }
 
         playHandler = PlayHandler(Player(thisContext))
 

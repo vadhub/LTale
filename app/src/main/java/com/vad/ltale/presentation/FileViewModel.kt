@@ -28,15 +28,15 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
         uriAudio.postValue(Pair(playView, localUriTemp))
     }
 
-    fun getImage(id: Int, context: Context?, imageViewPost: ImageView) = viewModelScope.launch {
+    fun getImage(id: Long, context: Context?, imageViewPost: ImageView) = viewModelScope.launch {
         fileRepository.getImage(id, context, imageViewPost)
     }
 
-    fun getIcon(userId: Int, context: Context?, imageIcon: ShapeableImageView) = viewModelScope.launch {
+    fun getIcon(userId: Long, context: Context?, imageIcon: ShapeableImageView) = viewModelScope.launch {
         fileRepository.getIcon(userId, context, imageIcon)
     }
 
-    fun uploadIcon(file: File, userId: Int) = viewModelScope.launch {
+    fun uploadIcon(file: File, userId: Long) = viewModelScope.launch {
         fileRepository.uploadIcon(file, userId)
     }
 

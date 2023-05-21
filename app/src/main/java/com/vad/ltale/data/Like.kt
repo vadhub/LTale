@@ -6,9 +6,9 @@ import com.google.gson.annotations.SerializedName
 data class Like(
     @SerializedName("userId")
     @Expose
-    val idUser: Int,
+    val idUser: Long,
 
     @SerializedName("postId")
     @Expose
-    val idPost: Int
+    val idPost: Long
     )

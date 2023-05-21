@@ -9,10 +9,10 @@ class PostRepository(private val retrofitInstance: RemoteInstance) {
     suspend fun getPosts() =
         retrofitInstance.apiPost().getPost().body()?.embedded?.messages ?: emptyList()
 
-    suspend fun getPostById(id: Int) =
+    suspend fun getPostById(id: Long) =
         retrofitInstance.apiPost().getPostById(id).body()?.embedded?.messages ?: emptyList()
 
-    suspend fun getPostByUserId(userId: Int): List<PostResponse> {
+    suspend fun getPostByUserId(userId: Long): List<PostResponse> {
         return retrofitInstance.apiPost().getPostsByUserId(userId).body()?.embedded?.messages ?: emptyList()
     }
 

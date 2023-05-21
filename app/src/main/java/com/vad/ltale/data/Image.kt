@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class Image(
     @SerializedName("idImage")
     @Expose
-    val id: Int,
+    val id: Long,
 
     @SerializedName("imageUri")
     @Expose

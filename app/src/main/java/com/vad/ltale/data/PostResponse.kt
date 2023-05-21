@@ -7,7 +7,7 @@ data class PostResponse(
 
     @SerializedName("id")
     @Expose
-    val postId: Int,
+    val postId: Long,
 
     @SerializedName("image")
     @Expose
@@ -15,7 +15,7 @@ data class PostResponse(
 
     @SerializedName("userId")
     @Expose
-    val userId: Int,
+    val userId: Long,
 
     @SerializedName("audioList")
     @Expose

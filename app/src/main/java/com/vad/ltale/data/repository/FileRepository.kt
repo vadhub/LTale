@@ -57,7 +57,7 @@ class FileRepository(private val audioDao: AudioDao, private val remoteInstance:
         audioDao.insert(audio)
     }
 
-    suspend fun uploadIcon(icon: File, userId: Int) {
+    suspend fun uploadIcon(icon: File, userId: Long) {
 
         val requestIcon: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), icon)
@@ -77,14 +77,14 @@ class FileRepository(private val audioDao: AudioDao, private val remoteInstance:
         remoteInstance.apiUpload().uploadIcon(body, requestDateCreated, requestDateChanged, requestUserId)
     }
 
-    suspend fun getIcon(userId: Int, context: Context?, imageView: ImageView) {
+    suspend fun getIcon(userId: Long, context: Context?, imageView: ImageView) {
         context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/icon/search?userId=$userId")
             .error(com.vad.ltale.R.drawable.ic_launcher_foreground)
             .into(imageView)
         }
     }
 
-    suspend fun getImage(imageId: Int, context: Context?, imageView: ImageView) {
+    suspend fun getImage(imageId: Long, context: Context?, imageView: ImageView) {
         context?.let { remoteInstance.picasso(it).load("http://10.0.2.2:8080/api-v1/files/image/search?id=$imageId")
             .error(com.vad.ltale.R.drawable.ic_launcher_foreground)
             .into(imageView)
