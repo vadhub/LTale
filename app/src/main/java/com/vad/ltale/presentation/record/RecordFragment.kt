@@ -22,7 +22,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
 import com.vad.ltale.data.AudioRequest
+import com.vad.ltale.data.Limit
 import com.vad.ltale.data.PlayView
+import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.domain.*
 import com.vad.ltale.domain.audiohandle.PlayHandler
@@ -34,6 +36,7 @@ import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.AudioAdapter
 import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import java.io.File
+import java.sql.Date
 import java.sql.Timestamp
 import java.util.concurrent.TimeUnit
 
@@ -50,6 +53,9 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
     private lateinit var recorder: Recorder
     private lateinit var postViewModel: PostViewModel
     private val listAudioRequest: MutableList<AudioRequest> = ArrayList()
+    private lateinit var limitViewModel: LimitViewModel
+    private lateinit var limit: Limit
+    private var time: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,9 +79,19 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
         } else {
             val factory = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
             postViewModel = ViewModelProvider(this, factory).get(PostViewModel::class.java)
-            chunkTimer = ChunkTimer(1000 * 60)
-            recorder = Recorder(chunkTimer)
-            chunkTimer.setTimerHandler(this)
+
+            val limitFactory = LimitViewModelFactory(LimitRepository(mainViewModel.getRetrofit()))
+            limitViewModel = ViewModelProvider(this, limitFactory).get(LimitViewModel::class.java)
+
+            limitViewModel.getLimit(mainViewModel.getUserDetails().userId)
+
+            limitViewModel.limit.observe(viewLifecycleOwner) {
+                limit = it
+                chunkTimer = ChunkTimer(it.time)
+                recorder = Recorder(chunkTimer)
+                chunkTimer.setTimerHandler(this)
+            }
+
         }
     }
 
@@ -130,6 +146,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
                     file = File(FileUtil.getPath(selectedImage?.data, context))
                 }
                 postViewModel.savePost(listAudioRequest, file, mainViewModel.getUserDetails().userId)
+                limitViewModel.updateTime(Limit(limit.id, mainViewModel.getUserDetails().userId, time, Date(System.currentTimeMillis())))
             } else {
                 Toast.makeText(thisContext, "Record audio", Toast.LENGTH_SHORT).show()
             }
@@ -164,6 +181,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
     }
 
     override fun showTime(time: Long) {
+        this.time = time
         val mTime = String.format("%02d:%02d",
             TimeUnit.MILLISECONDS.toMinutes(time),
             TimeUnit.MILLISECONDS.toSeconds(time) -

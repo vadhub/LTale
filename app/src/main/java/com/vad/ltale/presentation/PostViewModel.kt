@@ -26,7 +26,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         post.postValue(position)
     }
 
-    fun savePost(audio: List<AudioRequest>, image: File?, userId: Int) = viewModelScope.launch {
+    fun savePost(audio: List<AudioRequest>, image: File?, userId: Long) = viewModelScope.launch {
 
         val listAudio = audio.map{ a ->
                 MultipartBody.Part.createFormData("audio", a.file.name, RequestBody.create("multipart/form-data".toMediaTypeOrNull(), a.file))

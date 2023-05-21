@@ -11,9 +11,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 class RemoteInstance(private val user: User) {
+
+    private val baseUrl = "http://10.0.2.2:8080/"
 
     private val interceptorBody: HttpLoggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -41,7 +44,7 @@ class RemoteInstance(private val user: User) {
 
     fun retrofit(): Retrofit =
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
+            .baseUrl(baseUrl)
             .client(client(basicAuthInterceptor(user.username, user.password)))
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -51,7 +54,7 @@ class RemoteInstance(private val user: User) {
         Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .client(clientNoAuth())
-            .baseUrl("http://10.0.2.2:8080/")
+            .baseUrl(baseUrl)
             .build()
 
     fun picasso(context: Context): Picasso {
@@ -76,4 +79,8 @@ class RemoteInstance(private val user: User) {
 
     fun apiLike(): LikeService =
         retrofit().create(LikeService::class.java)
+
+    fun apiLimit(): LimitService =
+        retrofit().create(LimitService::class.java)
+
 }

@@ -6,6 +6,10 @@ import java.sql.Date
 
 data class Limit(
 
+    @SerializedName("id")
+    @Expose
+    val id: Long,
+
     @SerializedName("userId")
     @Expose
     val userId: Long,

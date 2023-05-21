@@ -7,7 +7,7 @@ data class User(
 
     @SerializedName("id")
     @Expose
-    val userId: Int,
+    val userId: Long,
 
     @SerializedName("username")
     @Expose
