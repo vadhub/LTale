@@ -3,8 +3,10 @@ package com.vad.ltale.domain.audiohandle
 import android.os.Handler
 import android.os.Looper
 import android.widget.SeekBar
+import android.widget.TextView
 import com.vad.ltale.data.PlayView
 import com.vad.ltale.presentation.adapter.AudioAdapter
+import java.util.concurrent.TimeUnit
 
 class PlayHandler(private val player: Player) {
 
@@ -20,7 +22,8 @@ class PlayHandler(private val player: Player) {
         position: Int,
         localUri: String,
         audioAdapter: AudioAdapter,
-        seekBar: SeekBar
+        seekBar: SeekBar,
+        timeTextView: TextView
     ) {
 
         handler = Handler(Looper.getMainLooper())
@@ -51,6 +54,7 @@ class PlayHandler(private val player: Player) {
             player.play(localUri)
             ran = Runnable {
                 seekBar.progress = ((player.mp.currentPosition*100)/player.mp.duration).toInt()
+                timeTextView.text = timeFormat(player.mp.duration - player.mp.currentPosition)
                 handler.postDelayed(ran, 100)
             }
 
@@ -100,6 +104,7 @@ class PlayHandler(private val player: Player) {
             player.play(playView.audio.uri)
             ran = Runnable {
                 playView.seekBar.progress = ((player.mp.currentPosition*100)/player.mp.duration).toInt()
+                playView.timeTextView.text = timeFormat(player.mp.duration - player.mp.currentPosition)
                 handler.postDelayed(ran, 100)
             }
 
@@ -119,4 +124,12 @@ class PlayHandler(private val player: Player) {
         oldPosition = playView.position
 
     }
+
+    fun timeFormat(time: Long) =
+        String.format(
+            "%02d :%02d",
+            TimeUnit.MILLISECONDS.toMinutes(time),
+            TimeUnit.MILLISECONDS.toSeconds(time) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time))
+        )
 }

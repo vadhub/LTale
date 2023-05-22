@@ -115,7 +115,7 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
         playHandler = PlayHandler(Player(thisContext))
 
         load.uriAudio.observe(viewLifecycleOwner) {
-            playHandler.handle(it.first.position, it.second, it.first.audioAdapter, it.first.seekBar)
+            playHandler.handle(it.first.position, it.second, it.first.audioAdapter, it.first.seekBar, it.first.timeTextView)
             Log.d("!!mv", "onViewCreated: ${it.second}")
             it.first.progressBar.visibility = View.GONE
         }

@@ -46,7 +46,7 @@ class AudioAdapter(private var clickListener: PlayOnClickListener) : Adapter<Aud
 
         holder.also { h ->
             h.playButton.setOnClickListener {
-                clickListener.onItemClick(PlayView(position, audio.get(position), this, h.seekBar, h.progressBar))
+                clickListener.onItemClick(PlayView(position, audio.get(position), this, h.seekBar, h.progressBar, h.timeTextView))
                 h.playButton.setImageResource(R.drawable.ic_baseline_pause_24)
             }
         }
@@ -55,7 +55,7 @@ class AudioAdapter(private var clickListener: PlayOnClickListener) : Adapter<Aud
     override fun getItemCount(): Int = audio.size
 
     class RecordViewHolder(item: View) : ViewHolder(item) {
-        private val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
+        val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
         val playButton: ShapeableImageView = item.findViewById(R.id.playButton)
         val seekBar: SeekBar = item.findViewById(R.id.seekBar)
         val progressBar: ProgressBar = item.findViewById(R.id.loadingProgressBar)
