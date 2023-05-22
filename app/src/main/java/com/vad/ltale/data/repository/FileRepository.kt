@@ -65,16 +65,16 @@ class FileRepository(private val audioDao: AudioDao, private val remoteInstance:
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", icon.name, requestIcon)
 
-        val requestDateCreated: RequestBody =
+        val dateCreated: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${Date(System.currentTimeMillis())}")
 
-        val requestDateChanged: RequestBody =
+        val dateChanged: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${Date(System.currentTimeMillis())}")
 
-        val requestUserId: RequestBody =
+        val userIdL: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "$userId")
 
-        remoteInstance.apiUpload().uploadIcon(body, requestDateCreated, requestDateChanged, requestUserId)
+        remoteInstance.apiUpload().uploadIcon(body, dateCreated, dateChanged, userIdL)
     }
 
     suspend fun getIcon(userId: Long, context: Context?, imageView: ImageView) {

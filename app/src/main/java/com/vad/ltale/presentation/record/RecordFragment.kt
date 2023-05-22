@@ -146,7 +146,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
                     file = File(FileUtil.getPath(selectedImage?.data, context))
                 }
                 postViewModel.savePost(listAudioRequest, file, mainViewModel.getUserDetails().userId)
-                limitViewModel.updateTime(Limit(limit.id, mainViewModel.getUserDetails().userId, time, Date(System.currentTimeMillis())))
+                limitViewModel.updateTime(Limit(limit.id, mainViewModel.getUserDetails().userId, time, "${Date(System.currentTimeMillis())}"))
             } else {
                 Toast.makeText(thisContext, "Record audio", Toast.LENGTH_SHORT).show()
             }

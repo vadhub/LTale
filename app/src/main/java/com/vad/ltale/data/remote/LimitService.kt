@@ -14,7 +14,7 @@ interface LimitService {
     @PUT("/api-v1/limits/{id}")
     suspend fun update(@Path("id") id: Long, @Body limit: Limit): Response<Limit>
 
-    @GET("/api-v1/limits/search/limitByUserId")
-    suspend fun getLimit(@Query("userId") userId: Long): Response<Limit>
+    @GET("/api-v1/limit/{userId}")
+    suspend fun getLimit(@Path("userId") userId: Long): Response<Limit>
 
 }

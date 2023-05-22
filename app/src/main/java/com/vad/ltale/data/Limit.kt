@@ -19,5 +19,5 @@ data class Limit(
     val time: Long,
 
     @SerializedName("dateUpdate")
-    val dateUpdate: Date
+    val dateUpdate: String
 )
