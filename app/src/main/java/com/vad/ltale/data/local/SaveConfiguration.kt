@@ -23,7 +23,7 @@ class SaveConfiguration(private val context: Context) {
     fun saveFirstStart(isFirst: Boolean) {
         pref = context.getSharedPreferences("lil_tale_first_run", Context.MODE_PRIVATE)
         val ed: SharedPreferences.Editor = pref.edit()
-        ed.putBoolean("first_run", true)
+        ed.putBoolean("first_run", isFirst)
         ed.apply()
     }
 

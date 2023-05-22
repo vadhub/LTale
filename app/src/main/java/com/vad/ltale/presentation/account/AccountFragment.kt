@@ -7,12 +7,17 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -22,6 +27,7 @@ import com.vad.ltale.R
 import com.vad.ltale.data.Like
 import com.vad.ltale.data.PlayView
 import com.vad.ltale.data.PostResponse
+import com.vad.ltale.data.local.SaveConfiguration
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
@@ -44,17 +50,22 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
     private lateinit var playHandler: PlayHandler
     private lateinit var load: FileViewModel
     private lateinit var adapter: PostAdapter
+    private lateinit var saveConfiguration: SaveConfiguration;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         Log.d("##acc", "onCreateView: ")
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_account, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("##acc", "onViewCreated: ")
+
+        saveConfiguration = SaveConfiguration(thisContext)
+
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
@@ -135,5 +146,20 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
         } else {
             likeViewModel.addLike(like, position, post)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_sign_out, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        if (item.itemId == R.id.sigh_out) {
+            saveConfiguration.saveFirstStart(false)
+            findNavController().navigate(R.id.action_accountFragment_to_registrationFragment)
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

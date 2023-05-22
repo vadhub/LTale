@@ -45,11 +45,11 @@ class MainActivity : AppCompatActivity(), Supplier<MainViewModel>, HandleRespons
 
         navController = navHostFragment.navController
 
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.accountFragment))
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.accountFragment, R.id.registrationFragment))
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        if (configuration.getFirstStart()) {
+        if (!configuration.getFirstStart()) {
             configuration.saveFirstStart(true)
         } else {
             viewModel.getUserByUsername(configuration.getLogin())
