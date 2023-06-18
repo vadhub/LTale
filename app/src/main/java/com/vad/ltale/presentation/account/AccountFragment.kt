@@ -2,7 +2,6 @@ package com.vad.ltale.presentation.account
 
 import android.app.Activity
 import android.content.Intent
-import android.icu.text.Transliterator.Position
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -13,7 +12,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -27,7 +25,6 @@ import com.vad.ltale.R
 import com.vad.ltale.data.Like
 import com.vad.ltale.data.PlayView
 import com.vad.ltale.data.PostResponse
-import com.vad.ltale.data.local.SaveConfiguration
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
@@ -35,11 +32,9 @@ import com.vad.ltale.domain.FileUtil
 import com.vad.ltale.domain.audiohandle.PlayHandler
 import com.vad.ltale.domain.audiohandle.Player
 import com.vad.ltale.presentation.*
-import com.vad.ltale.presentation.adapter.AudioAdapter
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 import com.vad.ltale.presentation.adapter.PlayOnClickListener
-import okhttp3.internal.notify
 import java.io.File
 
 
@@ -112,7 +107,6 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
 
         load.uriAudio.observe(viewLifecycleOwner) {
             playHandler.handle(it.first.position, it.second, it.first.audioAdapter, it.first.seekBar, it.first.timeTextView)
-            Log.d("!!mv", "onViewCreated: ${it.second}")
             it.first.progressBar.visibility = View.GONE
         }
 

@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
 import com.vad.ltale.data.PostResponse
@@ -34,9 +35,11 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
 
         val image = posts.get(position).image
 
-        Log.d("", "onBindViewHolder: $position")
+        Log.d("", "onBindViewHolder: $position ${posts[position].userId}")
         holder.likeHandle(posts[position].isLiked, posts[position].countLike)
-        
+
+        load.getIcon(posts[position].userId, holder.itemView.context, holder.imageIcon)
+
         if (image != null) {
             load.getImage(image.id, holder.itemView.context, holder.imageViewPost)
         }
@@ -59,6 +62,7 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
         private val textViewCountLike = itemView.findViewById(R.id.countLikes) as TextView
         val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
+        val imageIcon = itemView.findViewById(R.id.imageIconPost) as ShapeableImageView
 
         fun bind(date: String, audios: List<Audio>) {
             textViewDate.text = date

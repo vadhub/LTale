@@ -13,7 +13,7 @@ data class PostResponse(
     @Expose
     val image: Image?,
 
-    @SerializedName("userId")
+    @SerializedName("user")
     @Expose
     val userId: Long,
 
