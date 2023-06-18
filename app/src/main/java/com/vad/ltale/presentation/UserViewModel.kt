@@ -30,6 +30,12 @@ class UserViewModel(private val userRepository: UserRepository, private val hand
     }
 
     fun createUser(user: User) = viewModelScope.launch {
-        userRepository.creteUser(user)
+        try {
+            userDetails.postValue(userRepository.creteUser(user))
+            handleResponse.success()
+        } catch (e: Exception) {
+            handleResponse.error()
+        }
+
     }
 }

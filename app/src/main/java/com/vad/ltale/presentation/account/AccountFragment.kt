@@ -50,7 +50,6 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
     private lateinit var playHandler: PlayHandler
     private lateinit var load: FileViewModel
     private lateinit var adapter: PostAdapter
-    private lateinit var saveConfiguration: SaveConfiguration;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +63,6 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("##acc", "onViewCreated: ")
 
-        saveConfiguration = SaveConfiguration(thisContext)
 
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
@@ -103,9 +101,7 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
         adapter = PostAdapter(load, this, this)
 
         postViewModel.posts.observe(viewLifecycleOwner) {
-            Log.d("##account", "-------------------------")
             if (it.isNotEmpty()) {
-                Log.d("##account", "${it}-------------------------")
                 adapter.setPosts(it)
                 recyclerView.adapter = adapter
                 countPost.text = "posts: ${it.size}"
@@ -155,7 +151,7 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if (item.itemId == R.id.sigh_out) {
-            saveConfiguration.saveFirstStart(false)
+            configuration.saveFirstStart(false)
             findNavController().navigate(R.id.action_accountFragment_to_registrationFragment)
             return true
         }

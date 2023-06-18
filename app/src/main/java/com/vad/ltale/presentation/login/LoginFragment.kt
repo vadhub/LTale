@@ -22,7 +22,6 @@ import com.vad.ltale.presentation.UserViewModelFactory
 
 class LoginFragment : BaseFragment(), HandleResponse {
 
-    private lateinit var configuration: SaveConfiguration
     private lateinit var username: TextInputEditText
     private lateinit var password: TextInputEditText
 
@@ -35,8 +34,6 @@ class LoginFragment : BaseFragment(), HandleResponse {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        configuration = SaveConfiguration(thisContext)
-
         val buttonLogin: Button = view.findViewById(R.id.loginButton)
         username = view.findViewById(R.id.usernameLoginEditText) as TextInputEditText
         password = view.findViewById(R.id.passwordLoginEditText) as TextInputEditText
@@ -45,16 +42,22 @@ class LoginFragment : BaseFragment(), HandleResponse {
         password.setText("1234")
 
         val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
-        val viewModel: UserViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
+        val viewModel: UserViewModel =
+            ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         buttonLogin.setOnClickListener {
-            CheckEmptyText.check(username, password) {
-                viewModel.getUserByUsername(username.text.toString())
-                viewModel.userDetails.observe(viewLifecycleOwner) {
-                    println(it)
-                    mainViewModel.setUserDetails(User(it.userId ,username.text.toString().trim(), "", password.text.toString().trim()))
-                    mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
-                }
+            viewModel.getUserByUsername(username.text.toString())
+            viewModel.userDetails.observe(viewLifecycleOwner) {
+                println(it)
+                mainViewModel.setUserDetails(
+                    User(
+                        it.userId,
+                        username.text.toString().trim(),
+                        "",
+                        password.text.toString().trim()
+                    )
+                )
+                mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
             }
         }
     }

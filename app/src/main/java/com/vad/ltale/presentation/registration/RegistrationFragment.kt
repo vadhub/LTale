@@ -39,8 +39,8 @@ class RegistrationFragment : BaseFragment(), HandleResponse {
         val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
         val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
+        //todo check on empty
         buttonRegistration.setOnClickListener {
-            CheckEmptyText.check(username, email, password) {
                 userViewModel.createUser(
                     User(0,
                         username.text.toString(),
@@ -48,8 +48,15 @@ class RegistrationFragment : BaseFragment(), HandleResponse {
                         password.text.toString()
                     )
                 )
-            }
         }
+
+        userViewModel.userDetails.observe(viewLifecycleOwner) {
+            mainViewModel.setUserDetails(User(it.userId, it.username, it.email, password.text.toString()))
+            configuration.saveLogin(it.username)
+            configuration.savePass(password.text.toString())
+            configuration.saveFirstStart(true)
+        }
+
         buttonLogin.setOnClickListener {
             findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
         }
@@ -60,6 +67,6 @@ class RegistrationFragment : BaseFragment(), HandleResponse {
     }
 
     override fun success() {
-        findNavController().navigate(R.id.accountFragment)
+        findNavController().navigate(R.id.action_registrationFragment_to_accountFragment)
     }
 }

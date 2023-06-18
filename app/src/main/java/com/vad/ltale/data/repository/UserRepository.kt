@@ -21,6 +21,13 @@ class UserRepository(private val retrofitInstance: RemoteInstance) {
     }
 
 
-    suspend fun creteUser(user: User) =
-        retrofitInstance.apiUser(retrofitInstance.retrofitNoAuth()).registration(user)
+    suspend fun creteUser(user: User) : User {
+        val response = retrofitInstance.apiUser(retrofitInstance.retrofitNoAuth()).registration(user)
+
+        if (response.code() == 401) {
+            throw IllegalArgumentException("user not authorized")
+        }
+
+        return response.body() ?: throw IllegalArgumentException(response.errorBody().toString())
+    }
 }
