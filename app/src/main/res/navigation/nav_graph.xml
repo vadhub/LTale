@@ -19,6 +19,9 @@
             app:popUpTo="@+id/accountFragment"
             app:popUpToInclusive="true"
             app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -56,4 +59,9 @@
             app:popUpToInclusive="true"
             app:destination="@id/accountFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.vad.ltale.presentation.feed.FeedFragment"
+        android:label="fragment_feed"
+        tools:layout="@layout/fragment_feed" />
 </navigation>
