@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vad.ltale.App
@@ -22,12 +23,14 @@ import com.vad.ltale.presentation.LikeViewModelFactory
 import com.vad.ltale.presentation.LoadViewModelFactory
 import com.vad.ltale.presentation.PostViewModel
 import com.vad.ltale.presentation.PostViewModelFactory
+import com.vad.ltale.presentation.account.PeopleAccountFragment
+import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 
 
-class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener {
+class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, AccountClickListener {
 
     private lateinit var postViewModel: PostViewModel
     private lateinit var likeViewModel: LikeViewModel
@@ -54,7 +57,7 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener {
         val factory = LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit()))
         load = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
-        adapter = PostAdapter(load, this, this)
+        adapter = PostAdapter(load, this, this, this)
 
         postViewModel.getPosts()
 
@@ -85,6 +88,11 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener {
     override fun onItemClick(playView: PlayView) {
         playView.progressBar.visibility = View.VISIBLE
         load.getUriByAudio(playView)
+    }
+
+    override fun onClick(id: Long) {
+        val directions = FeedFragmentDirections.actionFeedFragmentToPeopleAccountFragment(id)
+        findNavController().navigate(directions)
     }
 
 }

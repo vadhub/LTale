@@ -8,8 +8,8 @@ class UserRepository(private val retrofitInstance: RemoteInstance) {
     suspend fun getUsers() =
         retrofitInstance.apiUser(retrofitInstance.retrofit()).getUser().body()?.embedded?.users
 
-    suspend fun getUserById(id: Int) =
-        retrofitInstance.apiUser(retrofitInstance.retrofit()).getUser(id).body()?.embedded?.users
+    suspend fun getUserById(id: Long) =
+        retrofitInstance.apiUser(retrofitInstance.retrofit()).getUser(id).body()
 
     suspend fun login(username: String): User {
         val response = retrofitInstance.apiUser(retrofitInstance.retrofitNoAuth()).login(username)

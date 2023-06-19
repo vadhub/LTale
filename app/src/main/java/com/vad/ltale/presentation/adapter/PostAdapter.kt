@@ -17,7 +17,12 @@ import com.vad.ltale.data.Audio
 import com.vad.ltale.data.PostResponse
 import com.vad.ltale.presentation.FileViewModel
 
-class PostAdapter(private val load: FileViewModel, private val onClickListener: PlayOnClickListener, private val likeOnClickListener: LikeOnClickListener) :
+class PostAdapter(
+    private val load: FileViewModel,
+    private val onClickListener: PlayOnClickListener,
+    private val likeOnClickListener: LikeOnClickListener,
+    private val onClickAccount: AccountClickListener
+) :
     RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
     private var posts: List<PostResponse> = emptyList()
@@ -29,7 +34,10 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false), onClickListener)
+        MyViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false),
+            onClickListener
+        )
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
@@ -39,6 +47,10 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
         holder.likeHandle(posts[position].isLiked, posts[position].countLike)
 
         load.getIcon(posts[position].userId, holder.itemView.context, holder.imageIcon)
+
+        holder.imageIcon.setOnClickListener {
+            onClickAccount.onClick(posts[position].userId)
+        }
 
         if (image != null) {
             load.getImage(image.id, holder.itemView.context, holder.imageViewPost)
@@ -56,7 +68,8 @@ class PostAdapter(private val load: FileViewModel, private val onClickListener: 
 
     override fun getItemCount() = posts.size
 
-    class MyViewHolder(itemView: View, private val onClickListener: PlayOnClickListener) : ViewHolder(itemView){
+    class MyViewHolder(itemView: View, private val onClickListener: PlayOnClickListener) :
+        ViewHolder(itemView) {
         private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
         val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView

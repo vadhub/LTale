@@ -15,8 +15,8 @@ class UserViewModel(private val userRepository: UserRepository, private val hand
         users.postValue(userRepository.getUsers())
     }
 
-    fun getUser(id: Int) = viewModelScope.launch {
-        users.postValue(userRepository.getUserById(id))
+    fun getUser(id: Long) = viewModelScope.launch {
+        userDetails.postValue(userRepository.getUserById(id))
     }
 
     fun getUserByUsername(username: String) = viewModelScope.launch {

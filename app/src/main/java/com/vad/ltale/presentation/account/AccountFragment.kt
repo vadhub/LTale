@@ -25,6 +25,7 @@ import com.vad.ltale.R
 import com.vad.ltale.data.Like
 import com.vad.ltale.data.PlayView
 import com.vad.ltale.data.PostResponse
+import com.vad.ltale.data.User
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
@@ -32,32 +33,37 @@ import com.vad.ltale.domain.FileUtil
 import com.vad.ltale.domain.audiohandle.PlayHandler
 import com.vad.ltale.domain.audiohandle.Player
 import com.vad.ltale.presentation.*
+import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import java.io.File
 
 
-class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener {
+open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, AccountClickListener {
 
-    private lateinit var postViewModel: PostViewModel
-    private lateinit var likeViewModel: LikeViewModel
-    private lateinit var playHandler: PlayHandler
-    private lateinit var load: FileViewModel
-    private lateinit var adapter: PostAdapter
+    protected lateinit var postViewModel: PostViewModel
+    protected lateinit var likeViewModel: LikeViewModel
+    protected lateinit var playHandler: PlayHandler
+    protected lateinit var load: FileViewModel
+    protected lateinit var adapter: PostAdapter
+    protected lateinit var userDetails: User
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        userDetails = mainViewModel.getUserDetails()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("##acc", "onCreateView: ")
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_account, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("##acc", "onViewCreated: ")
-
 
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
@@ -66,34 +72,28 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
         val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIcon)
         val username: TextView = view.findViewById(R.id.usernameTextView)
         val countPost: TextView = view.findViewById(R.id.countPosts)
+        val countFollowers: TextView = view.findViewById(R.id.countFollowers)
 
-        val factory = LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit()))
-        load = ViewModelProvider(this, factory).get(FileViewModel::class.java)
-
-        val factoryPost = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
-        postViewModel = ViewModelProvider(this, factoryPost).get(PostViewModel::class.java)
-
-        val factoryLike = LikeViewModelFactory(LikeRepository(mainViewModel.getRetrofit()))
-        likeViewModel = ViewModelProvider(this, factoryLike).get(LikeViewModel::class.java)
+        viewModelInit()
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                 val selectedImage = it.data
                 imageIcon.setImageURI(selectedImage!!.data)
-                load.uploadIcon(File(FileUtil.getPath(selectedImage.data, context)), mainViewModel.getUserDetails().userId)
+                load.uploadIcon(File(FileUtil.getPath(selectedImage.data, context)), userDetails.userId)
             }
         }
 
-        load.getIcon(mainViewModel.getUserDetails().userId, context, imageIcon)
+        load.getIcon(userDetails.userId, context, imageIcon)
 
         imageIcon.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             resultLauncher.launch(intent)
         }
 
-        username.text = mainViewModel.getUserDetails().username
+        username.text = userDetails.username
 
-        adapter = PostAdapter(load, this, this)
+        adapter = PostAdapter(load, this, this, this)
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
@@ -102,6 +102,8 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
                 countPost.text = "posts: ${it.size}"
             }
         }
+
+        countFollowers.text = "followers: 0"
 
         playHandler = PlayHandler(Player(thisContext))
 
@@ -114,13 +116,20 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
             adapter.notifyItemChanged(it.first, it.second)
         }
 
+        postViewModel.getPostsByUserId(userDetails.userId)
+
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("##acc", "onStart: ")
-        postViewModel.getPostsByUserId(mainViewModel.getUserDetails().userId)
+    protected fun viewModelInit() {
+        val factory = LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit()))
+        load = ViewModelProvider(this, factory).get(FileViewModel::class.java)
+
+        val factoryPost = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
+        postViewModel = ViewModelProvider(this, factoryPost).get(PostViewModel::class.java)
+
+        val factoryLike = LikeViewModelFactory(LikeRepository(mainViewModel.getRetrofit()))
+        likeViewModel = ViewModelProvider(this, factoryLike).get(LikeViewModel::class.java)
     }
 
     override fun onItemClick(playView: PlayView) {
@@ -129,6 +138,8 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
     }
 
     override fun onLike(post: PostResponse, position: Int) {
+
+        //like only user who uses app at time
         val like = Like(mainViewModel.getUserDetails().userId, post.postId)
 
         if (post.isLiked) {
@@ -151,5 +162,9 @@ class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onClick(id: Long) {
+
     }
 }

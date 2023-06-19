@@ -25,7 +25,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imageIcon"
+                    android:id="@+id/imageIconPeople"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxHeight="150dp"
@@ -40,7 +40,7 @@
                     app:strokeWidth="1dp" />
 
                 <TextView
-                    android:id="@+id/usernameTextView"
+                    android:id="@+id/usernameTextViewPeople"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="nik"
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/countPosts"
+                        android:id="@+id/countPostsPeople"
                         android:layout_marginEnd="6dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -60,12 +60,20 @@
                         android:textColor="@color/white" />
 
                     <TextView
-                        android:id="@+id/countFollowers"
+                        android:id="@+id/countFollowersPeople"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="followers"
                         android:textColor="@color/white" />
                 </LinearLayout>
+
+                <ImageButton
+                    android:layout_margin="8dp"
+                    android:id="@+id/addFriend"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_person_add_alt_1_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
@@ -73,26 +81,18 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--    <androidx.core.widget.NestedScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:fillViewport="true"-->
-<!--        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">-->
+    <!--    <androidx.core.widget.NestedScrollView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:fillViewport="true"-->
+    <!--        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">-->
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerItemRecords"
+        android:id="@+id/recyclerItemRecordsPeople"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-<!--    </androidx.core.widget.NestedScrollView>-->
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/createRecordButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@android:drawable/ic_input_add" />
+    <!--    </androidx.core.widget.NestedScrollView>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

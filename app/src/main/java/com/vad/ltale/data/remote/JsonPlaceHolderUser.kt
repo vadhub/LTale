@@ -10,7 +10,7 @@ interface JsonPlaceHolderUser : AuthService {
     suspend fun getUser(): Response<Main>
 
     @GET("api-v1/users/{id}")
-    suspend fun getUser(@Part id: Int): Response<Main>
+    suspend fun getUser(@Path("id") id: Long): Response<User>
 
     @GET("api-v1/users/search/findByUsername")
     suspend fun getUserByUsername(@Query("username") username: String): User
