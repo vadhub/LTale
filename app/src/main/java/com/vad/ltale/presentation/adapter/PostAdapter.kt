@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.data.Audio
+import com.vad.ltale.data.Hashtag
 import com.vad.ltale.data.PostResponse
 import com.vad.ltale.presentation.FileViewModel
 
@@ -62,7 +63,8 @@ class PostAdapter(
 
         holder.bind(
             posts[position].dateCreated,
-            posts[position].listAudio
+            posts[position].listAudio,
+            posts[position].hashtags
         )
     }
 
@@ -76,9 +78,13 @@ class PostAdapter(
         private val textViewCountLike = itemView.findViewById(R.id.countLikes) as TextView
         val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
         val imageIcon = itemView.findViewById(R.id.imageIconPost) as ShapeableImageView
+        private val hashtag = itemView.findViewById(R.id.textViewHashtag) as TextView
 
-        fun bind(date: String, audios: List<Audio>) {
+        fun bind(date: String, audios: List<Audio>, hashtags: List<Hashtag>) {
             textViewDate.text = date
+
+            if (hashtags.isNotEmpty()) hashtag.text = hashtags.map { "#${it.hashtagName}" }.reduce { acc, s -> "$acc $s" }
+
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             val adapter = AudioAdapter(onClickListener)
             adapter.setRecords(audios)

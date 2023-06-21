@@ -50,7 +50,6 @@
                         android:id="@+id/imageViewPostRecord"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher"
                         app:layout_constraintDimensionRatio="H,1:1" />
 
                     <androidx.recyclerview.widget.RecyclerView

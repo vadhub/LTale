@@ -2,6 +2,7 @@ package com.vad.ltale.domain.audiohandle
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
 import com.vad.ltale.data.PlayView

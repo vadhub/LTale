@@ -36,4 +36,8 @@ data class PostResponse(
     @SerializedName("dateChanged")
     @Expose
     val dateChanged: String,
+
+    @SerializedName("hashtags")
+    @Expose
+    val hashtags: List<Hashtag>
 )
