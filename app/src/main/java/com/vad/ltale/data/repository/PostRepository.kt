@@ -21,6 +21,8 @@ class PostRepository(private val retrofitInstance: RemoteInstance) {
                          image: MultipartBody.Part?,
                          userId: RequestBody,
                          dateCreated: RequestBody,
-                         dateChanged: RequestBody) =
-        retrofitInstance.apiPost().postPost(audio, duration, image, userId, dateCreated, dateChanged)
+                         dateChanged: RequestBody,
+                         hashtags: List<RequestBody>?
+    ) =
+        retrofitInstance.apiPost().postPost(audio, duration, image, userId, dateCreated, dateChanged, hashtags)
 }

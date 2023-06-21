@@ -56,6 +56,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
     private lateinit var limitViewModel: LimitViewModel
     private lateinit var limit: Limit
     private var time: Long = 0
+    private val hashtags: MutableList<String> = mutableListOf()
+    private lateinit var hashtag: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +104,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
         val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
 
+        hashtag = view.findViewById(R.id.editTextHashtag)
+
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
         actionButton = view.findViewById(R.id.recordFloatingButton)
         actionButton.setOnTouchListener(this)
@@ -145,7 +149,13 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
                 if (selectedImage != null) {
                     file = File(FileUtil.getPath(selectedImage?.data, context))
                 }
-                postViewModel.savePost(listAudioRequest, file, mainViewModel.getUserDetails().userId)
+
+                if (hashtag.text.isNotEmpty()) {
+                    hashtags.add(hashtag.text.toString())
+                }
+
+                postViewModel.savePost(listAudioRequest, file, mainViewModel.getUserDetails().userId,
+                    hashtags.ifEmpty { null })
                 limitViewModel.updateTime(Limit(limit.id, mainViewModel.getUserDetails().userId, time, "${Date(System.currentTimeMillis())}"))
             } else {
                 Toast.makeText(thisContext, "Record audio", Toast.LENGTH_SHORT).show()

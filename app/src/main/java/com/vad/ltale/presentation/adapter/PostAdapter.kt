@@ -83,7 +83,7 @@ class PostAdapter(
         fun bind(date: String, audios: List<Audio>, hashtags: List<Hashtag>) {
             textViewDate.text = date
 
-            if (hashtags.isNotEmpty()) hashtag.text = hashtags.map { "#${it.hashtagName}" }.reduce { acc, s -> "$acc $s" }
+            if (hashtags.isNotEmpty()) hashtag.text = hashtags.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
 
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             val adapter = AudioAdapter(onClickListener)

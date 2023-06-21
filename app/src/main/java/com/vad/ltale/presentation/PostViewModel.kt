@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.AudioRequest
+import com.vad.ltale.data.Hashtag
 import com.vad.ltale.data.PostResponse
 import com.vad.ltale.data.repository.PostRepository
 import kotlinx.coroutines.launch
@@ -30,7 +31,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         posts.postValue(postRepository.getPosts())
     }
 
-    fun savePost(audio: List<AudioRequest>, image: File?, userId: Long) = viewModelScope.launch {
+    fun savePost(audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {
 
         val listAudio = audio.map{ a ->
                 MultipartBody.Part.createFormData("audio", a.file.name, RequestBody.create("multipart/form-data".toMediaTypeOrNull(), a.file))
@@ -58,6 +59,12 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         val requestDateChanged: RequestBody =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${Date(System.currentTimeMillis())}")
 
-        postRepository.sendPost(listAudio, listDuration, imageBody, requestUserId, requestDateCreated, requestDateChanged)
+        var hashtagRequest: List<RequestBody>? = null
+        if (hashtags != null) {
+            hashtagRequest = hashtags.map { h ->
+                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), h)
+            }
+        }
+        postRepository.sendPost(listAudio, listDuration, imageBody, requestUserId, requestDateCreated, requestDateChanged, hashtagRequest)
     }
 }

@@ -46,6 +46,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <EditText
+                        android:id="@+id/editTextHashtag"
+                        android:hint="#hashtag"
+                        android:textSize="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
                     <ImageView
                         android:id="@+id/imageViewPostRecord"
                         android:layout_width="match_parent"

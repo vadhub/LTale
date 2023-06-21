@@ -30,6 +30,7 @@ interface JsonPlaceHolderPost {
         @Part image: MultipartBody.Part?,
         @Part("userId") userId: RequestBody,
         @Part("dateCreated") dateCreated: RequestBody,
-        @Part("dateChanged") dateChanged: RequestBody
+        @Part("dateChanged") dateChanged: RequestBody,
+        @Part("hashtags") hashtags: List<@JvmSuppressWildcards RequestBody>?
     ) : Response<PostResponse?>
 }
