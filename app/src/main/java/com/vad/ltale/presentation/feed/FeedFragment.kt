@@ -16,6 +16,8 @@ import com.vad.ltale.data.PostResponse
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
+import com.vad.ltale.domain.audiohandle.PlayHandler
+import com.vad.ltale.domain.audiohandle.Player
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.FileViewModel
 import com.vad.ltale.presentation.LikeViewModel
@@ -34,6 +36,7 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, A
 
     private lateinit var postViewModel: PostViewModel
     private lateinit var likeViewModel: LikeViewModel
+    private lateinit var playHandler: PlayHandler
     private lateinit var load: FileViewModel
     private lateinit var adapter: PostAdapter
 
@@ -60,6 +63,13 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, A
         adapter = PostAdapter(load, this, this, this)
 
         postViewModel.getPosts()
+
+        playHandler = PlayHandler(Player(thisContext))
+
+        load.uriAudio.observe(viewLifecycleOwner) {
+            playHandler.handle(it.first.position, it.second, it.first.audioAdapter, it.first.seekBar, it.first.timeTextView)
+            it.first.progressBar.visibility = View.GONE
+        }
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
