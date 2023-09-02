@@ -13,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,13 +39,13 @@ import com.vad.ltale.presentation.adapter.PostAdapter
 import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import java.io.File
 
-
 open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, AccountClickListener {
 
-    protected lateinit var postViewModel: PostViewModel
-    protected lateinit var likeViewModel: LikeViewModel
+    protected val postViewModel: PostViewModel by activityViewModels { PostViewModelFactory(PostRepository(mainViewModel.getRetrofit())) }
+    protected val likeViewModel: LikeViewModel by activityViewModels { LikeViewModelFactory(LikeRepository(mainViewModel.getRetrofit())) }
+    protected val load: FileViewModel by activityViewModels { LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit())) }
+
     protected lateinit var playHandler: PlayHandler
-    protected lateinit var load: FileViewModel
     protected lateinit var adapter: PostAdapter
     protected lateinit var userDetails: User
 
@@ -74,8 +74,6 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
         val countPost: TextView = view.findViewById(R.id.countPosts)
         val countFollowers: TextView = view.findViewById(R.id.countFollowers)
 
-        viewModelInit()
-
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                 val selectedImage = it.data
@@ -93,7 +91,7 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
 
         username.text = userDetails.username
 
-        adapter = PostAdapter(load, this, this, this)
+        adapter = PostAdapter(load, this, this, this, mainViewModel.getUserDetails().userId)
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
@@ -119,17 +117,6 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
         postViewModel.getPostsByUserId(userDetails.userId)
 
         buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
-    }
-
-    protected fun viewModelInit() {
-        val factory = LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit()))
-        load = ViewModelProvider(this, factory).get(FileViewModel::class.java)
-
-        val factoryPost = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
-        postViewModel = ViewModelProvider(this, factoryPost).get(PostViewModel::class.java)
-
-        val factoryLike = LikeViewModelFactory(LikeRepository(mainViewModel.getRetrofit()))
-        likeViewModel = ViewModelProvider(this, factoryLike).get(LikeViewModel::class.java)
     }
 
     override fun onItemClick(playView: PlayView) {
