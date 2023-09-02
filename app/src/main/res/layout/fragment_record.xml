@@ -8,9 +8,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,6 +62,7 @@
                         android:id="@+id/audioRecyclerRecord"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        tools:itemCount="5"
                         tools:listitem="@layout/item_audio" />
 
                 </LinearLayout>
@@ -83,7 +83,8 @@
             android:id="@+id/imageButtonChoose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_add_a_photo_24" />
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/baseline_image_24" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/recordFloatingButton"
