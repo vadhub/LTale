@@ -35,8 +35,6 @@ class PeopleAccountFragment : AccountFragment(), HandleResponse {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModelInit()
-
         val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIconPeople)
         val username: TextView = view.findViewById(R.id.usernameTextViewPeople)
         val countPost: TextView = view.findViewById(R.id.countPostsPeople)
@@ -44,7 +42,7 @@ class PeopleAccountFragment : AccountFragment(), HandleResponse {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsPeople)
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
-        val adapter = PostAdapter(load, this, this, this)
+        val adapter = PostAdapter(load, this, this, this, mainViewModel.getUserDetails().userId)
 
         val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
         userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)

@@ -60,7 +60,7 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, A
         val factory = LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit()))
         load = ViewModelProvider(this, factory).get(FileViewModel::class.java)
 
-        adapter = PostAdapter(load, this, this, this)
+        adapter = PostAdapter(load, this, this, this, mainViewModel.getUserDetails().userId)
 
         postViewModel.getPosts()
 
