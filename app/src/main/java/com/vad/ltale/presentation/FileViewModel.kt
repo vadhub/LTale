@@ -12,7 +12,6 @@ import com.vad.ltale.data.repository.FileRepository
 import kotlinx.coroutines.launch
 import java.io.File
 
-
 class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
 
     val uriAudio: MutableLiveData<Pair<PlayView, String>> = MutableLiveData()
@@ -28,8 +27,8 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
         uriAudio.postValue(Pair(playView, localUriTemp))
     }
 
-    fun getImage(id: Long, context: Context?, imageViewPost: ImageView) = viewModelScope.launch {
-        fileRepository.getImage(id, context, imageViewPost)
+    fun getImage(id: Long?, context: Context?, imageViewPost: ImageView) = viewModelScope.launch {
+        if (id != null) fileRepository.getImage(id, context, imageViewPost)
     }
 
     fun getIcon(userId: Long, context: Context?, imageIcon: ShapeableImageView) = viewModelScope.launch {
