@@ -22,7 +22,8 @@ class PostAdapter(
     private val load: FileViewModel,
     private val onClickListener: PlayOnClickListener,
     private val likeOnClickListener: LikeOnClickListener,
-    private val onClickAccount: AccountClickListener
+    private val onClickAccount: AccountClickListener,
+    private val userId: Long
 ) :
     RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
@@ -42,52 +43,50 @@ class PostAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        val image = posts.get(position).image
+        val post = posts[position]
 
-        Log.d("", "onBindViewHolder: $position ${posts[position].userId}")
-        holder.likeHandle(posts[position].isLiked, posts[position].countLike)
+        Log.d("", "onBindViewHolder: $position ${post.userId}")
 
-        load.getIcon(posts[position].userId, holder.itemView.context, holder.imageIcon)
+        if (post.countLike > 0) holder.likeHandle(userId == post.userId, post.countLike)
 
         holder.imageIcon.setOnClickListener {
-            onClickAccount.onClick(posts[position].userId)
-        }
-
-        if (image != null) {
-            load.getImage(image.id, holder.itemView.context, holder.imageViewPost)
+            onClickAccount.onClick(post.userId)
         }
 
         holder.imageViewLike.setOnClickListener {
-            likeOnClickListener.onLike(posts[position], position)
+            likeOnClickListener.onLike(post, position)
         }
 
-        holder.bind(
-            posts[position].dateCreated,
-            posts[position].listAudio,
-            posts[position].hashtags
-        )
+        holder.bind(post)
     }
 
     override fun getItemCount() = posts.size
 
-    class MyViewHolder(itemView: View, private val onClickListener: PlayOnClickListener) :
+    inner class MyViewHolder(itemView: View, private val onClickListener: PlayOnClickListener) :
         ViewHolder(itemView) {
         private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
-        val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
+        private val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
         private val textViewCountLike = itemView.findViewById(R.id.countLikes) as TextView
         val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
         val imageIcon = itemView.findViewById(R.id.imageIconPost) as ShapeableImageView
         private val hashtag = itemView.findViewById(R.id.textViewHashtag) as TextView
 
-        fun bind(date: String, audios: List<Audio>, hashtags: List<Hashtag>) {
-            textViewDate.text = date
+        fun bind(postResponse: PostResponse) {
 
-            if (hashtags.isNotEmpty()) hashtag.text = hashtags.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
+            imageIcon.setImageDrawable(null)
+            imageViewPost.setImageDrawable(null)
+
+            textViewDate.text = postResponse.dateChanged
+
+            load.getIcon(postResponse.userId, itemView.context, imageIcon)
+            load.getImage(postResponse.image?.id, itemView.context, imageViewPost)
+
+            if (postResponse.hashtags.isNotEmpty()) hashtag.text = postResponse.hashtags.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
 
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             val adapter = AudioAdapter(onClickListener)
-            adapter.setRecords(audios)
+            adapter.setRecords(postResponse.listAudio)
             recyclerViewAudio.adapter = adapter
         }
 
