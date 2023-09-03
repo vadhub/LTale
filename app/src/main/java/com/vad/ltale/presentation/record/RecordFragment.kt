@@ -14,7 +14,7 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +42,9 @@ import java.util.concurrent.TimeUnit
 
 class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClickListener {
 
+    private val postViewModel: PostViewModel by activityViewModels { PostViewModelFactory(PostRepository(mainViewModel.getRetrofit())) }
+    private val limitViewModel: LimitViewModel by activityViewModels { LimitViewModelFactory(LimitRepository(mainViewModel.getRetrofit())) }
+
     private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer
     private lateinit var actionButton: FloatingActionButton
@@ -51,9 +54,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
     private lateinit var playHandler: PlayHandler
     private lateinit var listAudio: List<Audio>
     private lateinit var recorder: Recorder
-    private lateinit var postViewModel: PostViewModel
     private val listAudioRequest: MutableList<AudioRequest> = ArrayList()
-    private lateinit var limitViewModel: LimitViewModel
     private lateinit var limit: Limit
     private var time: Long = 0
     private val hashtags: MutableList<String> = mutableListOf()
@@ -79,14 +80,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
             )
             ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
         } else {
-            val factory = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
-            postViewModel = ViewModelProvider(this, factory).get(PostViewModel::class.java)
-
-            val limitFactory = LimitViewModelFactory(LimitRepository(mainViewModel.getRetrofit()))
-            limitViewModel = ViewModelProvider(this, limitFactory).get(LimitViewModel::class.java)
-
             limitViewModel.getLimit(mainViewModel.getUserDetails().userId)
-
         }
     }
 
