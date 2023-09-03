@@ -8,7 +8,7 @@ class ChunkTimer(time: Long) {
     private lateinit var timer: CountDownTimer
     private var timeStartFrom = time
     private var timeLast = 0L
-    private val interval = 100L
+    private val interval = 1000L
 
     fun setTimerHandler(handler: TimerHandler) {
         this.handler = handler
