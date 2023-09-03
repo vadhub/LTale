@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,20 +25,34 @@ import com.vad.ltale.presentation.LikeViewModelFactory
 import com.vad.ltale.presentation.LoadViewModelFactory
 import com.vad.ltale.presentation.PostViewModel
 import com.vad.ltale.presentation.PostViewModelFactory
-import com.vad.ltale.presentation.account.PeopleAccountFragment
 import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 
+class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener,
+    AccountClickListener {
 
-class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, AccountClickListener {
-
-    private lateinit var postViewModel: PostViewModel
-    private lateinit var likeViewModel: LikeViewModel
-    private lateinit var playHandler: PlayHandler
-    private lateinit var load: FileViewModel
+    private val postViewModel: PostViewModel by activityViewModels {
+        PostViewModelFactory(
+            PostRepository(mainViewModel.getRetrofit())
+        )
+    }
+    private val likeViewModel: LikeViewModel by activityViewModels {
+        LikeViewModelFactory(
+            LikeRepository(mainViewModel.getRetrofit())
+        )
+    }
+    private val load: FileViewModel by activityViewModels {
+        LoadViewModelFactory(
+            FileRepository(
+                (activity?.application as App).database.audioDao(),
+                mainViewModel.getRetrofit()
+            )
+        )
+    }
     private lateinit var adapter: PostAdapter
+    private lateinit var playHandler: PlayHandler
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,15 +65,6 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, A
         val recyclerView = view.findViewById(R.id.feedRecyclerView) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
-        val factoryPost = PostViewModelFactory(PostRepository(mainViewModel.getRetrofit()))
-        postViewModel = ViewModelProvider(this, factoryPost).get(PostViewModel::class.java)
-
-        val factoryLike = LikeViewModelFactory(LikeRepository(mainViewModel.getRetrofit()))
-        likeViewModel = ViewModelProvider(this, factoryLike).get(LikeViewModel::class.java)
-
-        val factory = LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit()))
-        load = ViewModelProvider(this, factory).get(FileViewModel::class.java)
-
         adapter = PostAdapter(load, this, this, this, mainViewModel.getUserDetails().userId)
 
         postViewModel.getPosts()
@@ -67,7 +72,13 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, A
         playHandler = PlayHandler(Player(thisContext))
 
         load.uriAudio.observe(viewLifecycleOwner) {
-            playHandler.handle(it.first.position, it.second, it.first.audioAdapter, it.first.seekBar, it.first.timeTextView)
+            playHandler.handle(
+                it.first.position,
+                it.second,
+                it.first.audioAdapter,
+                it.first.seekBar,
+                it.first.timeTextView
+            )
             it.first.progressBar.visibility = View.GONE
         }
 
