@@ -73,7 +73,7 @@ class RemoteInstance(private val user: User) {
     fun apiPost(): PostService =
         retrofit().create(PostService::class.java)
 
-    fun apiUpload(): FileService =
+    fun apiFileHandle(): FileService =
         retrofit().create(FileService::class.java)
 
     fun apiLike(): LikeService =
