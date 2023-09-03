@@ -1,4 +1,4 @@
-package com.vad.ltale.presentation
+package com.vad.ltale.data.remote
 
 interface HandleResponse {
     fun error()

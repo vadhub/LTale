@@ -19,7 +19,7 @@ import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.local.SaveConfiguration
 import com.vad.ltale.presentation.MainViewModelProvider
-import com.vad.ltale.presentation.HandleResponse
+import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.presentation.MainViewModel
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory

@@ -17,7 +17,7 @@ import com.vad.ltale.data.PostResponse
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.domain.audiohandle.PlayHandler
 import com.vad.ltale.domain.audiohandle.Player
-import com.vad.ltale.presentation.HandleResponse
+import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 import com.vad.ltale.presentation.adapter.PostAdapter

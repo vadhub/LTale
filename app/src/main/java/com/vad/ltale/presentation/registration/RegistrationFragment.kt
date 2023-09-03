@@ -12,7 +12,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.data.User
 import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.presentation.HandleResponse
+import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory

@@ -13,7 +13,7 @@ import com.vad.ltale.R
 import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.presentation.HandleResponse
+import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
@@ -46,7 +46,6 @@ class LoginFragment : BaseFragment(), HandleResponse {
         buttonLogin.setOnClickListener {
             viewModel.getUserByUsername(username.text.toString())
             viewModel.userDetails.observe(viewLifecycleOwner) {
-                println(it)
                 mainViewModel.setUserDetails(
                     User(
                         it.userId,
