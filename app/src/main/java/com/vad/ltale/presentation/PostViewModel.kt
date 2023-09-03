@@ -2,6 +2,7 @@ package com.vad.ltale.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.AudioRequest
 import com.vad.ltale.data.Hashtag
@@ -66,5 +67,11 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             }
         }
         postRepository.sendPost(listAudio, listDuration, imageBody, requestUserId, requestDateCreated, requestDateChanged, hashtagRequest)
+    }
+}
+
+class PostViewModelFactory(private val postRepository: PostRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return PostViewModel(postRepository) as T
     }
 }

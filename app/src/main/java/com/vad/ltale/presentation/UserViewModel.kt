@@ -2,18 +2,16 @@ package com.vad.ltale.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.User
+import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val userRepository: UserRepository, private val handleResponse: HandleResponse) : ViewModel() {
-    var users: MutableLiveData<List<User>> = MutableLiveData()
-    var userDetails: MutableLiveData<User> = MutableLiveData()
 
-    fun getUsers() = viewModelScope.launch {
-        users.postValue(userRepository.getUsers())
-    }
+    var userDetails: MutableLiveData<User> = MutableLiveData()
 
     fun getUser(id: Long) = viewModelScope.launch {
         userDetails.postValue(userRepository.getUserById(id))
@@ -37,5 +35,11 @@ class UserViewModel(private val userRepository: UserRepository, private val hand
             handleResponse.error()
         }
 
+    }
+}
+
+class UserViewModelFactory(private val userRepository: UserRepository, private val handleResponse: HandleResponse) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return UserViewModel(userRepository, handleResponse) as T
     }
 }

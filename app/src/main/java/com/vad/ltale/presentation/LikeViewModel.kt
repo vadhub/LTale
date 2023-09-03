@@ -2,6 +2,7 @@ package com.vad.ltale.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.Like
 import com.vad.ltale.data.PostResponse
@@ -26,4 +27,10 @@ class LikeViewModel(private val likeRepository: LikeRepository) : ViewModel() {
         likeData.postValue(Pair(position, post))
     }
 
+}
+
+class LikeViewModelFactory(private val repository: LikeRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return LikeViewModel(repository) as T
+    }
 }

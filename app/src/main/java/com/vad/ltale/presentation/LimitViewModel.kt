@@ -2,6 +2,7 @@ package com.vad.ltale.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.Limit
 import com.vad.ltale.data.repository.LimitRepository
@@ -19,4 +20,11 @@ class LimitViewModel(private val repository: LimitRepository) : ViewModel() {
         limit.postValue(repository.getByUserId(userId))
     }
 
+}
+
+@Suppress("UNCHECKED_CAST")
+class LimitViewModelFactory(private val repository: LimitRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return LimitViewModel(repository) as T
+    }
 }
