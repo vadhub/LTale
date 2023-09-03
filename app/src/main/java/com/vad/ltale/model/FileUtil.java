@@ -1,4 +1,4 @@
-package com.vad.ltale.domain;
+package com.vad.ltale.model;
 
 import android.content.ContentUris;
 import android.content.Context;

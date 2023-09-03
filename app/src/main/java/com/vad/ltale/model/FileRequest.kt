@@ -1,4 +1,4 @@
-package com.vad.ltale.data
+package com.vad.ltale.model
 
 import okhttp3.MultipartBody
 import retrofit2.http.Part

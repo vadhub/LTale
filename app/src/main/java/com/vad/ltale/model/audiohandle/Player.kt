@@ -1,4 +1,4 @@
-package com.vad.ltale.domain.audiohandle
+package com.vad.ltale.model.audiohandle
 
 import android.content.Context
 import android.util.Log

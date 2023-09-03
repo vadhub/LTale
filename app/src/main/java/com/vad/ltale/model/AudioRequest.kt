@@ -1,4 +1,4 @@
-package com.vad.ltale.data
+package com.vad.ltale.model
 
 import java.io.File
 

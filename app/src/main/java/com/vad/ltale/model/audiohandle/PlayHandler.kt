@@ -1,11 +1,10 @@
-package com.vad.ltale.domain.audiohandle
+package com.vad.ltale.model.audiohandle
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
-import com.vad.ltale.data.PlayView
+import com.vad.ltale.model.PlayView
 import com.vad.ltale.presentation.adapter.AudioAdapter
 import java.util.concurrent.TimeUnit
 

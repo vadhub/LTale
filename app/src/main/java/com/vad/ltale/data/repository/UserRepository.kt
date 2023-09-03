@@ -1,6 +1,6 @@
 package com.vad.ltale.data.repository
 
-import com.vad.ltale.data.User
+import com.vad.ltale.model.User
 import com.vad.ltale.data.remote.RemoteInstance
 
 class UserRepository(private val retrofitInstance: RemoteInstance) {

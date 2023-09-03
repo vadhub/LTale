@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.vad.ltale.data.Limit
+import com.vad.ltale.model.Limit
 import com.vad.ltale.data.repository.LimitRepository
 import kotlinx.coroutines.launch
 

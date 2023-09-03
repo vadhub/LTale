@@ -1,6 +1,6 @@
 package com.vad.ltale.data.repository
 
-import com.vad.ltale.data.Like
+import com.vad.ltale.model.Like
 import com.vad.ltale.data.remote.RemoteInstance
 
 class LikeRepository(private val remoteInstance: RemoteInstance) {

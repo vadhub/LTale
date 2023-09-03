@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
-import com.vad.ltale.data.Audio
-import com.vad.ltale.data.PlayView
+import com.vad.ltale.model.Audio
+import com.vad.ltale.model.PlayView
 import java.util.concurrent.TimeUnit
 
 

@@ -1,11 +1,10 @@
 package com.vad.ltale.data.repository
 
 import android.content.Context
-import android.os.Environment
 import android.util.Log
 import android.widget.ImageView
 import com.vad.ltale.R
-import com.vad.ltale.data.Audio
+import com.vad.ltale.model.Audio
 import com.vad.ltale.data.local.AudioDao
 import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.remote.RemoteInstance

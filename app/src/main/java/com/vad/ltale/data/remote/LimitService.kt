@@ -1,6 +1,6 @@
 package com.vad.ltale.data.remote
 
-import com.vad.ltale.data.Limit
+import com.vad.ltale.model.Limit
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

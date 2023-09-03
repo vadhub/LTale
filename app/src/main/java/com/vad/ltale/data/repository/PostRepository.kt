@@ -1,6 +1,6 @@
 package com.vad.ltale.data.repository
 
-import com.vad.ltale.data.PostResponse
+import com.vad.ltale.model.PostResponse
 import com.vad.ltale.data.remote.RemoteInstance
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

@@ -1,7 +1,7 @@
 package com.vad.ltale.data.remote
 
-import com.vad.ltale.data.Main
-import com.vad.ltale.data.PostResponse
+import com.vad.ltale.model.Main
+import com.vad.ltale.model.PostResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response

@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
-import com.vad.ltale.data.Like
-import com.vad.ltale.data.PlayView
-import com.vad.ltale.data.PostResponse
+import com.vad.ltale.model.Like
+import com.vad.ltale.model.PlayView
+import com.vad.ltale.model.PostResponse
 import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.domain.audiohandle.PlayHandler
-import com.vad.ltale.domain.audiohandle.Player
+import com.vad.ltale.model.audiohandle.PlayHandler
+import com.vad.ltale.model.audiohandle.Player
 import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory

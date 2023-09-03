@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.imageview.ShapeableImageView
-import com.vad.ltale.data.PlayView
+import com.vad.ltale.model.PlayView
 import com.vad.ltale.data.repository.FileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

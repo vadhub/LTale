@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
-import com.vad.ltale.data.Audio
-import com.vad.ltale.data.Hashtag
-import com.vad.ltale.data.PostResponse
+import com.vad.ltale.model.PostResponse
 import com.vad.ltale.presentation.FileViewModel
 
 class PostAdapter(

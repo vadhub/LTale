@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.vad.ltale.data.User
+import com.vad.ltale.model.User
 import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.repository.UserRepository
 import kotlinx.coroutines.launch
