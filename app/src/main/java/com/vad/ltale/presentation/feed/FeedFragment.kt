@@ -13,6 +13,7 @@ import com.vad.ltale.R
 import com.vad.ltale.data.Like
 import com.vad.ltale.data.PlayView
 import com.vad.ltale.data.PostResponse
+import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
@@ -46,6 +47,7 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener,
     private val load: FileViewModel by activityViewModels {
         LoadViewModelFactory(
             FileRepository(
+                SaveInternalHandle(thisContext),
                 (activity?.application as App).database.audioDao(),
                 mainViewModel.getRetrofit()
             )

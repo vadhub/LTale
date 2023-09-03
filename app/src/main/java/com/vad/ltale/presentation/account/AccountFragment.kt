@@ -26,6 +26,7 @@ import com.vad.ltale.data.Like
 import com.vad.ltale.data.PlayView
 import com.vad.ltale.data.PostResponse
 import com.vad.ltale.data.User
+import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
@@ -39,11 +40,28 @@ import com.vad.ltale.presentation.adapter.PostAdapter
 import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import java.io.File
 
-open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener, AccountClickListener {
+open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener,
+    AccountClickListener {
 
-    protected val postViewModel: PostViewModel by activityViewModels { PostViewModelFactory(PostRepository(mainViewModel.getRetrofit())) }
-    protected val likeViewModel: LikeViewModel by activityViewModels { LikeViewModelFactory(LikeRepository(mainViewModel.getRetrofit())) }
-    protected val load: FileViewModel by activityViewModels { LoadViewModelFactory(FileRepository((activity?.application as App).database.audioDao(), mainViewModel.getRetrofit())) }
+    protected val postViewModel: PostViewModel by activityViewModels {
+        PostViewModelFactory(
+            PostRepository(mainViewModel.getRetrofit())
+        )
+    }
+    protected val likeViewModel: LikeViewModel by activityViewModels {
+        LikeViewModelFactory(
+            LikeRepository(mainViewModel.getRetrofit())
+        )
+    }
+    protected val load: FileViewModel by activityViewModels {
+        LoadViewModelFactory(
+            FileRepository(
+                SaveInternalHandle(thisContext),
+                (activity?.application as App).database.audioDao(),
+                mainViewModel.getRetrofit()
+            )
+        )
+    }
 
     protected lateinit var playHandler: PlayHandler
     protected lateinit var adapter: PostAdapter
@@ -74,13 +92,17 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
         val countPost: TextView = view.findViewById(R.id.countPosts)
         val countFollowers: TextView = view.findViewById(R.id.countFollowers)
 
-        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-                val selectedImage = it.data
-                imageIcon.setImageURI(selectedImage!!.data)
-                load.uploadIcon(File(FileUtil.getPath(selectedImage.data, context)), userDetails.userId)
+        val resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == Activity.RESULT_OK && it.data != null) {
+                    val selectedImage = it.data
+                    imageIcon.setImageURI(selectedImage!!.data)
+                    load.uploadIcon(
+                        File(FileUtil.getPath(selectedImage.data, context)),
+                        userDetails.userId
+                    )
+                }
             }
-        }
 
         load.getIcon(userDetails.userId, context, imageIcon)
 
@@ -106,7 +128,13 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
         playHandler = PlayHandler(Player(thisContext))
 
         load.uriAudio.observe(viewLifecycleOwner) {
-            playHandler.handle(it.first.position, it.second, it.first.audioAdapter, it.first.seekBar, it.first.timeTextView)
+            playHandler.handle(
+                it.first.position,
+                it.second,
+                it.first.audioAdapter,
+                it.first.seekBar,
+                it.first.timeTextView
+            )
             it.first.progressBar.visibility = View.GONE
         }
 
@@ -116,7 +144,9 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
 
         postViewModel.getPostsByUserId(userDetails.userId)
 
-        buttonCreateRecord.setOnClickListener { view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment) }
+        buttonCreateRecord.setOnClickListener {
+            view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)
+        }
     }
 
     override fun onItemClick(playView: PlayView) {

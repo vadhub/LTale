@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.data.PlayView
 import com.vad.ltale.data.repository.FileRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -19,7 +20,7 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
     private var uriTemp = ""
     private var localUriTemp = ""
 
-    fun getUriByAudio(playView: PlayView) = viewModelScope.launch {
+    fun getUriByAudio(playView: PlayView) = viewModelScope.launch(Dispatchers.IO) {
         if (uriTemp != playView.audio.uri) {
             localUriTemp = fileRepository.getUriByAudio(playView.audio)
             Log.d("!!mv", "getUriByAudio: $localUriTemp")

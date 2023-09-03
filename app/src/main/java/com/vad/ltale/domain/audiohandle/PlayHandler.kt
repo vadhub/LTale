@@ -54,9 +54,9 @@ class PlayHandler(private val player: Player) {
             isPlay = true
             player.play(localUri)
             ran = Runnable {
-                seekBar.progress = ((player.mp.currentPosition*100)/player.mp.duration).toInt()
+                seekBar.progress = ((player.mp.currentPosition*1000)/player.mp.duration).toInt()
                 timeTextView.text = timeFormat(player.mp.duration - player.mp.currentPosition)
-                handler.postDelayed(ran, 100)
+                handler.postDelayed(ran, 1000)
             }
 
             handler.post(ran)
@@ -126,7 +126,7 @@ class PlayHandler(private val player: Player) {
 
     }
 
-    fun timeFormat(time: Long) =
+    private fun timeFormat(time: Long) =
         String.format(
             "%02d :%02d",
             TimeUnit.MILLISECONDS.toMinutes(time),
