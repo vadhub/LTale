@@ -13,7 +13,7 @@ open class BaseFragment : Fragment() {
         super.onAttach(context)
         this.thisContext = context
         configuration = SaveConfiguration(thisContext)
-        mainViewModel = (requireActivity() as Supplier<*>).get() as MainViewModel
+        mainViewModel = (requireActivity() as MainViewModelProvider).get()
     }
 
 }

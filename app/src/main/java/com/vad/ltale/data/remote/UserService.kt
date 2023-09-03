@@ -5,7 +5,7 @@ import com.vad.ltale.data.User
 import retrofit2.Response
 import retrofit2.http.*
 
-interface JsonPlaceHolderUser : AuthService {
+interface UserService : AuthService {
     @GET("api-v1/users")
     suspend fun getUser(): Response<Main>
 

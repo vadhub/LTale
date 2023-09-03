@@ -41,16 +41,4 @@ class SaveConfiguration(private val context: Context) {
         pref = context.getSharedPreferences("lil_tale_first_run", Context.MODE_PRIVATE)
         return pref.getBoolean("first_run", false)
     }
-
-    fun saveTimeRecord(time: Long) {
-        pref = context.getSharedPreferences("lil_tale_record", Context.MODE_PRIVATE)
-        val ed: SharedPreferences.Editor = pref.edit()
-        ed.putLong("time", time)
-        ed.apply()
-    }
-
-    fun getTimeRecord(): Long {
-        pref = context.getSharedPreferences("lil_tale_record", Context.MODE_PRIVATE)
-        return pref.getLong("time", 1)
-    }
 }

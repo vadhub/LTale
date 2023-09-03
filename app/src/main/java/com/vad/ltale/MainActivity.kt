@@ -18,14 +18,13 @@ import com.vad.ltale.data.User
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.local.SaveConfiguration
-import com.vad.ltale.presentation.Supplier
+import com.vad.ltale.presentation.MainViewModelProvider
 import com.vad.ltale.presentation.HandleResponse
 import com.vad.ltale.presentation.MainViewModel
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 
-
-class MainActivity : AppCompatActivity(), Supplier<MainViewModel>, HandleResponse {
+class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -56,7 +55,7 @@ class MainActivity : AppCompatActivity(), Supplier<MainViewModel>, HandleRespons
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomMenu.visibility = View.VISIBLE
 
-        bottomMenu?.setupWithNavController(navController)
+        bottomMenu.setupWithNavController(navController)
 
         if (!configuration.getFirstStart()) {
             configuration.saveFirstStart(true)

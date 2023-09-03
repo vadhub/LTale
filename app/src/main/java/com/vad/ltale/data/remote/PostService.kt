@@ -12,7 +12,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface JsonPlaceHolderPost {
+interface PostService {
     @GET("api-v1/posts")
     suspend fun getPost(): Response<Main>
 

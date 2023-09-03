@@ -11,7 +11,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 class RemoteInstance(private val user: User) {
@@ -68,11 +67,11 @@ class RemoteInstance(private val user: User) {
             ).build()
     }
 
-    fun apiUser(retrofit: Retrofit): JsonPlaceHolderUser =
-        retrofit.create(JsonPlaceHolderUser::class.java)
+    fun apiUser(retrofit: Retrofit): UserService =
+        retrofit.create(UserService::class.java)
 
-    fun apiPost(): JsonPlaceHolderPost =
-        retrofit().create(JsonPlaceHolderPost::class.java)
+    fun apiPost(): PostService =
+        retrofit().create(PostService::class.java)
 
     fun apiUpload(): FileService =
         retrofit().create(FileService::class.java)
