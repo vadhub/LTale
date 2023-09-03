@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.data.PlayView
@@ -39,4 +40,10 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
         fileRepository.uploadIcon(file, userId)
     }
 
+}
+
+class LoadViewModelFactory(private val repository: FileRepository): ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return FileViewModel(repository) as T
+    }
 }
