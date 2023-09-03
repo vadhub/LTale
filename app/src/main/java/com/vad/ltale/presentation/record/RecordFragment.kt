@@ -20,18 +20,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
-import com.vad.ltale.data.Audio
-import com.vad.ltale.data.AudioRequest
-import com.vad.ltale.data.Limit
-import com.vad.ltale.data.PlayView
+import com.vad.ltale.model.Audio
+import com.vad.ltale.model.AudioRequest
+import com.vad.ltale.model.Limit
+import com.vad.ltale.model.PlayView
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.domain.*
-import com.vad.ltale.domain.audiohandle.PlayHandler
-import com.vad.ltale.domain.audiohandle.Player
-import com.vad.ltale.domain.audiohandle.Recorder
-import com.vad.ltale.domain.timehandle.ChunkTimer
-import com.vad.ltale.domain.timehandle.TimerHandler
+import com.vad.ltale.model.FileUtil
+import com.vad.ltale.model.audiohandle.PlayHandler
+import com.vad.ltale.model.audiohandle.Player
+import com.vad.ltale.model.audiohandle.Recorder
+import com.vad.ltale.model.timehandle.ChunkTimer
+import com.vad.ltale.model.timehandle.TimerHandler
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.AudioAdapter
 import com.vad.ltale.presentation.adapter.PlayOnClickListener
@@ -110,7 +110,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
         limitViewModel.limit.observe(viewLifecycleOwner) {
             limit = it
             chunkTimer = ChunkTimer(it.time)
-            recorder = Recorder(chunkTimer)
+            recorder = Recorder(chunkTimer, thisContext)
             chunkTimer.setTimerHandler(this)
         }
 

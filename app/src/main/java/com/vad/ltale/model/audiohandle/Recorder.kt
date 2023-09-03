@@ -1,15 +1,17 @@
-package com.vad.ltale.domain.audiohandle
+package com.vad.ltale.model.audiohandle
 
+import android.content.Context
 import android.media.MediaRecorder
 import android.os.Environment
-import com.vad.ltale.data.AudioRequest
-import com.vad.ltale.domain.timehandle.ChunkTimer
+import android.util.Log
+import com.vad.ltale.model.AudioRequest
+import com.vad.ltale.model.timehandle.ChunkTimer
 import java.io.File
 import java.io.IOException
 
-
 class Recorder(
-    private val chunkTimer: ChunkTimer
+    private val chunkTimer: ChunkTimer,
+    private val context: Context
 ) {
     private var output: String = ""
     private var mediaRecorder: MediaRecorder? = null
@@ -24,7 +26,10 @@ class Recorder(
             file.mkdirs()
         }
 
-        output = file.absolutePath + File.separator + "l" + System.currentTimeMillis() + ".mp3"
+        output = context.filesDir.absolutePath + File.separator + "l" + System.currentTimeMillis()
+
+        ///data/user/0/com.vad.ltale/files
+        Log.d("ddd", "${context.filesDir}")
 
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
