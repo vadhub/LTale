@@ -5,20 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vad.ltale.App
 import com.vad.ltale.R
 import com.vad.ltale.model.Like
-import com.vad.ltale.model.PlayView
 import com.vad.ltale.model.PostResponse
 import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.model.audiohandle.PlayHandler
-import com.vad.ltale.model.audiohandle.Player
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.FileViewModel
 import com.vad.ltale.presentation.LikeViewModel
@@ -28,10 +26,9 @@ import com.vad.ltale.presentation.PostViewModel
 import com.vad.ltale.presentation.PostViewModelFactory
 import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
-import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 
-class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener,
+class FeedFragment : BaseFragment(), LikeOnClickListener,
     AccountClickListener {
 
     private val postViewModel: PostViewModel by activityViewModels {
@@ -54,7 +51,6 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener,
         )
     }
     private lateinit var adapter: PostAdapter
-    private lateinit var playHandler: PlayHandler
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,20 +63,14 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener,
         val recyclerView = view.findViewById(R.id.feedRecyclerView) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
-        adapter = PostAdapter(load, this, this, this, mainViewModel.getUserDetails().userId)
+        val player: ExoPlayer = ExoPlayer.Builder(thisContext).build()
+
+        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, player)
 
         postViewModel.getPosts()
 
-        playHandler = PlayHandler(Player(thisContext))
 
         load.uriAudio.observe(viewLifecycleOwner) {
-            playHandler.handle(
-                it.first.position,
-                it.second,
-                it.first.audioAdapter,
-                it.first.seekBar,
-                it.first.timeTextView
-            )
             it.first.progressBar.visibility = View.GONE
         }
 
@@ -106,11 +96,6 @@ class FeedFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener,
         } else {
             likeViewModel.addLike(like, position, post)
         }
-    }
-
-    override fun onItemClick(playView: PlayView) {
-        playView.progressBar.visibility = View.VISIBLE
-        load.getUriByAudio(playView)
     }
 
     override fun onClick(id: Long) {

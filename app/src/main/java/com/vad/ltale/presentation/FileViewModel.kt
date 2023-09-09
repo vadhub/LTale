@@ -1,33 +1,19 @@
 package com.vad.ltale.presentation
 
 import android.content.Context
-import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.imageview.ShapeableImageView
-import com.vad.ltale.model.PlayView
 import com.vad.ltale.data.repository.FileRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
 class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
 
-    val uriAudio: MutableLiveData<Pair<PlayView, String>> = MutableLiveData()
-    private var uriTemp = ""
-    private var localUriTemp = ""
-
-    fun getUriByAudio(playView: PlayView) = viewModelScope.launch(Dispatchers.IO) {
-        if (uriTemp != playView.audio.uri) {
-            localUriTemp = fileRepository.getUriByAudio(playView.audio)
-            Log.d("!!mv", "getUriByAudio: $localUriTemp")
-        }
-
-        uriAudio.postValue(Pair(playView, localUriTemp))
-    }
+    val uriAudio: MutableLiveData<String> = MutableLiveData()
 
     fun getImage(id: Long?, context: Context?, imageViewPost: ImageView) = viewModelScope.launch {
         if (id != null) fileRepository.getImage(id, context, imageViewPost)

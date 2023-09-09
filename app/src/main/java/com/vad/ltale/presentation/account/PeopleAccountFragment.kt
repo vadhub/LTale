@@ -6,17 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.model.Like
-import com.vad.ltale.model.PlayView
 import com.vad.ltale.model.PostResponse
 import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.model.audiohandle.PlayHandler
-import com.vad.ltale.model.audiohandle.Player
 import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
@@ -40,9 +38,11 @@ class PeopleAccountFragment : AccountFragment(), HandleResponse {
         val countPost: TextView = view.findViewById(R.id.countPostsPeople)
         val countFollowers: TextView = view.findViewById(R.id.countFollowersPeople)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsPeople)
+        val player: ExoPlayer = ExoPlayer.Builder(thisContext).build()
+
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
-        val adapter = PostAdapter(load, this, this, this, mainViewModel.getUserDetails().userId)
+        val adapter = PostAdapter(load,  this, this, mainViewModel.getUserDetails().userId, player)
 
         val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
         userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
@@ -70,10 +70,8 @@ class PeopleAccountFragment : AccountFragment(), HandleResponse {
 
         countFollowers.text = "followers: 0"
 
-        playHandler = PlayHandler(Player(thisContext))
 
         load.uriAudio.observe(viewLifecycleOwner) {
-            playHandler.handle(it.first.position, it.second, it.first.audioAdapter, it.first.seekBar, it.first.timeTextView)
             it.first.progressBar.visibility = View.GONE
         }
 
@@ -81,11 +79,6 @@ class PeopleAccountFragment : AccountFragment(), HandleResponse {
             adapter.notifyItemChanged(it.first, it.second)
         }
 
-    }
-
-    override fun onItemClick(playView: PlayView) {
-        playView.progressBar.visibility = View.VISIBLE
-        load.getUriByAudio(playView)
     }
 
     override fun onLike(post: PostResponse, position: Int) {

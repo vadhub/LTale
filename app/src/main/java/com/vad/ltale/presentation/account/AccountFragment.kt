@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +24,6 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.App
 import com.vad.ltale.R
 import com.vad.ltale.model.Like
-import com.vad.ltale.model.PlayView
 import com.vad.ltale.model.PostResponse
 import com.vad.ltale.model.User
 import com.vad.ltale.data.local.SaveInternalHandle
@@ -31,16 +31,13 @@ import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.FileUtil
-import com.vad.ltale.model.audiohandle.PlayHandler
-import com.vad.ltale.model.audiohandle.Player
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
-import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import java.io.File
 
-open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickListener,
+open class AccountFragment : BaseFragment(), LikeOnClickListener,
     AccountClickListener {
 
     protected val postViewModel: PostViewModel by activityViewModels {
@@ -63,7 +60,6 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
         )
     }
 
-    protected lateinit var playHandler: PlayHandler
     protected lateinit var adapter: PostAdapter
     protected lateinit var userDetails: User
 
@@ -91,6 +87,7 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
         val username: TextView = view.findViewById(R.id.usernameTextView)
         val countPost: TextView = view.findViewById(R.id.countPosts)
         val countFollowers: TextView = view.findViewById(R.id.countFollowers)
+        val player: ExoPlayer = ExoPlayer.Builder(thisContext).build()
 
         val resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -113,7 +110,7 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
 
         username.text = userDetails.username
 
-        adapter = PostAdapter(load, this, this, this, mainViewModel.getUserDetails().userId)
+        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, player)
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
@@ -125,16 +122,8 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
 
         countFollowers.text = "followers: 0"
 
-        playHandler = PlayHandler(Player(thisContext))
 
         load.uriAudio.observe(viewLifecycleOwner) {
-            playHandler.handle(
-                it.first.position,
-                it.second,
-                it.first.audioAdapter,
-                it.first.seekBar,
-                it.first.timeTextView
-            )
             it.first.progressBar.visibility = View.GONE
         }
 
@@ -147,11 +136,6 @@ open class AccountFragment : BaseFragment(), PlayOnClickListener, LikeOnClickLis
         buttonCreateRecord.setOnClickListener {
             view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)
         }
-    }
-
-    override fun onItemClick(playView: PlayView) {
-        playView.progressBar.visibility = View.VISIBLE
-        load.getUriByAudio(playView)
     }
 
     override fun onLike(post: PostResponse, position: Int) {

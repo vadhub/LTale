@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,24 +24,20 @@ import com.vad.ltale.R
 import com.vad.ltale.model.Audio
 import com.vad.ltale.model.AudioRequest
 import com.vad.ltale.model.Limit
-import com.vad.ltale.model.PlayView
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.FileUtil
-import com.vad.ltale.model.audiohandle.PlayHandler
-import com.vad.ltale.model.audiohandle.Player
 import com.vad.ltale.model.audiohandle.Recorder
 import com.vad.ltale.model.timehandle.ChunkTimer
 import com.vad.ltale.model.timehandle.TimerHandler
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.AudioAdapter
-import com.vad.ltale.presentation.adapter.PlayOnClickListener
 import java.io.File
 import java.sql.Date
 import java.sql.Timestamp
 import java.util.concurrent.TimeUnit
 
-class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClickListener {
+class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
     private val postViewModel: PostViewModel by activityViewModels { PostViewModelFactory(PostRepository(mainViewModel.getRetrofit())) }
     private val limitViewModel: LimitViewModel by activityViewModels { LimitViewModelFactory(LimitRepository(mainViewModel.getRetrofit())) }
@@ -51,7 +48,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AudioAdapter
     private var selectedImage: Intent? = null
-    private lateinit var playHandler: PlayHandler
     private lateinit var listAudio: List<Audio>
     private lateinit var recorder: Recorder
     private val listAudioRequest: MutableList<AudioRequest> = ArrayList()
@@ -97,6 +93,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
 
         val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
+        val player: ExoPlayer = ExoPlayer.Builder(thisContext).build()
 
         hashtag = view.findViewById(R.id.editTextHashtag)
 
@@ -105,7 +102,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
         actionButton.setOnTouchListener(this)
         recyclerView = view.findViewById(R.id.audioRecyclerRecord)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = AudioAdapter(this)
+        adapter = AudioAdapter(player)
 
         limitViewModel.limit.observe(viewLifecycleOwner) {
             limit = it
@@ -113,9 +110,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
             recorder = Recorder(chunkTimer, thisContext)
             chunkTimer.setTimerHandler(this)
         }
-
-        playHandler = PlayHandler(Player(thisContext))
-
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data != null) {
@@ -195,10 +189,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, PlayOnClic
 
     override fun finishTime() {
         timeRecordTextView.text = "end"
-    }
-
-    override fun onItemClick(playView: PlayView){
-        playHandler.handlePlayView(playView)
     }
 
 }
