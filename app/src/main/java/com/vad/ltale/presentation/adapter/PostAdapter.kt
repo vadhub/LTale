@@ -16,6 +16,8 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.model.PostResponse
 import com.vad.ltale.presentation.FileViewModel
+import java.text.SimpleDateFormat
+
 
 class PostAdapter(
     private val load: FileViewModel,
@@ -72,8 +74,7 @@ class PostAdapter(
 
     override fun getItemCount() = posts.size
 
-    inner class PostViewHolder(itemView: View) :
-        ViewHolder(itemView) {
+    inner class PostViewHolder(itemView: View) : ViewHolder(itemView) {
         private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
         private val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
@@ -88,7 +89,10 @@ class PostAdapter(
             imageIcon.setImageDrawable(null)
             imageViewPost.setImageDrawable(null)
 
-            textViewDate.text = postResponse.dateChanged
+            val parser = SimpleDateFormat("yyyy-MM-dd")
+            val formatter = SimpleDateFormat("dd.MM.yyyy")
+
+            textViewDate.text = formatter.format(parser.parse(postResponse.dateChanged))
 
             load.getIcon(postResponse.userId, itemView.context, imageIcon)
             load.getImage(postResponse.image?.id, itemView.context, imageViewPost)
