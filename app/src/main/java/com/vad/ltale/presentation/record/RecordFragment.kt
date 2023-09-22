@@ -15,18 +15,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
-import com.vad.ltale.model.Audio
-import com.vad.ltale.model.AudioRequest
-import com.vad.ltale.model.Limit
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
+import com.vad.ltale.model.Audio
+import com.vad.ltale.model.AudioRequest
 import com.vad.ltale.model.FileUtil
+import com.vad.ltale.model.Limit
+import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.model.audiohandle.Recorder
 import com.vad.ltale.model.timehandle.ChunkTimer
 import com.vad.ltale.model.timehandle.TimerHandler
@@ -102,7 +104,18 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
         actionButton.setOnTouchListener(this)
         recyclerView = view.findViewById(R.id.audioRecyclerRecord)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = AudioAdapter(player)
+
+        val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
+            { audio: Audio, changePlayItem: () -> Unit ->
+                player.setMediaItem(MediaItem.fromUri(audio.uri))
+                player.prepare()
+                player.play()
+                changePlayItem.invoke()
+            }
+
+        val playlistHandler = PlaylistHandler(player, play)
+
+        adapter = AudioAdapter(0, playlistHandler)
 
         limitViewModel.limit.observe(viewLifecycleOwner) {
             limit = it

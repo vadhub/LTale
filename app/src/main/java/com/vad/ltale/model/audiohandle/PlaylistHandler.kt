@@ -1,4 +1,4 @@
-package com.vad.ltale
+package com.vad.ltale.model.audiohandle
 
 import android.os.Handler
 import android.os.Looper
@@ -7,12 +7,14 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.vad.ltale.data.TimeFormatter
+import com.vad.ltale.R
+import com.vad.ltale.model.Audio
+import com.vad.ltale.model.TimeFormatter
 import com.vad.ltale.presentation.adapter.AudioAdapter
 
 class PlaylistHandler(
     private val player: ExoPlayer,
-    private val play: (layoutPositionParent: Int, idAudio: Int, () -> Unit) -> Unit,
+    private val play: (audio: Audio, () -> Unit) -> Unit,
 ) {
 
     private var playingParentPosition = -1
@@ -29,8 +31,13 @@ class PlaylistHandler(
                 if (playbackState == ExoPlayer.STATE_READY) {
                     seekBarChanged(playingChildHolder!!.timeTextView, playingChildHolder!!.seekBar, player.duration)
                 }
+
+                if (playbackState == Player.STATE_ENDED) {
+                    updateNonPlayingLastChild()
+                }
             }
         })
+
     }
 
     private fun updateNonPlayingChild(playingHolder: AudioAdapter.RecordViewHolder?) {
@@ -56,7 +63,7 @@ class PlaylistHandler(
         positionParent: Int,
         positionChild: Int,
         holder: AudioAdapter.RecordViewHolder,
-        audioId: Int
+        audio: Audio
     ) {
 
         if (positionChild == playingChildPosition && positionParent == playingParentPosition) {
@@ -87,8 +94,7 @@ class PlaylistHandler(
             }
 
             play.invoke(
-                positionParent,
-                audioId,
+                audio,
                 changePlayItem
             )
         }

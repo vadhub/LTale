@@ -8,12 +8,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.data.repository.FileRepository
+import com.vad.ltale.model.Audio
 import kotlinx.coroutines.launch
 import java.io.File
 
 class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
 
     val uriAudio: MutableLiveData<String> = MutableLiveData()
+
+    fun getUri(audio: Audio) = viewModelScope.launch {
+        fileRepository.getUriByAudio(audio)
+    }
 
     fun getImage(id: Long?, context: Context?, imageViewPost: ImageView) = viewModelScope.launch {
         if (id != null) fileRepository.getImage(id, context, imageViewPost)

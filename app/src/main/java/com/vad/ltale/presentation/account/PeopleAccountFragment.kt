@@ -20,7 +20,7 @@ import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 import com.vad.ltale.presentation.adapter.PostAdapter
 
-class PeopleAccountFragment : AccountFragment(), HandleResponse {
+class PeopleAccountFragment: AccountFragment(), HandleResponse {
 
     private lateinit var userViewModel: UserViewModel
 
@@ -38,11 +38,8 @@ class PeopleAccountFragment : AccountFragment(), HandleResponse {
         val countPost: TextView = view.findViewById(R.id.countPostsPeople)
         val countFollowers: TextView = view.findViewById(R.id.countFollowersPeople)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsPeople)
-        val player: ExoPlayer = ExoPlayer.Builder(thisContext).build()
 
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
-
-        val adapter = PostAdapter(load,  this, this, mainViewModel.getUserDetails().userId, player)
 
         val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
         userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
@@ -69,11 +66,6 @@ class PeopleAccountFragment : AccountFragment(), HandleResponse {
         }
 
         countFollowers.text = "followers: 0"
-
-
-        load.uriAudio.observe(viewLifecycleOwner) {
-            it.first.progressBar.visibility = View.GONE
-        }
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {
             adapter.notifyItemChanged(it.first, it.second)

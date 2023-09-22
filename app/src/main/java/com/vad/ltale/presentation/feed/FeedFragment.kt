@@ -5,18 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vad.ltale.App
 import com.vad.ltale.R
-import com.vad.ltale.model.Like
-import com.vad.ltale.model.PostResponse
 import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
+import com.vad.ltale.model.Audio
+import com.vad.ltale.model.Like
+import com.vad.ltale.model.PostResponse
+import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.FileViewModel
 import com.vad.ltale.presentation.LikeViewModel
@@ -50,6 +53,11 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
             )
         )
     }
+
+    private val player: ExoPlayer by lazy {
+        ExoPlayer.Builder(thisContext).build()
+    }
+
     private lateinit var adapter: PostAdapter
 
     override fun onCreateView(
@@ -63,16 +71,26 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         val recyclerView = view.findViewById(R.id.feedRecyclerView) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
-        val player: ExoPlayer = ExoPlayer.Builder(thisContext).build()
+        var changePlayItemTemp: () -> Unit = {}
 
-        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, player)
-
-        postViewModel.getPosts()
-
+        val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
+            { audio: Audio, changePlayItem: () -> Unit ->
+                load.getUri(audio)
+                changePlayItemTemp = changePlayItem
+            }
 
         load.uriAudio.observe(viewLifecycleOwner) {
-            it.first.progressBar.visibility = View.GONE
+            player.setMediaItem(MediaItem.fromUri(it))
+            player.prepare()
+            player.play()
+            changePlayItemTemp.invoke()
         }
+
+        val playlistHandler = PlaylistHandler(player, play)
+
+        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, playlistHandler)
+
+        postViewModel.getPosts()
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
