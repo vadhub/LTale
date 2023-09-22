@@ -1,46 +1,31 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.model.PostResponse
+import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.presentation.FileViewModel
 import java.text.SimpleDateFormat
-
 
 class PostAdapter(
     private val load: FileViewModel,
     private val likeOnClickListener: LikeOnClickListener,
     private val onClickAccount: AccountClickListener,
     private val userId: Long,
-    private val player: ExoPlayer
+    private val playlistHandler: PlaylistHandler
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private var posts: List<PostResponse> = emptyList()
-
-    private var playingPosition = -1
-    private var playingParentHolder: PostViewHolder? = null
-
-    fun updateNonPlaying(parentHolder: PostViewHolder?) {
-        Log.d("@item 3update", "$!1 $playingParentHolder")
-        parentHolder?.adapter?.updateNonPlayingLast()
-        parentHolder?.adapter?.resetPlayingPosition()
-    }
-
-    fun updateStopPlayingLast() {
-        updateNonPlaying(playingParentHolder)
-    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun setPosts(posts: List<PostResponse>) {
@@ -56,8 +41,6 @@ class PostAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
 
         val post = posts[position]
-
-        Log.d("", "onBindViewHolder: $position ${post.userId}")
 
         if (post.countLike > 0) holder.likeHandle(userId == post.userId, post.countLike)
 
@@ -84,6 +67,7 @@ class PostAdapter(
         val imageIcon = itemView.findViewById(R.id.imageIconPost) as ShapeableImageView
         private val hashtag = itemView.findViewById(R.id.textViewHashtag) as TextView
 
+        @SuppressLint("SimpleDateFormat")
         fun bind(postResponse: PostResponse) {
 
             imageIcon.setImageDrawable(null)
@@ -100,27 +84,13 @@ class PostAdapter(
             if (postResponse.hashtags.isNotEmpty()) hashtag.text = postResponse.hashtags.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
 
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
-            adapter = AudioAdapter(player)
+            adapter = AudioAdapter(layoutPosition, playlistHandler)
             adapter.setRecords(postResponse.listAudio)
             recyclerViewAudio.adapter = adapter
-
-            adapter.setOnClick {
-                onClick()
-            }
         }
 
-        val onClick: () -> Unit = {
-            Log.d("itemClick", "$playingPosition $layoutPosition $this $playingParentHolder")
-            if (playingPosition != layoutPosition) {
-                Log.d("itemClick", "update $")
-                updateNonPlaying(playingParentHolder)
-                playingParentHolder = this
-                playingPosition = layoutPosition
-            }
-        }
-
+        @SuppressLint("UseCompatLoadingForDrawables")
         fun likeHandle(isLiked: Boolean, countLike: Int) {
-            Log.d("##postAdapter", "likeHandle: $isLiked")
             if (isLiked) {
                 imageViewLike.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_baseline_favorite_24))
             } else {
