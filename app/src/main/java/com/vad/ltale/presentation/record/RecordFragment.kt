@@ -28,6 +28,7 @@ import com.vad.ltale.model.Audio
 import com.vad.ltale.model.AudioRequest
 import com.vad.ltale.model.FileUtil
 import com.vad.ltale.model.Limit
+import com.vad.ltale.model.TimeFormatter
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.model.audiohandle.Recorder
 import com.vad.ltale.model.timehandle.ChunkTimer
@@ -37,7 +38,6 @@ import com.vad.ltale.presentation.adapter.AudioAdapter
 import java.io.File
 import java.sql.Date
 import java.sql.Timestamp
-import java.util.concurrent.TimeUnit
 
 class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
@@ -146,7 +146,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
         if (item.itemId == R.id.done) {
             if (listAudioRequest.isNotEmpty()) {
                 var file: File? = null
-                Log.d("##bustsave", "save")
                 if (selectedImage != null) {
                     file = File(FileUtil.getPath(selectedImage?.data, context))
                 }
@@ -169,7 +168,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> recorder.startRecording()
             MotionEvent.ACTION_UP -> saveAudio()
@@ -180,7 +178,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
     private fun saveAudio() {
         val audio: AudioRequest = recorder.stopRecording()
-        Log.d("##record", "play ${audio.file}")
         listAudioRequest.add(audio)
         listAudio = listAudioRequest.map { la -> Audio(
             uri = la.file.absolutePath,
@@ -193,11 +190,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
     override fun showTime(time: Long) {
         this.time = time
-        val mTime = String.format("%02d:%02d",
-            TimeUnit.MILLISECONDS.toMinutes(time),
-            TimeUnit.MILLISECONDS.toSeconds(time) -
-                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)))
-        timeRecordTextView.text = mTime
+        timeRecordTextView.text = TimeFormatter.format(time)
     }
 
     override fun finishTime() {
