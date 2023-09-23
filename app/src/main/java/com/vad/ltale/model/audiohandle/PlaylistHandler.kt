@@ -25,6 +25,14 @@ class PlaylistHandler(
     private var playingChildHolder: AudioAdapter.RecordViewHolder? = null
     private var clickedHolder: AudioAdapter.RecordViewHolder? = null
 
+    private fun reset() {
+        playingChildHolder = null
+        clickedHolder = null
+        playingParentPosition = -1
+        playingChildPosition = -1
+        durationBeforeDicrease = ""
+    }
+
     init {
         player.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
@@ -34,6 +42,7 @@ class PlaylistHandler(
 
                 if (playbackState == Player.STATE_ENDED) {
                     updateNonPlayingLastChild()
+                    reset()
                 }
             }
         })
@@ -43,7 +52,7 @@ class PlaylistHandler(
     private fun updateNonPlayingChild(playingHolder: AudioAdapter.RecordViewHolder?) {
         handler.removeCallbacksAndMessages(null)
         playingHolder?.timeTextView?.text = durationBeforeDicrease
-        playingHolder?.seekBar?.max = 0
+        playingHolder?.seekBar?.progress = 0
         playingHolder?.playButton?.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
 
