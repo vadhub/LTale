@@ -17,7 +17,7 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
     val uriAudio: MutableLiveData<String> = MutableLiveData()
 
     fun getUri(audio: Audio) = viewModelScope.launch {
-        fileRepository.getUriByAudio(audio)
+        uriAudio.postValue(fileRepository.getUriByAudio(audio))
     }
 
     fun getImage(id: Long?, context: Context?, imageViewPost: ImageView) = viewModelScope.launch {
