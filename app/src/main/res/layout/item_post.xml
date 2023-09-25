@@ -35,17 +35,28 @@
             android:gravity="center"
             android:text="3345"
             android:textSize="18sp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageIconPost"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/textViewNikName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="vasya"
+            app:layout_constraintBottom_toTopOf="@+id/textViewHashtag"
+            app:layout_constraintStart_toEndOf="@+id/imageIconPost" />
+
+        <TextView
             android:id="@+id/textViewHashtag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginStart="8dp"
+            android:gravity="center"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewPost"
             app:layout_constraintStart_toEndOf="@+id/imageIconPost"
             app:layout_constraintTop_toBottomOf="@id/textViewDate" />
 

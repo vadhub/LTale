@@ -17,6 +17,10 @@ data class PostResponse(
     @Expose
     val userId: Long,
 
+    @SerializedName("nikName")
+    @Expose
+    val nikName: String,
+
     @SerializedName("audioList")
     @Expose
     val listAudio: List<Audio>,

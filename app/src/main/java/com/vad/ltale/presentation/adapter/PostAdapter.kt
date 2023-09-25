@@ -66,6 +66,7 @@ class PostAdapter(
         val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
         val imageIcon = itemView.findViewById(R.id.imageIconPost) as ShapeableImageView
         private val hashtag = itemView.findViewById(R.id.textViewHashtag) as TextView
+        private val nikName = itemView.findViewById(R.id.textViewNikName) as TextView
 
         @SuppressLint("SimpleDateFormat")
         fun bind(postResponse: PostResponse) {
@@ -77,6 +78,8 @@ class PostAdapter(
             val formatter = SimpleDateFormat("dd.MM.yyyy")
 
             textViewDate.text = formatter.format(parser.parse(postResponse.dateChanged))
+
+            nikName.text = postResponse.nikName
 
             load.getIcon(postResponse.userId, itemView.context, imageIcon)
             load.getImage(postResponse.image?.id, itemView.context, imageViewPost)
