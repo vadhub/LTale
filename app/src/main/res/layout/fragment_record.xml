@@ -9,6 +9,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout">
 
         <LinearLayout
@@ -55,8 +56,7 @@
                     <ImageView
                         android:id="@+id/imageViewPostRecord"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintDimensionRatio="H,1:1" />
+                        android:layout_height="150dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/audioRecyclerRecord"
