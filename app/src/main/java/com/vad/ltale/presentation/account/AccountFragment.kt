@@ -144,11 +144,11 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
             if (it.isNotEmpty()) {
                 adapter.setPosts(it)
                 recyclerView.adapter = adapter
-                countPost.text = "posts: ${it.size}"
+                countPost.text = "${it.size}"
             }
         }
 
-        countFollowers.text = "followers: 0"
+        countFollowers.text = "0"
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {
             adapter.notifyItemChanged(it.first, it.second)
