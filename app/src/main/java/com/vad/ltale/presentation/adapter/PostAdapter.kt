@@ -42,16 +42,6 @@ class PostAdapter(
 
         val post = posts[position]
 
-        if (post.countLike > 0) holder.likeHandle(userId == post.userId, post.countLike)
-
-        holder.imageIcon.setOnClickListener {
-            onClickAccount.onClick(post.userId)
-        }
-
-        holder.imageViewLike.setOnClickListener {
-            likeOnClickListener.onLike(post, position)
-        }
-
         holder.bind(post)
     }
 
@@ -61,10 +51,10 @@ class PostAdapter(
         private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
         private val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
-        lateinit var adapter: AudioAdapter
+        private lateinit var adapter: AudioAdapter
         private val textViewCountLike = itemView.findViewById(R.id.countLikes) as TextView
-        val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
-        val imageIcon = itemView.findViewById(R.id.imageIconPost) as ShapeableImageView
+        private val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
+        private val imageIcon = itemView.findViewById(R.id.imageIconPost) as ShapeableImageView
         private val hashtag = itemView.findViewById(R.id.textViewHashtag) as TextView
         private val nikName = itemView.findViewById(R.id.textViewNikName) as TextView
 
@@ -73,6 +63,9 @@ class PostAdapter(
 
             imageIcon.setImageDrawable(null)
             imageViewPost.setImageDrawable(null)
+            nikName.text = ""
+            hashtag.text = ""
+            textViewDate.text = ""
 
             val parser = SimpleDateFormat("yyyy-MM-dd")
             val formatter = SimpleDateFormat("dd.MM.yyyy")
@@ -90,6 +83,16 @@ class PostAdapter(
             adapter = AudioAdapter(layoutPosition, playlistHandler)
             adapter.setRecords(postResponse.listAudio)
             recyclerViewAudio.adapter = adapter
+
+            imageIcon.setOnClickListener {
+                onClickAccount.onClick(postResponse.userId)
+            }
+
+            imageViewLike.setOnClickListener {
+                likeOnClickListener.onLike(postResponse, layoutPosition)
+            }
+
+            likeHandle(postResponse.userId == userId, postResponse.countLike)
         }
 
         @SuppressLint("UseCompatLoadingForDrawables")
