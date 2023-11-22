@@ -22,6 +22,9 @@ interface PostService {
     @GET("api-v1/posts/search/findAllByUserId")
     suspend fun getPostsByUserId(@Query("userId") userId: Long): Response<Main>
 
+    @GET("api-v1/posts/search/findAllPostByText")
+    suspend fun getPostsByText(@Query("text") text: String): Response<Main>
+
     @Multipart
     @POST("api-v1/post/save")
     suspend fun postPost(

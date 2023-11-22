@@ -16,6 +16,10 @@ class PostRepository(private val retrofitInstance: RemoteInstance) {
         return retrofitInstance.apiPost().getPostsByUserId(userId).body()?.embedded?.messages ?: emptyList()
     }
 
+    suspend fun getPostsByText(text: String): List<PostResponse> {
+        return retrofitInstance.apiPost().getPostsByText(text).body()?.embedded?.messages ?: emptyList()
+    }
+
     suspend fun sendPost(audio: List<MultipartBody.Part>,
                          duration: List<RequestBody>,
                          image: MultipartBody.Part?,

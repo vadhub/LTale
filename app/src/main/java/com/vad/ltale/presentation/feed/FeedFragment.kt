@@ -1,9 +1,15 @@
 package com.vad.ltale.presentation.feed
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
@@ -64,6 +70,7 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_feed, container, false)
     }
 
@@ -102,6 +109,34 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         likeViewModel.likeData.observe(viewLifecycleOwner) {
             adapter.notifyItemChanged(it.first, it.second)
         }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+
+        inflater.inflate(R.menu.menu_search_view, menu)
+
+        val menuItem = menu.findItem(R.id.action_search)
+        val searchView = menuItem.actionView as SearchView
+        val editText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        editText.setTextColor(Color.WHITE)
+
+        searchView.isIconified = true
+        searchView.queryHint = "searching..."
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrEmpty()) {
+                    postViewModel.getPostsByText(query)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                Log.d("#ddddd1", "111222111")
+                return true
+            }
+        })
 
     }
 

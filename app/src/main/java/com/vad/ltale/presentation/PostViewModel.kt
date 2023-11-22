@@ -27,6 +27,10 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         post.postValue(position)
     }
 
+    fun getPostsByText(text: String) = viewModelScope.launch {
+        posts.postValue(postRepository.getPostsByText(text))
+    }
+
     fun getPosts() = viewModelScope.launch {
         posts.postValue(postRepository.getPosts())
     }
