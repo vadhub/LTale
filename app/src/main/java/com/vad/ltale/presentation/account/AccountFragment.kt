@@ -72,7 +72,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         ExoPlayer.Builder(thisContext).build()
     }
 
-    protected lateinit var adapter: PostAdapter
+    private lateinit var adapter: PostAdapter
     protected lateinit var userDetails: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,24 +121,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
 
         username.text = userDetails.username
 
-        var changePlayItemTemp: () -> Unit = {}
-
-        val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
-            { audio: Audio, changePlayItem: () -> Unit ->
-                load.getUri(audio)
-                changePlayItemTemp = changePlayItem
-            }
-
-        load.uriAudio.observe(viewLifecycleOwner) {
-            player.setMediaItem(MediaItem.fromUri(it))
-            player.prepare()
-            player.play()
-            changePlayItemTemp.invoke()
-        }
-
-        val playlistHandler = PlaylistHandler(player, play)
-
-        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, playlistHandler)
+        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, prepareAudioHandler())
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
@@ -159,6 +142,25 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         buttonCreateRecord.setOnClickListener {
             view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)
         }
+    }
+
+    protected fun prepareAudioHandler(): PlaylistHandler {
+        var changePlayItemTemp: () -> Unit = {}
+
+        val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
+            { audio: Audio, changePlayItem: () -> Unit ->
+                load.getUri(audio)
+                changePlayItemTemp = changePlayItem
+            }
+
+        load.uriAudio.observe(viewLifecycleOwner) {
+            player.setMediaItem(MediaItem.fromUri(it))
+            player.prepare()
+            player.play()
+            changePlayItemTemp.invoke()
+        }
+
+        return PlaylistHandler(player, play)
     }
 
     override fun onLike(post: PostResponse, position: Int) {
