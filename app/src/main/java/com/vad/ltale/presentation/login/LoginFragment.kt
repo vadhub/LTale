@@ -1,6 +1,7 @@
 package com.vad.ltale.presentation.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,7 +66,8 @@ class LoginFragment : BaseFragment(), HandleResponse {
         findNavController().navigate(R.id.accountFragment)
     }
 
-    override fun error() {
+    override fun error(e: String) {
+        Log.d("Login", "error: $e")
         Toast.makeText(context, "Invalid password or username", Toast.LENGTH_SHORT).show()
     }
 

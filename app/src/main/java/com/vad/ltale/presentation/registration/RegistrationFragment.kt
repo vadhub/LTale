@@ -1,6 +1,7 @@
 package com.vad.ltale.presentation.registration
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +62,8 @@ class RegistrationFragment : BaseFragment(), HandleResponse {
         }
     }
 
-    override fun error() {
+    override fun error(e: String) {
+        Log.d("Registration", "error: $e")
         Toast.makeText(context, "Illegal registration", Toast.LENGTH_SHORT).show()
     }
 

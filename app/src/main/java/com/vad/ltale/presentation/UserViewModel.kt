@@ -21,8 +21,8 @@ class UserViewModel(private val userRepository: UserRepository, private val hand
         try {
             userDetails.postValue(userRepository.login(username))
             handleResponse.success()
-        } catch (e: java.lang.Exception) {
-            handleResponse.error()
+        } catch (e: Exception) {
+            e.message?.let { handleResponse.error(it) }
         }
 
     }
@@ -32,7 +32,7 @@ class UserViewModel(private val userRepository: UserRepository, private val hand
             userDetails.postValue(userRepository.creteUser(user))
             handleResponse.success()
         } catch (e: Exception) {
-            handleResponse.error()
+            e.message?.let { handleResponse.error(it) }
         }
 
     }

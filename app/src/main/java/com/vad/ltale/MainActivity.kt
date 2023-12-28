@@ -1,8 +1,10 @@
 package com.vad.ltale
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -88,8 +90,9 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse 
 
     override fun get(): MainViewModel = mainViewModel
 
-    override fun error() {
-
+    override fun error(e: String) {
+        Toast.makeText(this, "we can`t open", Toast.LENGTH_SHORT).show()
+        Log.d("Main", "error: $e")
     }
 
     override fun success() {
