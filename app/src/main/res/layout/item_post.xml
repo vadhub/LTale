@@ -13,8 +13,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageIconPost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:maxHeight="50dp"
             android:maxWidth="50dp"
             android:adjustViewBounds="true"
@@ -75,7 +75,6 @@
             android:id="@+id/audioRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewPost" />
 
         <ImageButton
@@ -84,7 +83,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:paddingStart="8dp"
-            android:layout_marginBottom="8dp"
+            android:paddingBottom="8dp"
             android:src="@drawable/ic_outline_favorite_border_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
