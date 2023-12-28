@@ -21,7 +21,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="To Record Voce!"
+                android:text="To Record Voice!"
                 android:textAlignment="center"
                 android:textSize="24sp" />
 
@@ -56,7 +56,8 @@
                     <ImageView
                         android:id="@+id/imageViewPostRecord"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp" />
+                        android:layout_height="wrap_content"
+                        />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/audioRecyclerRecord"
