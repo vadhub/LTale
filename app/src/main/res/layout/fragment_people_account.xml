@@ -19,48 +19,59 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center|bottom"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imageIconPeople"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxHeight="150dp"
-                    android:maxWidth="150dp"
+                    android:id="@+id/imageIconAnother"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
                     android:background="@color/white"
+                    android:maxWidth="150dp"
+                    android:maxHeight="150dp"
                     android:padding="1dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_launcher_foreground"
                     app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                     app:strokeColor="@color/white"
                     app:strokeWidth="1dp" />
 
                 <TextView
-                    android:id="@+id/usernameTextViewPeople"
+                    android:id="@+id/usernameAnother"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="nik"
-                    android:textSize="24dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="24dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/countPostsPeople"
-                        android:layout_marginEnd="6dp"
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="posts"
-                        android:textColor="@color/white" />
+                        android:src="@drawable/baseline_assessment_24" />
 
                     <TextView
-                        android:id="@+id/countFollowersPeople"
+                        android:id="@+id/countPostsAnother"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:text="0"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_supervisor_account_24" />
+
+                    <TextView
+                        android:id="@+id/countFollowersAnother"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="followers"
@@ -68,31 +79,21 @@
                 </LinearLayout>
 
                 <ImageButton
-                    android:layout_margin="8dp"
                     android:id="@+id/addFriend"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/baseline_person_add_alt_1_24"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_person_add_alt_1_24" />
 
             </LinearLayout>
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!--    <androidx.core.widget.NestedScrollView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:fillViewport="true"-->
-    <!--        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">-->
-
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerItemRecordsPeople"
+        android:id="@+id/recyclerItemRecordsAnother"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <!--    </androidx.core.widget.NestedScrollView>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
