@@ -1,12 +1,13 @@
 package com.vad.ltale.presentation.account
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,9 +21,10 @@ import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 import com.vad.ltale.presentation.adapter.PostAdapter
 
-class PeopleAccountFragment: AccountFragment(), HandleResponse {
+class AnotherAccountFragment: AccountFragment(), HandleResponse {
 
     private lateinit var userViewModel: UserViewModel
+    private lateinit var adapter: PostAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,20 +35,22 @@ class PeopleAccountFragment: AccountFragment(), HandleResponse {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIconPeople)
-        val username: TextView = view.findViewById(R.id.usernameTextViewPeople)
-        val countPost: TextView = view.findViewById(R.id.countPostsPeople)
-        val countFollowers: TextView = view.findViewById(R.id.countFollowersPeople)
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsPeople)
+        val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIconAnother)
+        val username: TextView = view.findViewById(R.id.usernameAnother)
+        val countPost: TextView = view.findViewById(R.id.countPostsAnother)
+        val countFollowers: TextView = view.findViewById(R.id.countFollowersAnother)
+        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsAnother)
 
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
         userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
-        val args: PeopleAccountFragmentArgs by navArgs()
+        val args: AnotherAccountFragmentArgs by navArgs()
 
-        userViewModel.getUser(args.userId)
+        userViewModel.getUser(args.uid)
+
+        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, prepareAudioHandler())
 
         userViewModel.userDetails.observe(viewLifecycleOwner) {
             userDetails = it
@@ -61,11 +65,11 @@ class PeopleAccountFragment: AccountFragment(), HandleResponse {
             if (it.isNotEmpty()) {
                 adapter.setPosts(it)
                 recyclerView.adapter = adapter
-                countPost.text = "posts: ${it.size}"
+                countPost.text = "${it.size}"
             }
         }
 
-        countFollowers.text = "followers: 0"
+        countFollowers.text = "0"
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {
             adapter.notifyItemChanged(it.first, it.second)
@@ -85,11 +89,10 @@ class PeopleAccountFragment: AccountFragment(), HandleResponse {
         }
     }
 
-    override fun error() {
-
+    override fun error(e: String) {
+        Log.d("AnotherAccount", "error: $e")
+        Toast.makeText(thisContext, "We can`t open this account", Toast.LENGTH_SHORT).show()
     }
 
-    override fun success() {
-
-    }
+    override fun success() {}
 }
