@@ -127,6 +127,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                 selectedImage = it.data!!
+                image.layoutParams.height = 150
                 image.setImageURI(selectedImage?.data)
             }
         }
