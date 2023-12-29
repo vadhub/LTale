@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,13 +18,23 @@ import com.vad.ltale.model.Like
 import com.vad.ltale.model.PostResponse
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.remote.HandleResponse
+import com.vad.ltale.data.repository.FollowRepository
+import com.vad.ltale.presentation.FollowViewModel
+import com.vad.ltale.presentation.FollowViewModelFactory
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 import com.vad.ltale.presentation.adapter.PostAdapter
 
 class AnotherAccountFragment: AccountFragment(), HandleResponse {
 
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by activityViewModels {
+        UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
+    }
+
+    private val followViewModel: FollowViewModel by activityViewModels {
+        FollowViewModelFactory(FollowRepository(mainViewModel.getRetrofit()))
+    }
+
     private lateinit var adapter: PostAdapter
 
     override fun onCreateView(
@@ -42,9 +53,6 @@ class AnotherAccountFragment: AccountFragment(), HandleResponse {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsAnother)
 
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
-
-        val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
-        userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
 
         val args: AnotherAccountFragmentArgs by navArgs()
 
