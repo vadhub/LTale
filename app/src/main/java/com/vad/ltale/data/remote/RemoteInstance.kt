@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 class RemoteInstance(private val user: User) {
@@ -81,5 +82,8 @@ class RemoteInstance(private val user: User) {
 
     fun apiLimit(): LimitService =
         retrofit().create(LimitService::class.java)
+
+    fun apiFollow(): FollowService =
+        retrofit().create(FollowService::class.java)
 
 }
