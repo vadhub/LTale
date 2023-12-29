@@ -10,15 +10,19 @@ import kotlinx.coroutines.launch
 
 class FollowViewModel(private val followRepository: FollowRepository): ViewModel() {
 
-    var mutableLiveData: MutableLiveData<Int> = MutableLiveData()
+    var mutableLiveData: MutableLiveData<Long> = MutableLiveData()
 
-    fun subscribe(countFollowers: Int, follow: Follow) = viewModelScope.launch {
+    fun getSubscribers(userId: Long) = viewModelScope.launch {
+        mutableLiveData.postValue(followRepository.getSubscribers(userId))
+    }
+
+    fun subscribe(countFollowers: Long, follow: Follow) = viewModelScope.launch {
         var countFollower = countFollowers
         followRepository.subscribe(follow)
         mutableLiveData.postValue(++countFollower)
     }
 
-    fun unsubscribe(countFollowers: Int, follow: Follow) = viewModelScope.launch {
+    fun unsubscribe(countFollowers: Long, follow: Follow) = viewModelScope.launch {
         var countFollower = countFollowers
         followRepository.unsubscribe(follow)
         mutableLiveData.postValue(--countFollower)
