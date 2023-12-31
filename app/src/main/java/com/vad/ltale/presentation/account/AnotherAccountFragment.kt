@@ -5,34 +5,36 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
-import com.vad.ltale.model.Like
-import com.vad.ltale.model.PostResponse
-import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.repository.FollowRepository
+import com.vad.ltale.data.repository.UserRepository
+import com.vad.ltale.model.Like
+import com.vad.ltale.model.PostResponse
+import com.vad.ltale.model.User
 import com.vad.ltale.presentation.FollowViewModel
 import com.vad.ltale.presentation.FollowViewModelFactory
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 import com.vad.ltale.presentation.adapter.PostAdapter
 
-class AnotherAccountFragment: AccountFragment(), HandleResponse {
-
-    private val userViewModel: UserViewModel by activityViewModels {
-        UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
-    }
+class AnotherAccountFragment : AccountFragment() {
 
     private val followViewModel: FollowViewModel by activityViewModels {
         FollowViewModelFactory(FollowRepository(mainViewModel.getRetrofit()))
+    }
+
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()))
     }
 
     private lateinit var adapter: PostAdapter
@@ -51,6 +53,8 @@ class AnotherAccountFragment: AccountFragment(), HandleResponse {
         val countPost: TextView = view.findViewById(R.id.countPostsAnother)
         val countFollowers: TextView = view.findViewById(R.id.countFollowersAnother)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsAnother)
+        val addToFriend: ImageView = view.findViewById(R.id.addFriend)
+
 
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
@@ -58,15 +62,21 @@ class AnotherAccountFragment: AccountFragment(), HandleResponse {
 
         userViewModel.getUser(args.uid)
 
-        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, prepareAudioHandler())
+        adapter = PostAdapter(
+            load,
+            this,
+            this,
+            mainViewModel.getUserDetails().userId,
+            prepareAudioHandler()
+        )
 
         userViewModel.userDetails.observe(viewLifecycleOwner) {
-            userDetails = it
 
-            load.getIcon(userDetails.userId, context, imageIcon)
-            username.text = userDetails.username
+                followViewModel.getSubscribers(it.userId)
+                load.getIcon(it.userId, context, imageIcon)
+                username.text = it.username
 
-            postViewModel.getPostsByUserId(userDetails.userId)
+                postViewModel.getPostsByUserId(it.userId)
         }
 
         postViewModel.posts.observe(viewLifecycleOwner) {
@@ -77,7 +87,9 @@ class AnotherAccountFragment: AccountFragment(), HandleResponse {
             }
         }
 
-        countFollowers.text = "0"
+        followViewModel.mutableLiveData.observe(viewLifecycleOwner) {
+            countFollowers.text = "$it"
+        }
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {
             adapter.notifyItemChanged(it.first, it.second)
@@ -97,10 +109,4 @@ class AnotherAccountFragment: AccountFragment(), HandleResponse {
         }
     }
 
-    override fun error(e: String) {
-        Log.d("AnotherAccount", "error: $e")
-        Toast.makeText(thisContext, "We can`t open this account", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun success() {}
 }

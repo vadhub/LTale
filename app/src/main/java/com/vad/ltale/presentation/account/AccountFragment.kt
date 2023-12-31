@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -73,17 +74,13 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
     }
 
     private lateinit var adapter: PostAdapter
-    protected lateinit var userDetails: User
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        userDetails = mainViewModel.getUserDetails()
-    }
+    private lateinit var userDetails: User
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        userDetails = mainViewModel.getUserDetails()
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_account, container, false)
     }

@@ -1,14 +1,11 @@
 package com.vad.ltale.data.repository
 
-import com.vad.ltale.model.User
 import com.vad.ltale.data.remote.RemoteInstance
+import com.vad.ltale.model.User
 
 class UserRepository(private val retrofitInstance: RemoteInstance) {
 
-    suspend fun getUsers() =
-        retrofitInstance.apiUser(retrofitInstance.retrofit()).getUser().body()?.embedded?.users
-
-    suspend fun getUserById(id: Long) =
+    suspend fun getUserById(id: Long): User? =
         retrofitInstance.apiUser(retrofitInstance.retrofit()).getUser(id).body()
 
     suspend fun login(username: String): User {
@@ -21,7 +18,7 @@ class UserRepository(private val retrofitInstance: RemoteInstance) {
     }
 
 
-    suspend fun creteUser(user: User) : User {
+    suspend fun createUser(user: User) : User {
         val response = retrofitInstance.apiUser(retrofitInstance.retrofitNoAuth()).registration(user)
 
         if (response.code() == 401) {

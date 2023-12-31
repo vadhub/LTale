@@ -14,12 +14,14 @@ import com.vad.ltale.R
 import com.vad.ltale.model.User
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.remote.HandleResponse
+import com.vad.ltale.presentation.AuthViewModel
+import com.vad.ltale.presentation.AuthViewModelFactory
 import com.vad.ltale.presentation.BaseFragment
-import com.vad.ltale.presentation.UserViewModel
-import com.vad.ltale.presentation.UserViewModelFactory
 
 
-class RegistrationFragment : BaseFragment(), HandleResponse {
+class RegistrationFragment : BaseFragment(), HandleResponse<User> {
+
+    private var qwr = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,26 +38,22 @@ class RegistrationFragment : BaseFragment(), HandleResponse {
         val email = view.findViewById(R.id.emailEditText) as TextInputEditText
         val password = view.findViewById(R.id.passwordEditText) as TextInputEditText
 
-        val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
-        val userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
+        val factory = AuthViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
+        val authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
         //todo check on empty
         buttonRegistration.setOnClickListener {
-                userViewModel.createUser(
-                    User(0,
-                        username.text.toString(),
-                        email.text.toString(),
-                        password.text.toString()
-                    )
+            authViewModel.createUser(
+                User(
+                    0,
+                    username.text.toString(),
+                    email.text.toString(),
+                    password.text.toString()
                 )
+            )
         }
 
-        userViewModel.userDetails.observe(viewLifecycleOwner) {
-            mainViewModel.setUserDetails(User(it.userId, it.username, it.email, password.text.toString()))
-            configuration.saveLogin(it.username)
-            configuration.savePass(password.text.toString())
-            configuration.saveFirstStart(true)
-        }
+        qwr = password.text.toString()
 
         buttonLogin.setOnClickListener {
             findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
@@ -67,7 +65,18 @@ class RegistrationFragment : BaseFragment(), HandleResponse {
         Toast.makeText(context, "Illegal registration", Toast.LENGTH_SHORT).show()
     }
 
-    override fun success() {
+    override fun success(t: User) {
+        mainViewModel.setUserDetails(
+            User(
+                t.userId,
+                t.username,
+                t.email,
+                qwr
+            )
+        )
+        configuration.saveLogin(t.username)
+        configuration.savePass(qwr)
+        configuration.saveFirstStart(true)
         findNavController().navigate(R.id.action_registrationFragment_to_accountFragment)
     }
 }

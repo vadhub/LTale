@@ -9,7 +9,9 @@ class MainViewModel : ViewModel() {
     private var user: User = User(0, "","","")
     private var retrofitInstance: RemoteInstance = RemoteInstance(user)
 
-    fun getRetrofit() = retrofitInstance
+    fun getRetrofit(): RemoteInstance {
+        return retrofitInstance
+    }
     fun setRetrofit(retrofitInstance: RemoteInstance) {
         this.retrofitInstance = retrofitInstance
     }

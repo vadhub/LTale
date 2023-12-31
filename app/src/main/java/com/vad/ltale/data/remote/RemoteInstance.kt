@@ -1,6 +1,7 @@
 package com.vad.ltale.data.remote
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.GsonBuilder
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
@@ -49,6 +50,7 @@ class RemoteInstance(private val user: User) {
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
+
 
     fun retrofitNoAuth(): Retrofit =
         Retrofit.Builder()

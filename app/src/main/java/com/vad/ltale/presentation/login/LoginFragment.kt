@@ -15,11 +15,13 @@ import com.vad.ltale.model.User
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.remote.HandleResponse
+import com.vad.ltale.presentation.AuthViewModel
+import com.vad.ltale.presentation.AuthViewModelFactory
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 
-class LoginFragment : BaseFragment(), HandleResponse {
+class LoginFragment : BaseFragment(), HandleResponse<User> {
 
     private lateinit var username: TextInputEditText
     private lateinit var password: TextInputEditText
@@ -40,29 +42,28 @@ class LoginFragment : BaseFragment(), HandleResponse {
         username.setText("anton")
         password.setText("1234")
 
-        val factory = UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
-        val viewModel: UserViewModel =
-            ViewModelProvider(this, factory).get(UserViewModel::class.java)
+        val factory = AuthViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
+        val viewModel: AuthViewModel =
+            ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
         buttonLogin.setOnClickListener {
-            viewModel.getUserByUsername(username.text.toString())
-            viewModel.userDetails.observe(viewLifecycleOwner) {
-                mainViewModel.setUserDetails(
-                    User(
-                        it.userId,
-                        username.text.toString().trim(),
-                        "",
-                        password.text.toString().trim()
-                    )
-                )
-                mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
-            }
+            viewModel.login(username.text.toString())
         }
     }
 
-    override fun success() {
+    override fun success(t: User) {
         configuration.saveLogin(username.text.toString())
         configuration.savePass(password.text.toString())
+
+        mainViewModel.setUserDetails(
+            User(
+                t.userId,
+                username.text.toString().trim(),
+                "",
+                password.text.toString().trim()
+            )
+        )
+        mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
         findNavController().navigate(R.id.accountFragment)
     }
 

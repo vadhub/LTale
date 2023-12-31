@@ -1,6 +1,6 @@
 package com.vad.ltale.data.remote
 
-interface HandleResponse {
+interface HandleResponse<T> {
     fun error(e: String)
-    fun success()
+    fun success(t: T)
 }
