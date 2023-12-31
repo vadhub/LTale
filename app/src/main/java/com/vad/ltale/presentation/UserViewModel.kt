@@ -9,7 +9,7 @@ import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val userRepository: UserRepository, private val handleResponse: HandleResponse) : ViewModel() {
+class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     var userDetails: MutableLiveData<User> = MutableLiveData()
 
@@ -17,29 +17,10 @@ class UserViewModel(private val userRepository: UserRepository, private val hand
         userDetails.postValue(userRepository.getUserById(id))
     }
 
-    fun getUserByUsername(username: String) = viewModelScope.launch {
-        try {
-            userDetails.postValue(userRepository.login(username))
-            handleResponse.success()
-        } catch (e: Exception) {
-            e.message?.let { handleResponse.error(it) }
-        }
-
-    }
-
-    fun createUser(user: User) = viewModelScope.launch {
-        try {
-            userDetails.postValue(userRepository.creteUser(user))
-            handleResponse.success()
-        } catch (e: Exception) {
-            e.message?.let { handleResponse.error(it) }
-        }
-
-    }
 }
 
-class UserViewModelFactory(private val userRepository: UserRepository, private val handleResponse: HandleResponse) : ViewModelProvider.Factory {
+class UserViewModelFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return UserViewModel(userRepository, handleResponse) as T
+        return UserViewModel(userRepository) as T
     }
 }
