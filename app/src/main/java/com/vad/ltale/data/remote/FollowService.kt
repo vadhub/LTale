@@ -13,8 +13,11 @@ interface FollowService {
     @GET("/api-v1/subscribers")
     suspend fun getSubscribers(@Query("userId") userId: Long): Response<Long>
 
-    @POST("/api-v1/like")
+    @POST("/api-v1/subscribe")
     suspend fun subscribe(@Body follow: Follow) : Response<Follow>
+
+    @GET("/api-v1/is_subscriber")
+    suspend fun isSubscriber(@Query("follower") follower: Long, @Query("followed") followed: Long) : Response<String>
 
     @HTTP(method = "DELETE", path = "/api-v1/unsubscribe", hasBody = true)
     suspend fun unsubscribe(@Body follow: Follow) : Response<String>

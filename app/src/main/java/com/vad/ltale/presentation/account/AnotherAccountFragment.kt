@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -15,12 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
-import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.repository.FollowRepository
 import com.vad.ltale.data.repository.UserRepository
+import com.vad.ltale.model.Follow
 import com.vad.ltale.model.Like
 import com.vad.ltale.model.PostResponse
-import com.vad.ltale.model.User
 import com.vad.ltale.presentation.FollowViewModel
 import com.vad.ltale.presentation.FollowViewModelFactory
 import com.vad.ltale.presentation.UserViewModel
@@ -54,13 +52,34 @@ class AnotherAccountFragment : AccountFragment() {
         val countFollowers: TextView = view.findViewById(R.id.countFollowersAnother)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsAnother)
         val addToFriend: ImageView = view.findViewById(R.id.addFriend)
-
+        var followers = 0L
 
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         val args: AnotherAccountFragmentArgs by navArgs()
 
-        userViewModel.getUser(args.uid)
+        val follower = mainViewModel.getUserDetails().userId
+        val followed = args.uid
+        var isSubscribe = false
+
+        userViewModel.getUser(followed)
+        followViewModel.checkSubscribe(follower, followed)
+
+        followViewModel.isSubscribe.observe(viewLifecycleOwner) {
+            isSubscribe = it
+            Log.d("!", "onViewCreated: $it")
+            addToFriend.setImageResource(if (it) R.drawable.baseline_how_to_reg_24 else R.drawable.baseline_person_add_alt_1_24)
+        }
+
+        addToFriend.setOnClickListener {
+            if (!isSubscribe) {
+                followViewModel.subscribe(followers, Follow(follower, followed))
+                addToFriend.setImageResource(R.drawable.baseline_how_to_reg_24)
+            } else {
+                followViewModel.unsubscribe(followers, Follow(follower, followed))
+                addToFriend.setImageResource(R.drawable.baseline_person_add_alt_1_24)
+            }
+        }
 
         adapter = PostAdapter(
             load,
@@ -72,11 +91,11 @@ class AnotherAccountFragment : AccountFragment() {
 
         userViewModel.userDetails.observe(viewLifecycleOwner) {
 
-                followViewModel.getSubscribers(it.userId)
-                load.getIcon(it.userId, context, imageIcon)
-                username.text = it.username
+            followViewModel.getSubscribers(it.userId)
+            load.getIcon(it.userId, context, imageIcon)
+            username.text = it.username
 
-                postViewModel.getPostsByUserId(it.userId)
+            postViewModel.getPostsByUserId(it.userId)
         }
 
         postViewModel.posts.observe(viewLifecycleOwner) {
@@ -88,6 +107,7 @@ class AnotherAccountFragment : AccountFragment() {
         }
 
         followViewModel.mutableLiveData.observe(viewLifecycleOwner) {
+            followers = it
             countFollowers.text = "$it"
         }
 

@@ -1,5 +1,6 @@
 package com.vad.ltale.presentation
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 class FollowViewModel(private val followRepository: FollowRepository): ViewModel() {
 
     var mutableLiveData: MutableLiveData<Long> = MutableLiveData()
+    var isSubscribe: MutableLiveData<Boolean> = MutableLiveData()
 
     fun getSubscribers(userId: Long) = viewModelScope.launch {
         mutableLiveData.postValue(followRepository.getSubscribers(userId))
@@ -20,6 +22,11 @@ class FollowViewModel(private val followRepository: FollowRepository): ViewModel
         var countFollower = countFollowers
         followRepository.subscribe(follow)
         mutableLiveData.postValue(++countFollower)
+    }
+
+    fun checkSubscribe(follower: Long, followed: Long) = viewModelScope.launch {
+        Log.d("!", "checkSubscribe: ${followRepository.isSubscribe(follower, followed)}, r $follower, d $followed")
+        isSubscribe.postValue(followRepository.isSubscribe(follower, followed).equals("true"))
     }
 
     fun unsubscribe(countFollowers: Long, follow: Follow) = viewModelScope.launch {
