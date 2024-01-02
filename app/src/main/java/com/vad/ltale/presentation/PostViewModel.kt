@@ -18,21 +18,16 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
     val post: MutableLiveData<Int> = MutableLiveData()
 
-    fun getPostsByUserId(userId: Long) = viewModelScope.launch {
-        posts.postValue(postRepository.getPostByUserId(userId))
-    }
-
-    fun getPostById(postId: Long, position: Int) = viewModelScope.launch {
-        postRepository.getPostById(postId)
-        post.postValue(position)
+    fun getPostsByUserId(userId: Long, currentUserId: Long, page: Int) = viewModelScope.launch {
+        posts.postValue(postRepository.getPostByUserId(userId, currentUserId, page))
     }
 
     fun getPostsByText(text: String) = viewModelScope.launch {
         posts.postValue(postRepository.getPostsByText(text))
     }
 
-    fun getPosts() = viewModelScope.launch {
-        posts.postValue(postRepository.getPosts())
+    fun getPosts(currentUserId: Long, page: Int) = viewModelScope.launch {
+        posts.postValue(postRepository.getPosts(currentUserId, page))
     }
 
     fun savePost(audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {

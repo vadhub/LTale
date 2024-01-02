@@ -5,15 +5,11 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 class PostRepository(private val retrofitInstance: RemoteInstance) {
-    suspend fun getPosts() =
-        retrofitInstance.apiPost().getPost().body()?.embedded?.messages ?: emptyList()
+    suspend fun getPosts(currentUserId: Long, page: Int) =
+        retrofitInstance.apiPost().getPost(currentUserId, page).body() ?: emptyList()
 
-    suspend fun getPostById(id: Long) =
-        retrofitInstance.apiPost().getPostById(id).body()?.embedded?.messages ?: emptyList()
-
-    suspend fun getPostByUserId(userId: Long) =
-        retrofitInstance.apiPost().getPostsByUserId(userId).body()?.embedded?.messages ?: emptyList()
-
+    suspend fun getPostByUserId(userId: Long, currentUserId: Long, page: Int) =
+        retrofitInstance.apiPost().getPostsByUserId(userId, currentUserId, page).body() ?: emptyList()
 
     suspend fun getPostsByText(text: String) =
         retrofitInstance.apiPost().getPostsByText(text).body()?.embedded?.messages ?: emptyList()

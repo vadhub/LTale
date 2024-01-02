@@ -92,7 +92,7 @@ class PostAdapter(
                 likeOnClickListener.onLike(postResponse, layoutPosition)
             }
 
-            likeHandle(postResponse.userId == userId, postResponse.countLike)
+            likeHandle(postResponse.isLiked, postResponse.countLike)
         }
 
         @SuppressLint("UseCompatLoadingForDrawables")

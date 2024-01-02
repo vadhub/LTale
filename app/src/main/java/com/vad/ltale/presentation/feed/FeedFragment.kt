@@ -97,7 +97,7 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
 
         adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, playlistHandler)
 
-        postViewModel.getPosts()
+        postViewModel.getPosts(mainViewModel.getUserDetails().userId,0)
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {

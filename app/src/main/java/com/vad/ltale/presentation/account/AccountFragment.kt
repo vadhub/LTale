@@ -134,7 +134,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
             adapter.notifyItemChanged(it.first, it.second)
         }
 
-        postViewModel.getPostsByUserId(userDetails.userId)
+        postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId, 0)
 
         buttonCreateRecord.setOnClickListener {
             view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)

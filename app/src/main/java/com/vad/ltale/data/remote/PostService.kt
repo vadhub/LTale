@@ -14,13 +14,10 @@ import retrofit2.http.Query
 
 interface PostService {
     @GET("api-v1/posts")
-    suspend fun getPost(): Response<Main>
+    suspend fun getPost(@Query("currentUserId") currentUserId: Long, @Query("page") page: Int): Response<List<PostResponse>>
 
-    @GET("api-v1/posts/{id}")
-    suspend fun getPostById(@Path("id") id: Long): Response<Main>
-
-    @GET("api-v1/posts/search/findAllByUserId")
-    suspend fun getPostsByUserId(@Query("userId") userId: Long): Response<Main>
+    @GET("api-v1/posts/user")
+    suspend fun getPostsByUserId(@Query("currentUserId") userId: Long, @Query("currentUserId") currentUserId: Long, @Query("page") page: Int): Response<List<PostResponse>>
 
     @GET("api-v1/posts/search/findAllPostByText")
     suspend fun getPostsByText(@Query("text") text: String): Response<Main>
