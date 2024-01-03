@@ -95,7 +95,7 @@ class AnotherAccountFragment : AccountFragment() {
             load.getIcon(it.userId, context, imageIcon)
             username.text = it.username
 
-            postViewModel.getPostsByUserId(follower, it.userId, 0)
+            postViewModel.getPostsByUserId(it.userId, follower, 0)
         }
 
         postViewModel.posts.observe(viewLifecycleOwner) {

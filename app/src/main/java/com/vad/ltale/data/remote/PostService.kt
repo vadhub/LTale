@@ -17,7 +17,7 @@ interface PostService {
     suspend fun getPost(@Query("currentUserId") currentUserId: Long, @Query("page") page: Int): Response<List<PostResponse>>
 
     @GET("api-v1/posts/user")
-    suspend fun getPostsByUserId(@Query("currentUserId") userId: Long, @Query("currentUserId") currentUserId: Long, @Query("page") page: Int): Response<List<PostResponse>>
+    suspend fun getPostsByUserId(@Query("userId") userId: Long, @Query("currentUserId") currentUserId: Long, @Query("page") page: Int): Response<List<PostResponse>>
 
     @GET("api-v1/posts/search/findAllPostByText")
     suspend fun getPostsByText(@Query("text") text: String): Response<Main>
