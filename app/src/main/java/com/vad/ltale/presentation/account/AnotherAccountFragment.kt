@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
+import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.repository.FollowRepository
 import com.vad.ltale.data.repository.UserRepository
@@ -94,6 +95,7 @@ class AnotherAccountFragment : AccountFragment() {
             followViewModel.getSubscribers(it.userId)
             load.getIcon(it.userId, context, imageIcon)
             username.text = it.username
+            (requireActivity() as MainActivity).setActionBarTitle(it.username)
 
             postViewModel.getPostsByUserId(it.userId, follower, 0)
         }

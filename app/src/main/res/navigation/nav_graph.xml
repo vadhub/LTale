@@ -71,7 +71,7 @@
     <fragment
         android:id="@+id/peopleAccountFragment"
         android:name="com.vad.ltale.presentation.account.AnotherAccountFragment"
-        android:label="Another Account" >
+        android:label="" >
 
         <argument
             android:name="uid"

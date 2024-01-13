@@ -36,14 +36,17 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
         AuthViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
     }
 
-    private lateinit var bottomMenu: BottomNavigationView
+    lateinit var bottomMenu: BottomNavigationView
+        private set
+
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         bottomMenu = findViewById(R.id.bottom_menu)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         val navHostFragment =
@@ -54,7 +57,6 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
         appBarConfiguration = AppBarConfiguration(setOf(R.id.accountFragment, R.id.registrationFragment))
 
         setupActionBarWithNavController(navController, appBarConfiguration)
-        bottomMenu.visibility = View.VISIBLE
 
         bottomMenu.setupWithNavController(navController)
 
@@ -81,6 +83,7 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
     }
 
     override fun success(t: User) {
+        bottomMenu.visibility = View.VISIBLE
         Log.d("!T!", "onViewCreated: $t")
         mainViewModel.setUserDetails(
             User(
@@ -93,6 +96,10 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
 
         mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
         navController.navigate(R.id.action_registrationFragment_to_accountFragment)
+    }
+
+    fun setActionBarTitle(title: String) {
+        toolbar.title = title
     }
 
 }
