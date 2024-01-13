@@ -46,9 +46,9 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
             authViewModel.createUser(
                 User(
                     0,
-                    username.text.toString(),
-                    email.text.toString(),
-                    password.text.toString()
+                    username.text?.trim().toString(),
+                    email.text?.trim().toString(),
+                    password.text?.trim().toString()
                 )
             )
         }
@@ -66,6 +66,7 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
     }
 
     override fun success(t: User) {
+
         mainViewModel.setUserDetails(
             User(
                 t.userId,

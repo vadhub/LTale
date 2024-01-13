@@ -14,6 +14,11 @@ class ChunkTimer(time: Long) {
         this.handler = handler
     }
 
+    fun setTimeStartFrom(time: Long) {
+        timeLast = 0
+        timeStartFrom = time
+    }
+
     fun startTimer() {
         timer = object: CountDownTimer(timeStartFrom, interval) {
             override fun onTick(millisUntilFinished: Long) {

@@ -20,8 +20,6 @@ class FileRepository(private val saveHandle: SaveInternalHandle, private val aud
 
     suspend fun getUriByAudio(audio: Audio): String {
 
-        Log.d("--file repost", "${audioDao.getById(audio.id)}")
-
         if (audioDao.getById(audio.id) == null) {
             val response = remoteInstance.apiFileHandle().downloadAudio(audio.id)
             if (response.isSuccessful) {
@@ -36,9 +34,8 @@ class FileRepository(private val saveHandle: SaveInternalHandle, private val aud
         return audioDao.getById(audio.id)?.uri ?: ""
     }
 
-
-    private suspend fun insert(audio: Audio) {
-        audioDao.insert(audio)
+    suspend fun removeAudioById(id: Long) {
+        audioDao.deleteById(id)
     }
 
     suspend fun uploadIcon(icon: File, userId: Long) {

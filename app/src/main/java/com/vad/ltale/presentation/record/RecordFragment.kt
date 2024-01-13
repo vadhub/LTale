@@ -50,7 +50,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AudioAdapter
     private var selectedImage: Intent? = null
-    private lateinit var listAudio: List<Audio>
+    private lateinit var listAudio: MutableList<Audio>
     private lateinit var recorder: Recorder
     private val listAudioRequest: MutableList<AudioRequest> = ArrayList()
     private lateinit var limit: Limit
@@ -115,7 +115,13 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
         val playlistHandler = PlaylistHandler(player, play)
 
-        adapter = AudioAdapter(0, playlistHandler)
+        val removeAudioListener: (audio: Audio) -> Unit = {
+            removeAudio(it)
+        }
+
+        adapter = AudioAdapter(0, playlistHandler, true)
+
+        adapter.removeListener = removeAudioListener
 
         limitViewModel.limit.observe(viewLifecycleOwner) {
             limit = it
@@ -187,6 +193,15 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
         ) }.toMutableList()
         adapter.setRecords(listAudio)
         recyclerView.adapter = adapter
+    }
+
+    private fun removeAudio(audio: Audio) {
+        listAudio.remove(audio)
+        listAudioRequest.removeAll {uri -> uri.file.absolutePath == audio.uri }
+        adapter.setRecords(listAudio)
+        time += audio.duration
+        timeRecordTextView.text = TimeFormatter.format(time)
+        chunkTimer.setTimeStartFrom(time)
     }
 
     override fun showTime(time: Long) {

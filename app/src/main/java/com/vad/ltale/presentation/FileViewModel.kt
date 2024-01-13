@@ -32,6 +32,10 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
         fileRepository.uploadIcon(file, userId)
     }
 
+    fun removeAudioById(id: Long) = viewModelScope.launch {
+        fileRepository.removeAudioById(id)
+    }
+
 }
 
 class LoadViewModelFactory(private val repository: FileRepository): ViewModelProvider.Factory {

@@ -1,9 +1,11 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
@@ -15,10 +17,12 @@ import com.vad.ltale.model.Audio
 import com.vad.ltale.model.TimeFormatter
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 
-class AudioAdapter(private val parentPosition: Int, private val playlistHandler: PlaylistHandler) :
+class AudioAdapter(private val parentPosition: Int, private val playlistHandler: PlaylistHandler, private val isRecord: Boolean) :
     Adapter<AudioAdapter.RecordViewHolder>() {
 
     private var audio: List<Audio> = emptyList()
+
+    var removeListener: (audio: Audio) -> Unit = {}
 
     @SuppressLint("NotifyDataSetChanged")
     fun setRecords(audios: List<Audio>) {
@@ -32,7 +36,7 @@ class AudioAdapter(private val parentPosition: Int, private val playlistHandler:
         )
 
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
-        holder.bind(duration = audio.get(position).duration)
+        holder.bind(audio = audio.get(position))
     }
 
     override fun getItemCount(): Int = audio.size
@@ -42,12 +46,22 @@ class AudioAdapter(private val parentPosition: Int, private val playlistHandler:
         val playButton: ShapeableImageView = item.findViewById(R.id.playButton)
         val seekBar: SeekBar = item.findViewById(R.id.seekBar)
         val progressBar: ProgressBar = item.findViewById(R.id.loadingProgressBar)
+        val removeButton: ImageButton = item.findViewById(R.id.removeButton)
 
         @SuppressLint("SetTextI18n")
-        fun bind(duration: Long) {
-            timeTextView.text = TimeFormatter.format(duration)
+        fun bind(audio: Audio) {
+            if (isRecord) {
+                removeButton.visibility = View.VISIBLE
+            }
+
+            removeButton.setOnClickListener {
+                Log.d("!e4444", "ok")
+                removeListener.invoke(audio)
+            }
+
+            timeTextView.text = TimeFormatter.format(audio.duration)
             playButton.setOnClickListener {
-                playlistHandler.play(parentPosition, layoutPosition, this, audio[layoutPosition])
+                playlistHandler.play(parentPosition, layoutPosition, this, audio)
             }
         }
     }

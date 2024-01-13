@@ -15,6 +15,9 @@ interface AudioDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(audio: Audio)
 
+    @Query("DELETE FROM audio_table WHERE id = :id")
+    suspend fun deleteById(id: Long)
+
     @Query("DELETE FROM audio_table")
     suspend fun deleteAll()
 }

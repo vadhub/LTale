@@ -80,7 +80,7 @@ class PostAdapter(
             if (postResponse.hashtags.isNotEmpty()) hashtag.text = postResponse.hashtags.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
 
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
-            adapter = AudioAdapter(layoutPosition, playlistHandler)
+            adapter = AudioAdapter(layoutPosition, playlistHandler, false)
             adapter.setRecords(postResponse.listAudio)
             recyclerViewAudio.adapter = adapter
 
