@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.App
+import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.repository.FileRepository
@@ -80,6 +81,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (requireActivity() as MainActivity).bottomMenu.visibility = View.VISIBLE
         userDetails = mainViewModel.getUserDetails()
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_account, container, false)
