@@ -179,7 +179,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if (item.itemId == R.id.sigh_out) {
-            configuration.saveFirstStart(false)
+            configuration.clear()
             findNavController().navigate(R.id.action_accountFragment_to_registrationFragment)
             return true
         }

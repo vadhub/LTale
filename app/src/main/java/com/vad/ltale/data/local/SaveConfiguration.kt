@@ -6,7 +6,12 @@ import android.content.SharedPreferences
 class SaveConfiguration(private val context: Context) {
     private lateinit var pref: SharedPreferences
 
-    fun savePass(pass: String) {
+    fun clear() {
+        context.getSharedPreferences("lil_tale_pass", Context.MODE_PRIVATE).edit().clear().apply()
+        context.getSharedPreferences("lil_tale_login", Context.MODE_PRIVATE).edit().clear().apply()
+    }
+
+    fun savePass(pass: String?) {
         pref = context.getSharedPreferences("lil_tale_pass", Context.MODE_PRIVATE)
         val ed: SharedPreferences.Editor = pref.edit()
         ed.putString("pass", pass)
