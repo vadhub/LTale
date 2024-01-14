@@ -61,6 +61,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
     private var time: Long = 0
     private val hashtags: MutableList<String> = mutableListOf()
     private lateinit var hashtag: EditText
+    private lateinit var chipGroup: ChipGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +101,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
         val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
         val player: ExoPlayer = ExoPlayer.Builder(thisContext).build()
-        val chipGroup: ChipGroup = view.findViewById(R.id.chipGroup)
+        chipGroup = view.findViewById(R.id.chipGroup)
 
         hashtag = view.findViewById(R.id.editTextHashtag)
 
@@ -114,24 +115,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                 if (event != null) {
                     if (keyCode == KeyEvent.KEYCODE_SPACE && event.action == MotionEvent.ACTION_UP) {
-                        var str = hashtag.text.trim()
-                        Log.d("#4", "ok ${str.length}")
-
-                        if (str.isNotBlank()) {
-
-
-                            if (str[0] != '#') {
-                                str = "#$str"
-                            }
-
-                            val chip = Chip(thisContext)
-                            chip.text = str
-                            chip.isCloseIconVisible = true
-
-                            chipGroup.addView(chip)
-
-                            hashtag.setText("")
-                        }
+                        createTag(hashtag.text.trim())
+                        hashtag.setText("")
                         return true
                     }
                 }
@@ -179,6 +164,26 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
             resultLauncher.launch(intent)
         }
 
+    }
+
+    private fun createTag(text: CharSequence) {
+        var str = text
+
+        if (str.isNotBlank()) {
+
+            if (str[0] != '#') {
+                str = "#$str"
+            }
+
+            createChip(str, chipGroup)
+        }
+    }
+
+    private fun createChip(str: CharSequence, chipGroup: ChipGroup) {
+        val chip = Chip(thisContext)
+        chip.text = str
+        chip.isCloseIconVisible = true
+        chipGroup.addView(chip)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
