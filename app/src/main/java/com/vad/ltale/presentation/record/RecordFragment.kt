@@ -43,7 +43,7 @@ import java.io.File
 import java.sql.Date
 import java.sql.Timestamp
 
-class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
+class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnClickListener {
 
     private val postViewModel: PostViewModel by activityViewModels { PostViewModelFactory(PostRepository(mainViewModel.getRetrofit())) }
     private val limitViewModel: LimitViewModel by activityViewModels { LimitViewModelFactory(LimitRepository(mainViewModel.getRetrofit())) }
@@ -183,6 +183,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
         val chip = Chip(thisContext)
         chip.text = str
         chip.isCloseIconVisible = true
+        chip.setOnCloseIconClickListener(this)
         chipGroup.addView(chip)
     }
 
@@ -252,6 +253,10 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
 
     override fun finishTime() {
         timeRecordTextView.text = "end"
+    }
+
+    override fun onClick(v: View?) {
+        chipGroup.removeView(v)
     }
 
 }
