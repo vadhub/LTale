@@ -192,4 +192,10 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
     override fun onClick(id: Long) {
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        player.stop()
+        player.release()
+    }
 }

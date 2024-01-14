@@ -15,6 +15,8 @@ import com.vad.ltale.model.User
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.remote.HandleResponse
+import com.vad.ltale.data.remote.exception.UnauthorizedException
+import com.vad.ltale.data.remote.exception.UserNotFoundException
 import com.vad.ltale.presentation.AuthViewModel
 import com.vad.ltale.presentation.AuthViewModelFactory
 import com.vad.ltale.presentation.BaseFragment
@@ -67,9 +69,10 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
         findNavController().navigate(R.id.accountFragment)
     }
 
-    override fun error(e: String) {
-        Log.d("Login", "error: $e")
-        Toast.makeText(context, "Invalid password or username", Toast.LENGTH_SHORT).show()
+    override fun error(e: Exception) {
+        if (e is UserNotFoundException) {
+            Toast.makeText(thisContext, "Invalid password or username", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

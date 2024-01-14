@@ -14,6 +14,8 @@ import com.vad.ltale.R
 import com.vad.ltale.model.User
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.remote.HandleResponse
+import com.vad.ltale.data.remote.exception.UserAlreadyExistException
+import com.vad.ltale.data.remote.exception.UserNotFoundException
 import com.vad.ltale.presentation.AuthViewModel
 import com.vad.ltale.presentation.AuthViewModelFactory
 import com.vad.ltale.presentation.BaseFragment
@@ -60,9 +62,10 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
         }
     }
 
-    override fun error(e: String) {
-        Log.d("Registration", "error: $e")
-        Toast.makeText(context, "Illegal registration", Toast.LENGTH_SHORT).show()
+    override fun error(e: Exception) {
+        if (e is UserAlreadyExistException) {
+            Toast.makeText(thisContext, "User with this nik already exist", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun success(t: User) {

@@ -18,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vad.ltale.data.local.SaveConfiguration
 import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.remote.RemoteInstance
+import com.vad.ltale.data.remote.exception.UnauthorizedException
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.model.User
 import com.vad.ltale.presentation.AuthViewModel
@@ -77,8 +78,11 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
 
     override fun get(): MainViewModel = mainViewModel
 
-    override fun error(e: String) {
-        Toast.makeText(this, "we can`t open", Toast.LENGTH_SHORT).show()
+    override fun error(e: Exception) {
+        if (e is UnauthorizedException) {
+            Toast.makeText(this, "user unauthorized", Toast.LENGTH_SHORT).show()
+        }
+
         Log.d("Main", "error: $e")
     }
 

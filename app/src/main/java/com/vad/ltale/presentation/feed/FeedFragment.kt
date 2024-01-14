@@ -156,4 +156,10 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         findNavController().navigate(directions)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        player.release()
+        player.stop()
+    }
+
 }
