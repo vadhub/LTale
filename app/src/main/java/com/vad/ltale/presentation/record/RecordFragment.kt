@@ -62,6 +62,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
     private val hashtags: MutableList<String> = mutableListOf()
     private lateinit var hashtag: EditText
     private lateinit var chipGroup: ChipGroup
+    private val chips: MutableList<Chip> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,6 +186,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
         chip.isCloseIconVisible = true
         chip.setOnCloseIconClickListener(this)
         chipGroup.addView(chip)
+        chips.add(chip)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -199,9 +201,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
                     file = File(FileUtil.getPath(selectedImage?.data, context))
                 }
 
-                if (hashtag.text.isNotEmpty()) {
-                    hashtags.add(hashtag.text.toString())
-                }
+                chips.forEach { hashtags.add(it.text.toString()) }
 
                 postViewModel.savePost(listAudioRequest, file, mainViewModel.getUserDetails().userId,
                     hashtags.ifEmpty { null })
@@ -257,6 +257,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
 
     override fun onClick(v: View?) {
         chipGroup.removeView(v)
+        chips.remove(v)
     }
 
 }
