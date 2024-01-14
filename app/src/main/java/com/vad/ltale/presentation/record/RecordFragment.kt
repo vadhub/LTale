@@ -185,8 +185,10 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
         chip.text = str
         chip.isCloseIconVisible = true
         chip.setOnCloseIconClickListener(this)
-        chipGroup.addView(chip)
-        chips.add(chip)
+        if (chips.size <= 4) {
+            chipGroup.addView(chip)
+            chips.add(chip)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
