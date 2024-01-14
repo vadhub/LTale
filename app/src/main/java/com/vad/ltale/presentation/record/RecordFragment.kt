@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
@@ -20,6 +22,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.repository.LimitRepository
@@ -96,6 +100,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
         val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
         val player: ExoPlayer = ExoPlayer.Builder(thisContext).build()
+        val chipGroup: ChipGroup = view.findViewById(R.id.chipGroup)
 
         hashtag = view.findViewById(R.id.editTextHashtag)
 
@@ -104,6 +109,37 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler {
         actionButton.setOnTouchListener(this)
         recyclerView = view.findViewById(R.id.audioRecyclerRecord)
         recyclerView.layoutManager = LinearLayoutManager(context)
+
+        hashtag.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (event != null) {
+                    if (keyCode == KeyEvent.KEYCODE_SPACE && event.action == MotionEvent.ACTION_UP) {
+                        var str = hashtag.text.trim()
+                        Log.d("#4", "ok ${str.length}")
+
+                        if (str.isNotBlank()) {
+
+
+                            if (str[0] != '#') {
+                                str = "#$str"
+                            }
+
+                            val chip = Chip(thisContext)
+                            chip.text = str
+                            chip.isCloseIconVisible = true
+
+                            chipGroup.addView(chip)
+
+                            hashtag.setText("")
+                        }
+                        return true
+                    }
+                }
+                return false
+            }
+
+        })
+
 
         val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
             { audio: Audio, changePlayItem: () -> Unit ->
