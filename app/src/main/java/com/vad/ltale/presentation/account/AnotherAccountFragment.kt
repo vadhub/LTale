@@ -104,11 +104,16 @@ class AnotherAccountFragment : AccountFragment() {
             postViewModel.getPostsByUserId(it.userId, follower, 0)
         }
 
+        postViewModel.getCountOfPostsByUserId(followed)
+        postViewModel.countOfPosts.observe(viewLifecycleOwner) {
+            countPost.text = "$it"
+        }
+
+
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 adapter.setPosts(it)
                 recyclerView.adapter = adapter
-                countPost.text = "${it.size}"
             }
         }
 

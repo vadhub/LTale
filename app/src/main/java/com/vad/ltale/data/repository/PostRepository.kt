@@ -23,4 +23,6 @@ class PostRepository(private val retrofitInstance: RemoteInstance) {
                          hashtags: List<RequestBody>?
     ) =
         retrofitInstance.apiPost().postPost(audio, duration, image, userId, dateCreated, dateChanged, hashtags)
+
+    suspend fun getCountOfPost(userId: Long) = retrofitInstance.apiPost().getCountOfPosts(userId).body()
 }

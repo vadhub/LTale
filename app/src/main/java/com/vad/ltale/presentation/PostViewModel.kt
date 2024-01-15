@@ -15,6 +15,9 @@ import java.io.File
 import java.sql.Date
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
+
+    val countOfPosts: MutableLiveData<Int> = MutableLiveData()
+
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
 
     private var page = 0
@@ -77,6 +80,10 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             }
         }
         postRepository.sendPost(listAudio, listDuration, imageBody, requestUserId, requestDateCreated, requestDateChanged, hashtagRequest)
+    }
+
+    fun getCountOfPostsByUserId(userId: Long) = viewModelScope.launch {
+        countOfPosts.postValue(postRepository.getCountOfPost(userId))
     }
 }
 

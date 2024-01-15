@@ -33,4 +33,7 @@ interface PostService {
         @Part("dateChanged") dateChanged: RequestBody,
         @Part("hashtags") hashtags: List<@JvmSuppressWildcards RequestBody>?
     ) : Response<PostResponse?>
+
+    @GET("api-v1/posts/search/countByUserId")
+    suspend fun getCountOfPosts(@Query("user_id") userId: Long): Response<Int>
 }

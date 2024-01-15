@@ -121,16 +121,20 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         username.text = userDetails.username
 
         val onReachEndListener: () -> Unit = {
-            postViewModel.getPosts(mainViewModel.getUserDetails().userId)
+            postViewModel.getPosts(userDetails.userId)
         }
 
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
+
+        postViewModel.getCountOfPostsByUserId(userDetails.userId)
+        postViewModel.countOfPosts.observe(viewLifecycleOwner) {
+            countPost.text = "$it"
+        }
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 adapter.setPosts(it)
                 recyclerView.adapter = adapter
-                countPost.text = "${it.size}"
             }
         }
 
