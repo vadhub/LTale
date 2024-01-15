@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout">
+        app:layout_constraintBottom_toTopOf="@+id/recordFloatingButton">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,13 +53,6 @@
 
                     </com.google.android.material.chip.ChipGroup>
 
-                    <EditText
-                        android:id="@+id/editTextHashtag"
-                        android:hint="#hashtag"
-                        android:textSize="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
                     <ImageView
                         android:id="@+id/imageViewPostRecord"
                         android:layout_width="match_parent"
@@ -80,25 +73,42 @@
 
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent">
+        <EditText
+            android:id="@+id/editTextHashtag"
+            android:hint="#hashtag"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imageButtonChoose"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="0dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_height="wrap_content"/>
 
-        <ImageButton
-            android:id="@+id/imageButtonChoose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/baseline_image_24" />
+    <ImageButton
+        android:id="@+id/imageButtonChoose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+
+        android:background="@android:color/transparent"
+        android:rotation="-56"
+        android:src="@drawable/attachment_fill0_wght200_grad0_opsz24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/recordFloatingButton"
+        app:layout_constraintTop_toTopOf="@+id/editTextHashtag" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/recordFloatingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_btn_speak_now" />
-    </LinearLayout>
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="@color/blue_300"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@android:drawable/ic_btn_speak_now"
+            app:tint="@color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
