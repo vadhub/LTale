@@ -1,6 +1,7 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,7 @@ class PostAdapter(
     private val load: FileViewModel,
     private val likeOnClickListener: LikeOnClickListener,
     private val onClickAccount: AccountClickListener,
-    private val userId: Long,
+    private val onReachEndListener: () -> Unit,
     private val playlistHandler: PlaylistHandler
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
@@ -40,7 +41,13 @@ class PostAdapter(
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
 
+        Log.d("##onBindViewHolder","onBindViewHolder")
+
         val post = posts[position]
+
+        if (position == posts.size - 1) {
+            onReachEndListener.invoke()
+        }
 
         holder.bind(post)
     }

@@ -16,7 +16,8 @@ import java.sql.Date
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
-    val post: MutableLiveData<Int> = MutableLiveData()
+
+    private var page = 0
 
     fun getPostsByUserId(userId: Long, currentUserId: Long, page: Int) = viewModelScope.launch {
         posts.postValue(postRepository.getPostByUserId(userId, currentUserId, page))
@@ -26,8 +27,19 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         posts.postValue(postRepository.getPostsByText(text))
     }
 
-    fun getPosts(currentUserId: Long, page: Int) = viewModelScope.launch {
-        posts.postValue(postRepository.getPosts(currentUserId, page))
+    fun getPosts(currentUserId: Long) = viewModelScope.launch {
+
+        val loadedPosts: MutableList<PostResponse> = posts.value as MutableList<PostResponse>
+
+        if (loadedPosts.isNotEmpty()) {
+            loadedPosts.addAll(postRepository.getPosts(currentUserId, page))
+            posts.postValue(loadedPosts)
+        } else {
+            posts.postValue(postRepository.getPosts(currentUserId, page))
+        }
+
+        page++
+
     }
 
     fun savePost(audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {

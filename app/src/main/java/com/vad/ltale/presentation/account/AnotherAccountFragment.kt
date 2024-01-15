@@ -82,11 +82,15 @@ class AnotherAccountFragment : AccountFragment() {
             }
         }
 
+        val onReachEndListener: () -> Unit = {
+            postViewModel.getPosts(mainViewModel.getUserDetails().userId)
+        }
+
         adapter = PostAdapter(
             load,
             this,
             this,
-            follower,
+            onReachEndListener,
             prepareAudioHandler()
         )
 

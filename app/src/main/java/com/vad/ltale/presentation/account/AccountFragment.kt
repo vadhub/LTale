@@ -120,7 +120,11 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
 
         username.text = userDetails.username
 
-        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, prepareAudioHandler())
+        val onReachEndListener: () -> Unit = {
+            postViewModel.getPosts(mainViewModel.getUserDetails().userId)
+        }
+
+        adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {

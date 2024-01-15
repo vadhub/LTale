@@ -79,6 +79,9 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         var changePlayItemTemp: () -> Unit = {}
+        val onReachEndListener: () -> Unit = {
+            postViewModel.getPosts(mainViewModel.getUserDetails().userId)
+        }
 
         val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
             { audio: Audio, changePlayItem: () -> Unit ->
@@ -95,9 +98,9 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
 
         val playlistHandler = PlaylistHandler(player, play)
 
-        adapter = PostAdapter(load, this, this, mainViewModel.getUserDetails().userId, playlistHandler)
+        adapter = PostAdapter(load, this, this, onReachEndListener, playlistHandler)
 
-        postViewModel.getPosts(mainViewModel.getUserDetails().userId,0)
+        postViewModel.getPosts(mainViewModel.getUserDetails().userId)
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
