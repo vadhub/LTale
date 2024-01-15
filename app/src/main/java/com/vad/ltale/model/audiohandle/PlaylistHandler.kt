@@ -37,7 +37,9 @@ class PlaylistHandler(
         player.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 if (playbackState == ExoPlayer.STATE_READY) {
-                    seekBarChanged(playingChildHolder!!.timeTextView, playingChildHolder!!.seekBar, player.duration)
+                    if (playingChildHolder != null) {
+                        seekBarChanged(playingChildHolder!!.timeTextView, playingChildHolder!!.seekBar, player.duration)
+                    }
                 }
 
                 if (playbackState == Player.STATE_ENDED) {
