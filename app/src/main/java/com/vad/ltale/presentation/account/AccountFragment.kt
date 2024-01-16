@@ -77,12 +77,17 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
     private lateinit var adapter: PostAdapter
     private lateinit var userDetails: User
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        userDetails = mainViewModel.getUserDetails()
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         (requireActivity() as MainActivity).bottomMenu.visibility = View.VISIBLE
-        userDetails = mainViewModel.getUserDetails()
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_account, container, false)
     }
@@ -93,6 +98,12 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
+
+        val onReachEndListener: () -> Unit = {
+            postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
+        }
+
+        adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
 
         val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIcon)
         val username: TextView = view.findViewById(R.id.usernameTextView)
@@ -120,11 +131,6 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
 
         username.text = userDetails.username
 
-        val onReachEndListener: () -> Unit = {
-            postViewModel.getPosts(userDetails.userId)
-        }
-
-        adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
         recyclerView.adapter = adapter
 
         postViewModel.getCountOfPostsByUserId(userDetails.userId)
@@ -132,7 +138,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
             countPost.text = "$it"
         }
 
-        postViewModel.posts.observe(viewLifecycleOwner) {
+        postViewModel.postsByUserId.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 adapter.setPosts(it)
             }
@@ -144,7 +150,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
             adapter.notifyItemChanged(it.first, it.second)
         }
 
-        postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId, 0)
+        postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
 
         buttonCreateRecord.setOnClickListener {
             view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)

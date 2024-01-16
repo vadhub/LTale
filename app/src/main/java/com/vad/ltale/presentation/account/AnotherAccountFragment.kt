@@ -83,7 +83,7 @@ class AnotherAccountFragment : AccountFragment() {
         }
 
         val onReachEndListener: () -> Unit = {
-            postViewModel.getPosts(mainViewModel.getUserDetails().userId)
+            postViewModel.getPostsByUserId(followed, follower)
         }
 
         adapter = PostAdapter(
@@ -101,7 +101,7 @@ class AnotherAccountFragment : AccountFragment() {
             username.text = it.username
             (requireActivity() as MainActivity).setActionBarTitle(it.username)
 
-            postViewModel.getPostsByUserId(it.userId, follower, 0)
+            postViewModel.getPostsByUserId(it.userId, follower)
         }
 
         postViewModel.getCountOfPostsByUserId(followed)
@@ -110,7 +110,7 @@ class AnotherAccountFragment : AccountFragment() {
         }
 
 
-        postViewModel.posts.observe(viewLifecycleOwner) {
+        postViewModel.postsByUserId.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 adapter.setPosts(it)
                 recyclerView.adapter = adapter
@@ -128,16 +128,6 @@ class AnotherAccountFragment : AccountFragment() {
 
     }
 
-    override fun onLike(post: PostResponse, position: Int) {
 
-        //like only user who uses app at time
-        val like = Like(mainViewModel.getUserDetails().userId, post.postId)
-
-        if (post.isLiked) {
-            likeViewModel.deleteLike(like, position, post)
-        } else {
-            likeViewModel.addLike(like, position, post)
-        }
-    }
 
 }

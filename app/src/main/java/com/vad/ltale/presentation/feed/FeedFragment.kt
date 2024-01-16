@@ -99,13 +99,13 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         val playlistHandler = PlaylistHandler(player, play)
 
         adapter = PostAdapter(load, this, this, onReachEndListener, playlistHandler)
+        recyclerView.adapter = adapter
 
         postViewModel.getPosts(mainViewModel.getUserDetails().userId)
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 adapter.setPosts(it)
-                recyclerView.adapter = adapter
             }
         }
 

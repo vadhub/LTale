@@ -17,14 +17,10 @@ import java.sql.Date
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     val countOfPosts: MutableLiveData<Int> = MutableLiveData()
-
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
-
+    var postsByUserId: MutableLiveData<List<PostResponse>> = MutableLiveData()
     private var page = 0
-
-    fun getPostsByUserId(userId: Long, currentUserId: Long, page: Int) = viewModelScope.launch {
-        posts.postValue(postRepository.getPostByUserId(userId, currentUserId, page))
-    }
+    private var pageOfUserPosts = 0
 
     fun getPostsByText(text: String) = viewModelScope.launch {
         posts.postValue(postRepository.getPostsByText(text))
@@ -32,20 +28,37 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     fun getPosts(currentUserId: Long) = viewModelScope.launch {
 
-        val loadedPosts: MutableList<PostResponse> = posts.value as MutableList<PostResponse>
-
+        val loadedPosts: MutableList<PostResponse>? = posts.value as? MutableList<PostResponse>
         val loaded = postRepository.getPosts(currentUserId, page)
 
         if (loaded.isNotEmpty()) {
-            if (loadedPosts.isNotEmpty()) {
-                loadedPosts.addAll(postRepository.getPosts(currentUserId, page))
-                posts.postValue(loadedPosts)
+            if (!loadedPosts.isNullOrEmpty()) {
+                loadedPosts.addAll(loaded)
+                posts.postValue(loadedPosts!!)
             } else {
-                posts.postValue(postRepository.getPosts(currentUserId, page))
+                posts.postValue(loaded)
             }
 
             page++
         }
+    }
+
+    fun getPostsByUserId(userId: Long, currentUserId: Long) = viewModelScope.launch {
+
+        val loadedPosts: MutableList<PostResponse>? = posts.value as? MutableList<PostResponse>
+        val loaded = postRepository.getPostByUserId(userId, currentUserId, pageOfUserPosts)
+
+        if (loaded.isNotEmpty()) {
+            if (!loadedPosts.isNullOrEmpty()) {
+                loadedPosts.addAll(loaded)
+                postsByUserId.postValue(loadedPosts!!)
+            } else {
+                postsByUserId.postValue(loaded)
+            }
+
+            pageOfUserPosts++
+        }
+
     }
 
     fun savePost(audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {
