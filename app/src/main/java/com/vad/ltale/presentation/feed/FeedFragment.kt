@@ -89,19 +89,19 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
                 changePlayItemTemp = changePlayItem
             }
 
-        load.uriAudio.observe(viewLifecycleOwner) {
-            player.setMediaItem(MediaItem.fromUri(it))
-            player.prepare()
-            player.play()
-            changePlayItemTemp.invoke()
-        }
-
         val playlistHandler = PlaylistHandler(player, play)
 
         adapter = PostAdapter(load, this, this, onReachEndListener, playlistHandler)
         recyclerView.adapter = adapter
 
         postViewModel.getPosts(mainViewModel.getUserDetails().userId)
+
+        load.uriAudio.observe(viewLifecycleOwner) {
+            player.setMediaItem(MediaItem.fromUri(it))
+            player.prepare()
+            player.play()
+            changePlayItemTemp.invoke()
+        }
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {

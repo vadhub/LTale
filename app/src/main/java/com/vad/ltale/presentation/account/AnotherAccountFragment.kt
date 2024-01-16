@@ -63,8 +63,21 @@ class AnotherAccountFragment : AccountFragment() {
         val followed = args.uid
         var isSubscribe = false
 
+        val onReachEndListener: () -> Unit = {
+            postViewModel.getPostsByUserId(followed, follower)
+        }
+
+        adapter = PostAdapter(
+            load,
+            this,
+            this,
+            onReachEndListener,
+            prepareAudioHandler()
+        )
+
         userViewModel.getUser(followed)
         followViewModel.checkSubscribe(follower, followed)
+        postViewModel.getCountOfPostsByUserId(followed)
 
         followViewModel.isSubscribe.observe(viewLifecycleOwner) {
             isSubscribe = it
@@ -82,18 +95,6 @@ class AnotherAccountFragment : AccountFragment() {
             }
         }
 
-        val onReachEndListener: () -> Unit = {
-            postViewModel.getPostsByUserId(followed, follower)
-        }
-
-        adapter = PostAdapter(
-            load,
-            this,
-            this,
-            onReachEndListener,
-            prepareAudioHandler()
-        )
-
         userViewModel.userDetails.observe(viewLifecycleOwner) {
 
             followViewModel.getSubscribers(it.userId)
@@ -104,7 +105,6 @@ class AnotherAccountFragment : AccountFragment() {
             postViewModel.getPostsByUserId(it.userId, follower)
         }
 
-        postViewModel.getCountOfPostsByUserId(followed)
         postViewModel.countOfPosts.observe(viewLifecycleOwner) {
             countPost.text = "$it"
         }

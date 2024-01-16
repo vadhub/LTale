@@ -43,16 +43,25 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
         val factory = AuthViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
         val authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
-        //todo check on empty
         buttonRegistration.setOnClickListener {
-            authViewModel.createUser(
-                User(
-                    0,
-                    username.text?.trim().toString(),
-                    email.text?.trim().toString(),
-                    password.text?.trim().toString()
+
+            if (username.text.isNullOrBlank()) {
+                Toast.makeText(thisContext, "Enter username", Toast.LENGTH_SHORT).show()
+            } else if (email.text.isNullOrBlank()) {
+                Toast.makeText(thisContext, "Enter mail", Toast.LENGTH_SHORT).show()
+            } else if (password.text.isNullOrBlank()) {
+                Toast.makeText(thisContext, "Enter password", Toast.LENGTH_SHORT).show()
+            } else {
+                authViewModel.createUser(
+                    User(
+                        0,
+                        username.text?.trim().toString(),
+                        email.text?.trim().toString(),
+                        password.text?.trim().toString()
+                    )
                 )
-            )
+            }
+
         }
 
         qwr = password.text.toString()

@@ -49,7 +49,14 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
             ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
         buttonLogin.setOnClickListener {
-            viewModel.login(username.text.toString())
+
+            if (username.text.isNullOrBlank()) {
+                Toast.makeText(thisContext, "Enter username", Toast.LENGTH_SHORT).show()
+            } else if (password.text.isNullOrBlank()) {
+                Toast.makeText(thisContext, "Enter password", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.login(username.text.toString())
+            }
         }
     }
 

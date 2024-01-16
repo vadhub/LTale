@@ -104,11 +104,15 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         }
 
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
+        recyclerView.adapter = adapter
 
         val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIcon)
         val username: TextView = view.findViewById(R.id.usernameTextView)
         val countPost: TextView = view.findViewById(R.id.countPosts)
         val countFollowers: TextView = view.findViewById(R.id.countFollowers)
+
+        username.text = userDetails.username
+        countFollowers.text = "0"
 
         val resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -122,18 +126,19 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
                 }
             }
 
+        postViewModel.getCountOfPostsByUserId(userDetails.userId)
         load.getIcon(userDetails.userId, context, imageIcon)
+        postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
+
+        buttonCreateRecord.setOnClickListener {
+            view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)
+        }
 
         imageIcon.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             resultLauncher.launch(intent)
         }
 
-        username.text = userDetails.username
-
-        recyclerView.adapter = adapter
-
-        postViewModel.getCountOfPostsByUserId(userDetails.userId)
         postViewModel.countOfPosts.observe(viewLifecycleOwner) {
             countPost.text = "$it"
         }
@@ -144,17 +149,10 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
             }
         }
 
-        countFollowers.text = "0"
-
         likeViewModel.likeData.observe(viewLifecycleOwner) {
             adapter.notifyItemChanged(it.first, it.second)
         }
 
-        postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
-
-        buttonCreateRecord.setOnClickListener {
-            view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)
-        }
     }
 
     protected fun prepareAudioHandler(): PlaylistHandler {
