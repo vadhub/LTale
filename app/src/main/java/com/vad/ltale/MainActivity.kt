@@ -24,7 +24,7 @@ import com.vad.ltale.model.User
 import com.vad.ltale.presentation.AuthViewModel
 import com.vad.ltale.presentation.AuthViewModelFactory
 import com.vad.ltale.presentation.MainViewModel
-import com.vad.ltale.presentation.MainViewModelProvider
+import com.vad.ltale.di.MainViewModelProvider
 
 class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<User> {
 
