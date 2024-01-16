@@ -4,9 +4,10 @@ A new type of social media application that uses audio instead of text messaging
 
 Key Features:
 - Registration under your data;
-- Only 1 minutes of recording is given for the whole day;
+- Only 3 minutes of recording is given for the whole day;
 - Images can be attached to posts;
 - The account can be customized by adding an icon;
+- View and follow other accounts;
 - Ability to view the feed with entries from other users;
 - Search for a post by username or hashtag;
 
