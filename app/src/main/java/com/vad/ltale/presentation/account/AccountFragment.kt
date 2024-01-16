@@ -125,6 +125,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         }
 
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
+        recyclerView.adapter = adapter
 
         postViewModel.getCountOfPostsByUserId(userDetails.userId)
         postViewModel.countOfPosts.observe(viewLifecycleOwner) {
@@ -134,7 +135,6 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         postViewModel.posts.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 adapter.setPosts(it)
-                recyclerView.adapter = adapter
             }
         }
 

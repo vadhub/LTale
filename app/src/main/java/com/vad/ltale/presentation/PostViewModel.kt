@@ -34,15 +34,18 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
         val loadedPosts: MutableList<PostResponse> = posts.value as MutableList<PostResponse>
 
-        if (loadedPosts.isNotEmpty()) {
-            loadedPosts.addAll(postRepository.getPosts(currentUserId, page))
-            posts.postValue(loadedPosts)
-        } else {
-            posts.postValue(postRepository.getPosts(currentUserId, page))
+        val loaded = postRepository.getPosts(currentUserId, page)
+
+        if (loaded.isNotEmpty()) {
+            if (loadedPosts.isNotEmpty()) {
+                loadedPosts.addAll(postRepository.getPosts(currentUserId, page))
+                posts.postValue(loadedPosts)
+            } else {
+                posts.postValue(postRepository.getPosts(currentUserId, page))
+            }
+
+            page++
         }
-
-        page++
-
     }
 
     fun savePost(audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {
