@@ -1,5 +1,6 @@
 package com.vad.ltale
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_main)
         bottomMenu = findViewById(R.id.bottom_menu)
 
