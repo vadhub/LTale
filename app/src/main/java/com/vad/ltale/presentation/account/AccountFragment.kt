@@ -127,7 +127,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
             }
 
         postViewModel.getCountOfPostsByUserId(userDetails.userId)
-        load.getIcon(userDetails.userId, context, imageIcon)
+        load.getIcon(userDetails.userId, imageIcon)
         postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
 
         buttonCreateRecord.setOnClickListener {

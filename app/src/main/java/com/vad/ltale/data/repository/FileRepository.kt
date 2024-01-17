@@ -3,6 +3,7 @@ package com.vad.ltale.data.repository
 import android.content.Context
 import android.util.Log
 import android.widget.ImageView
+import com.squareup.picasso.Callback
 import com.vad.ltale.R
 import com.vad.ltale.model.Audio
 import com.vad.ltale.data.local.AudioDao
@@ -58,12 +59,12 @@ class FileRepository(private val saveHandle: SaveInternalHandle, private val aud
         remoteInstance.apiFileHandle().uploadIcon(body, dateCreated, dateChanged, userIdL)
     }
 
-    fun getIcon(userId: Long, context: Context?, imageView: ImageView) {
+    fun getIcon(userId: Long, context: Context?, imageView: ImageView, callback: Callback) {
         context?.let {
             remoteInstance.picasso(it)
                 .load("http://10.0.2.2:8080/api-v1/files/icon/search?userId=$userId")
                 .error(R.drawable.ic_launcher_foreground)
-                .into(imageView)
+                .into(imageView, callback)
         }
     }
 

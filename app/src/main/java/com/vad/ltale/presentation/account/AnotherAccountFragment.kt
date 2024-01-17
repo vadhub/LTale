@@ -98,7 +98,7 @@ class AnotherAccountFragment : AccountFragment() {
         userViewModel.userDetails.observe(viewLifecycleOwner) {
 
             followViewModel.getSubscribers(it.userId)
-            load.getIcon(it.userId, context, imageIcon)
+            load.getIcon(it.userId, imageIcon)
             username.text = it.username
             (requireActivity() as MainActivity).setActionBarTitle(it.username)
 

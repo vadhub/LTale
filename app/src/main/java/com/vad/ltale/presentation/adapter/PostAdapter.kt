@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
+import com.vad.ltale.model.CacheIcon
 import com.vad.ltale.model.PostResponse
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.presentation.FileViewModel
@@ -23,7 +24,7 @@ class PostAdapter(
     private val likeOnClickListener: LikeOnClickListener,
     private val onClickAccount: AccountClickListener,
     private val onReachEndListener: () -> Unit,
-    private val playlistHandler: PlaylistHandler
+    private val playlistHandler: PlaylistHandler,
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private var posts: List<PostResponse> = emptyList()
@@ -40,8 +41,6 @@ class PostAdapter(
         )
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-
-        Log.d("##onBindViewHolder","onBindViewHolder")
 
         val post = posts[position]
 
@@ -78,11 +77,9 @@ class PostAdapter(
             val formatter = SimpleDateFormat("dd.MM.yyyy")
 
             textViewDate.text = formatter.format(parser.parse(postResponse.dateChanged))
-
             nikName.text = postResponse.nikName
-
-            load.getIcon(postResponse.userId, itemView.context, imageIcon)
-            load.getImage(postResponse.image?.id, itemView.context, imageViewPost)
+            load.getIcon(postResponse.userId, imageIcon)
+            load.getImage(postResponse.image?.id, imageViewPost)
 
             if (postResponse.hashtags.isNotEmpty()) hashtag.text = postResponse.hashtags.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
 
