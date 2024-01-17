@@ -21,5 +21,6 @@
     <string name="search">search</string>
     <string name="record">Record</string>
     <string name="registration">Registration</string>
+    <string name="user_unauthorized">User unauthorized</string>
 
 </resources>
