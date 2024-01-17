@@ -51,9 +51,9 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
         buttonLogin.setOnClickListener {
 
             if (username.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, "Enter username", Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.enter_username), Toast.LENGTH_SHORT).show()
             } else if (password.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, "Enter password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.password), Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.login(username.text.toString())
             }
@@ -78,7 +78,8 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
 
     override fun error(e: Exception) {
         if (e is UserNotFoundException) {
-            Toast.makeText(thisContext, "Invalid password or username", Toast.LENGTH_SHORT).show()
+            Toast.makeText(thisContext,
+                getString(R.string.invalid_password_or_username), Toast.LENGTH_SHORT).show()
         }
     }
 

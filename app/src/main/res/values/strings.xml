@@ -1,6 +1,25 @@
 <resources>
     <string name="app_name">LTale</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="sigh_out">sigh out</string>
+    <string name="enter_username">Enter username</string>
+    <string name="enter_mail">Enter mail</string>
+    <string name="enter_password">Enter password</string>
+    <string name="user_with_this_nik_already_exist">User with this nik already exist</string>
+    <string name="nik">nik</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="enter">enter</string>
+    <string name="login">login</string>
+    <string name="invalid_password_or_username">Invalid password or username</string>
+    <string name="searching">searching...</string>
+    <string name="to_record_voice">To Record Voice!</string>
+    <string name="hashtag">#hashtag</string>
+    <string name="account">account</string>
+    <string name="feed">feed</string>
+    <string name="done">done</string>
+    <string name="search">search</string>
+    <string name="record">Record</string>
+    <string name="registration">Registration</string>
+
 </resources>

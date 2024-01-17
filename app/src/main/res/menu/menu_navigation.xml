@@ -6,6 +6,6 @@
         android:id="@+id/done"
         android:icon="@drawable/ic_baseline_done_24"
         app:showAsAction="always"
-        android:title="done" />
+        android:title="@string/done" />
 
 </menu>

@@ -46,11 +46,11 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
         buttonRegistration.setOnClickListener {
 
             if (username.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, "Enter username", Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.enter_username), Toast.LENGTH_SHORT).show()
             } else if (email.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, "Enter mail", Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.enter_mail), Toast.LENGTH_SHORT).show()
             } else if (password.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, "Enter password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT).show()
             } else {
                 authViewModel.createUser(
                     User(
@@ -73,7 +73,8 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
 
     override fun error(e: Exception) {
         if (e is UserAlreadyExistException) {
-            Toast.makeText(thisContext, "User with this nik already exist", Toast.LENGTH_SHORT).show()
+            Toast.makeText(thisContext,
+                getString(R.string.user_with_this_nik_already_exist), Toast.LENGTH_SHORT).show()
         }
     }
 

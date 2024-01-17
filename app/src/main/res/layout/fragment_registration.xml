@@ -18,7 +18,7 @@
             android:id="@+id/nikEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="nik" />
+            android:hint="@string/nik" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:hint="email" />
+            android:hint="@string/email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -46,18 +46,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="password" />
+            android:hint="@string/password" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/enterRegistrationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="enter"/>
+        android:text="@string/enter"/>
 
     <Button
         android:id="@+id/loginRegistrationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="login"/>
+        android:text="@string/login"/>
 </LinearLayout>

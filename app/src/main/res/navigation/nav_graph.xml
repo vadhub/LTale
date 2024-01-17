@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.vad.ltale.presentation.login.LoginFragment"
-        android:label="Login"
+        android:label="@string/login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_accountFragment"
@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/recordFragment"
         android:name="com.vad.ltale.presentation.record.RecordFragment"
-        android:label="Record"
+        android:label="@string/record"
         tools:layout="@layout/fragment_record" >
         <action
             android:id="@+id/action_to_accountFragment"
@@ -47,7 +47,7 @@
     <fragment
         android:id="@+id/registrationFragment"
         android:name="com.vad.ltale.presentation.registration.RegistrationFragment"
-        android:label="Registration"
+        android:label="@string/registration"
         tools:layout="@layout/fragment_registration" >
         <action
             android:id="@+id/action_registrationFragment_to_loginFragment"
@@ -62,7 +62,7 @@
     <fragment
         android:id="@+id/feedFragment"
         android:name="com.vad.ltale.presentation.feed.FeedFragment"
-        android:label="Feed"
+        android:label="@string/feed"
         tools:layout="@layout/fragment_feed" >
         <action
             android:id="@+id/action_feedFragment_to_peopleAccountFragment"

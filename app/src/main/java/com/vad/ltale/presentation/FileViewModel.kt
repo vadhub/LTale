@@ -1,6 +1,5 @@
 package com.vad.ltale.presentation
 
-import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +16,7 @@ import java.io.File
 class FileViewModel(private val fileRepository: FileRepository) : ViewModel(), Callback {
 
     val uriAudio: MutableLiveData<String> = MutableLiveData()
-    val cacheIcon = CacheIcon()
+    private val cacheIcon = CacheIcon()
 
     private val userIdAndImageView: MutableLiveData<Pair<Long, ImageView>> = MutableLiveData()
 
@@ -37,8 +36,9 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel(), C
             userIdAndImageView.value = Pair(userId, imageIcon)
         } else {
             imageIcon.setImageDrawable(icon)
-            cacheIcon.printIcons()
         }
+
+        cacheIcon.printIcons()
     }
 
     fun uploadIcon(file: File, userId: Long) = viewModelScope.launch {

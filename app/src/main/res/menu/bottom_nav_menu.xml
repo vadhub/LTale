@@ -4,10 +4,10 @@
     <item
         android:id="@+id/accountFragment"
         android:icon="@drawable/baseline_account_box_24"
-        android:title="account" />
+        android:title="@string/account" />
 
     <item
         android:id="@+id/feedFragment"
         android:icon="@drawable/baseline_home_24"
-        android:title="feed" />
+        android:title="@string/feed" />
 </menu>

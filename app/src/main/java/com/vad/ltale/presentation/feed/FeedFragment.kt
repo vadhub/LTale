@@ -125,7 +125,7 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         editText.setTextColor(Color.WHITE)
 
         searchView.isIconified = true
-        searchView.queryHint = "searching..."
+        searchView.queryHint = getString(R.string.searching)
 
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
