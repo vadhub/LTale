@@ -209,7 +209,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
                     hashtags.ifEmpty { null })
                 limitViewModel.updateTime(Limit(limit.id, mainViewModel.getUserDetails().userId, time, "${Date(System.currentTimeMillis())}"))
             } else {
-                Toast.makeText(thisContext, "Record audio", Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT).show()
             }
             findNavController().navigate(R.id.action_to_accountFragment)
             return true
@@ -254,7 +254,9 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
     }
 
     override fun finishTime() {
-        timeRecordTextView.text = "end"
+        timeRecordTextView.text = "00:00"
+        Toast.makeText(thisContext, getString(R.string.time_is_up), Toast.LENGTH_SHORT).show()
+
     }
 
     override fun onClick(v: View?) {
