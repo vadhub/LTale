@@ -142,8 +142,9 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
         }
 
         adapter = AudioAdapter(0, playlistHandler, true)
-
         adapter.removeListener = removeAudioListener
+
+        recyclerView.adapter = adapter
 
         limitViewModel.limit.observe(viewLifecycleOwner) {
             limit = it
@@ -203,11 +204,11 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
                     file = File(FileUtil.getPath(selectedImage?.data, context))
                 }
 
-                chips.forEach { hashtags.add(it.text.toString()) }
+                val idUser = mainViewModel.getUserDetails().userId
 
-                postViewModel.savePost(listAudioRequest, file, mainViewModel.getUserDetails().userId,
-                    hashtags.ifEmpty { null })
-                limitViewModel.updateTime(Limit(limit.id, mainViewModel.getUserDetails().userId, time, "${Date(System.currentTimeMillis())}"))
+                chips.forEach { hashtags.add(it.text.toString()) }
+                postViewModel.savePost(listAudioRequest, file, idUser, hashtags.ifEmpty { null })
+                limitViewModel.updateTime(Limit(limit.id, idUser, time, "${Date(System.currentTimeMillis())}"))
             } else {
                 Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT).show()
             }
@@ -236,13 +237,13 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
             date = "${Timestamp(System.currentTimeMillis())}"
         ) }.toMutableList()
         adapter.setRecords(listAudio)
-        recyclerView.adapter = adapter
     }
 
     private fun removeAudio(audio: Audio) {
         listAudio.remove(audio)
         listAudioRequest.removeAll {uri -> uri.file.absolutePath == audio.uri }
         adapter.setRecords(listAudio)
+        time = (time / 1000) * 1000
         time += audio.duration
         timeRecordTextView.text = TimeFormatter.format(time)
         chunkTimer.setTimeStartFrom(time)
