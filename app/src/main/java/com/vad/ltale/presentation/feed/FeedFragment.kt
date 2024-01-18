@@ -82,7 +82,6 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         val onReachEndListener: () -> Unit = {
             postViewModel.getPosts(mainViewModel.getUserDetails().userId)
         }
-
         val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
             { audio: Audio, changePlayItem: () -> Unit ->
                 load.getUri(audio)
@@ -104,9 +103,7 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         }
 
         postViewModel.posts.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                adapter.setPosts(it)
-            }
+            adapter.setPosts(it)
         }
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {
@@ -136,7 +133,6 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                Log.d("#ddddd1", "111222111")
                 return true
             }
         })

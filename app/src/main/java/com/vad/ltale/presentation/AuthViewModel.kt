@@ -12,28 +12,23 @@ import kotlinx.coroutines.launch
 class AuthViewModel(private val userRepository: UserRepository, private val handleResponse: HandleResponse<User>) : ViewModel() {
 
     fun login(username: String) = viewModelScope.launch {
-            val response = userRepository.login(username)
-
-            if (response is Resource.Failure) {
-                handleResponse.error(response.exception)
-            } else {
-                handleResponse.success((response as Resource.Success).result)
-            }
-
+            handleResponse(userRepository.login(username))
     }
 
-    fun createUser(user: User) = viewModelScope.launch {
-        val response = userRepository.createUser(user)
+    fun register(user: User) = viewModelScope.launch {
+        handleResponse(userRepository.createUser(user))
+    }
 
+    private fun handleResponse(response: Resource<User>) {
         if (response is Resource.Failure) {
             handleResponse.error(response.exception)
         } else {
             handleResponse.success((response as Resource.Success).result)
         }
-
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 class AuthViewModelFactory(private val userRepository: UserRepository, private val handleResponse: HandleResponse<User>) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return AuthViewModel(userRepository, handleResponse) as T

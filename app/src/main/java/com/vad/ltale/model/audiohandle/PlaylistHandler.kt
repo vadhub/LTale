@@ -19,7 +19,7 @@ class PlaylistHandler(
 
     private var playingParentPosition = -1
     private var playingChildPosition = -1
-    private var durationBeforeDicrease = ""
+    private var durationBeforeDecrease = ""
     private var handler = Handler(Looper.getMainLooper())
 
     private var playingChildHolder: AudioAdapter.RecordViewHolder? = null
@@ -30,7 +30,7 @@ class PlaylistHandler(
         clickedHolder = null
         playingParentPosition = -1
         playingChildPosition = -1
-        durationBeforeDicrease = ""
+        durationBeforeDecrease = ""
     }
 
     init {
@@ -53,7 +53,7 @@ class PlaylistHandler(
 
     private fun updateNonPlayingChild(playingHolder: AudioAdapter.RecordViewHolder?) {
         handler.removeCallbacksAndMessages(null)
-        playingHolder?.timeTextView?.text = durationBeforeDicrease
+        playingHolder?.timeTextView?.text = durationBeforeDecrease
         playingHolder?.seekBar?.progress = 0
         playingHolder?.playButton?.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
@@ -114,8 +114,8 @@ class PlaylistHandler(
 
     private fun seekBarChanged(timeTextView: TextView, seekBar: SeekBar, duration: Long) {
 
-        durationBeforeDicrease = TimeFormatter.format(player.duration)
-        timeTextView.text = durationBeforeDicrease
+        durationBeforeDecrease = TimeFormatter.format(player.duration)
+        timeTextView.text = durationBeforeDecrease
 
         val runnable = object: Runnable {
             override fun run() {

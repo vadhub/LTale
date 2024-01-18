@@ -94,6 +94,10 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIcon)
+        val username: TextView = view.findViewById(R.id.usernameTextView)
+        val countPost: TextView = view.findViewById(R.id.countPosts)
+        val countFollowers: TextView = view.findViewById(R.id.countFollowers)
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
@@ -104,11 +108,6 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
 
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
         recyclerView.adapter = adapter
-
-        val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIcon)
-        val username: TextView = view.findViewById(R.id.usernameTextView)
-        val countPost: TextView = view.findViewById(R.id.countPosts)
-        val countFollowers: TextView = view.findViewById(R.id.countFollowers)
 
         username.text = userDetails.username
         countFollowers.text = "0"
@@ -143,9 +142,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         }
 
         postViewModel.postsByUserId.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                adapter.setPosts(it)
-            }
+            adapter.setPosts(it)
         }
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {

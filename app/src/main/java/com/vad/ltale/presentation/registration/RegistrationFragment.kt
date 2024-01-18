@@ -33,7 +33,6 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val buttonRegistration: Button = view.findViewById(R.id.enterRegistrationButton)
         val buttonLogin: Button = view.findViewById(R.id.loginRegistrationButton)
-
         val username = view.findViewById(R.id.nikEditText) as TextInputEditText
         val email = view.findViewById(R.id.emailEditText) as TextInputEditText
         val password = view.findViewById(R.id.passwordEditText) as TextInputEditText
@@ -50,7 +49,7 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
             } else if (password.text.isNullOrBlank()) {
                 Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT).show()
             } else {
-                authViewModel.createUser(
+                authViewModel.register(
                     User(
                         0,
                         username.text?.trim().toString(),

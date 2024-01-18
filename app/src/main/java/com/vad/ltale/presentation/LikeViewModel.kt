@@ -29,6 +29,7 @@ class LikeViewModel(private val likeRepository: LikeRepository) : ViewModel() {
 
 }
 
+@Suppress("UNCHECKED_CAST")
 class LikeViewModelFactory(private val repository: LikeRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return LikeViewModel(repository) as T

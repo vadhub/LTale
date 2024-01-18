@@ -18,6 +18,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
 
 }
 
+@Suppress("UNCHECKED_CAST")
 class UserViewModelFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return UserViewModel(userRepository) as T

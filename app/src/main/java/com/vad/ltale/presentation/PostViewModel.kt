@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.sql.Date
 
@@ -64,35 +66,32 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     fun savePost(audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {
 
         val listAudio = audio.map{ a ->
-                MultipartBody.Part.createFormData("audio", a.file.name, RequestBody.create("multipart/form-data".toMediaTypeOrNull(), a.file))
+                MultipartBody.Part.createFormData("audio", a.file.name, a.file.asRequestBody("multipart/form-data".toMediaTypeOrNull()))
         }
 
         val listDuration = audio.map {
-            a -> RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${a.duration}")
+            a -> "${a.duration}".toRequestBody("multipart/form-data".toMediaTypeOrNull())
         }
 
         var imageBody: MultipartBody.Part? = null
         if (image?.exists() == true) {
-            val requestImage: RequestBody =
-                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), image)
-
-            imageBody =
-                MultipartBody.Part.createFormData("image", image.name, requestImage)
+            val requestImage: RequestBody = image.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            imageBody = MultipartBody.Part.createFormData("image", image.name, requestImage)
         }
 
         val requestUserId: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "$userId")
+            "$userId".toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
         val requestDateCreated: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${Date(System.currentTimeMillis())}")
+            "${Date(System.currentTimeMillis())}".toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
         val requestDateChanged: RequestBody =
-            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "${Date(System.currentTimeMillis())}")
+            "${Date(System.currentTimeMillis())}".toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
         var hashtagRequest: List<RequestBody>? = null
         if (hashtags != null) {
             hashtagRequest = hashtags.map { h ->
-                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), h)
+                h.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             }
         }
         postRepository.sendPost(listAudio, listDuration, imageBody, requestUserId, requestDateCreated, requestDateChanged, hashtagRequest)
@@ -103,6 +102,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 class PostViewModelFactory(private val postRepository: PostRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PostViewModel(postRepository) as T

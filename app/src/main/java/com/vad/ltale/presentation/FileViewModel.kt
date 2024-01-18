@@ -65,6 +65,7 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel(), C
 
 }
 
+@Suppress("UNCHECKED_CAST")
 class LoadViewModelFactory(private val repository: FileRepository): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return FileViewModel(repository) as T

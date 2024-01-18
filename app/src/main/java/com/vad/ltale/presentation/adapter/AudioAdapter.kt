@@ -55,7 +55,6 @@ class AudioAdapter(private val parentPosition: Int, private val playlistHandler:
             }
 
             removeButton.setOnClickListener {
-                Log.d("!e4444", "ok")
                 removeListener.invoke(audio)
             }
 

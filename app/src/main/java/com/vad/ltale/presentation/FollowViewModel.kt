@@ -1,6 +1,5 @@
 package com.vad.ltale.presentation
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +24,6 @@ class FollowViewModel(private val followRepository: FollowRepository): ViewModel
     }
 
     fun checkSubscribe(follower: Long, followed: Long) = viewModelScope.launch {
-        Log.d("!", "checkSubscribe: ${followRepository.isSubscribe(follower, followed)}, r $follower, d $followed")
         isSubscribe.postValue(followRepository.isSubscribe(follower, followed).equals("true"))
     }
 

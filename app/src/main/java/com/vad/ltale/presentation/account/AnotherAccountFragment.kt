@@ -49,11 +49,11 @@ class AnotherAccountFragment : AccountFragment() {
         val username: TextView = view.findViewById(R.id.usernameAnother)
         val countPost: TextView = view.findViewById(R.id.countPostsAnother)
         val countFollowers: TextView = view.findViewById(R.id.countFollowersAnother)
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsAnother)
         val addToFriend: ImageView = view.findViewById(R.id.addFriend)
-        var followers = 0L
-
+        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsAnother)
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
+
+        var followers = 0L
 
         val args: AnotherAccountFragmentArgs by navArgs()
 
@@ -65,13 +65,8 @@ class AnotherAccountFragment : AccountFragment() {
             postViewModel.getPostsByUserId(followed, follower)
         }
 
-        adapter = PostAdapter(
-            load,
-            this,
-            this,
-            onReachEndListener,
-            prepareAudioHandler()
-        )
+        adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
+        recyclerView.adapter = adapter
 
         userViewModel.getUser(followed)
         followViewModel.checkSubscribe(follower, followed)
@@ -79,7 +74,6 @@ class AnotherAccountFragment : AccountFragment() {
 
         followViewModel.isSubscribe.observe(viewLifecycleOwner) {
             isSubscribe = it
-            Log.d("!", "onViewCreated: $it")
             addToFriend.setImageResource(if (it) R.drawable.baseline_how_to_reg_24 else R.drawable.baseline_person_add_alt_1_24)
         }
 
@@ -109,10 +103,7 @@ class AnotherAccountFragment : AccountFragment() {
 
 
         postViewModel.postsByUserId.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                adapter.setPosts(it)
-                recyclerView.adapter = adapter
-            }
+            adapter.setPosts(it)
         }
 
         followViewModel.mutableLiveData.observe(viewLifecycleOwner) {
@@ -125,7 +116,5 @@ class AnotherAccountFragment : AccountFragment() {
         }
 
     }
-
-
 
 }

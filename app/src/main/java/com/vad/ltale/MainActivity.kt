@@ -2,7 +2,6 @@ package com.vad.ltale
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -48,7 +47,6 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_main)
         bottomMenu = findViewById(R.id.bottom_menu)
-
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -56,11 +54,8 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
         navController = navHostFragment.navController
-
         appBarConfiguration = AppBarConfiguration(setOf(R.id.accountFragment, R.id.registrationFragment))
-
         setupActionBarWithNavController(navController, appBarConfiguration)
-
         bottomMenu.setupWithNavController(navController)
 
         if (!configuration.getFirstStart()) {
@@ -84,13 +79,10 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
         if (e is UnauthorizedException) {
             Toast.makeText(this, getString(R.string.user_unauthorized), Toast.LENGTH_SHORT).show()
         }
-
-        Log.d("Main", "error: $e")
     }
 
     override fun success(t: User) {
         bottomMenu.visibility = View.VISIBLE
-        Log.d("!T!", "onViewCreated: $t")
         mainViewModel.setUserDetails(
             User(
                 t.userId,
