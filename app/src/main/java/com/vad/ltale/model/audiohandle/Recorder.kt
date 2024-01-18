@@ -4,7 +4,7 @@ import android.content.Context
 import android.media.MediaRecorder
 import android.os.Environment
 import android.util.Log
-import com.vad.ltale.model.AudioRequest
+import com.vad.ltale.model.pojo.AudioRequest
 import com.vad.ltale.model.timehandle.ChunkTimer
 import java.io.File
 import java.io.IOException

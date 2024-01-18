@@ -1,4 +1,4 @@
-package com.vad.ltale.model
+package com.vad.ltale.model.pojo
 
 import java.io.File
 

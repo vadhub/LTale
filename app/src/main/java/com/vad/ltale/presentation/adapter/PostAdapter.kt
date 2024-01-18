@@ -1,7 +1,6 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
-import com.vad.ltale.model.CacheIcon
-import com.vad.ltale.model.PostResponse
+import com.vad.ltale.model.pojo.PostResponse
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.presentation.FileViewModel
 import java.text.SimpleDateFormat

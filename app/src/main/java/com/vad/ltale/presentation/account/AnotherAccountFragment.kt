@@ -17,9 +17,7 @@ import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.repository.FollowRepository
 import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.model.Follow
-import com.vad.ltale.model.Like
-import com.vad.ltale.model.PostResponse
+import com.vad.ltale.model.pojo.Follow
 import com.vad.ltale.presentation.FollowViewModel
 import com.vad.ltale.presentation.FollowViewModelFactory
 import com.vad.ltale.presentation.UserViewModel

@@ -5,10 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.remote.Resource
-import com.vad.ltale.data.remote.exception.UnauthorizedException
-import com.vad.ltale.data.remote.exception.UserNotFoundException
 import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.model.User
+import com.vad.ltale.model.pojo.User
 import kotlinx.coroutines.launch
 
 class AuthViewModel(private val userRepository: UserRepository, private val handleResponse: HandleResponse<User>) : ViewModel() {

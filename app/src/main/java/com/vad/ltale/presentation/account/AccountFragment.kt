@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -29,11 +28,11 @@ import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.model.Audio
+import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.FileUtil
-import com.vad.ltale.model.Like
-import com.vad.ltale.model.PostResponse
-import com.vad.ltale.model.User
+import com.vad.ltale.model.pojo.Like
+import com.vad.ltale.model.pojo.PostResponse
+import com.vad.ltale.model.pojo.User
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.FileViewModel

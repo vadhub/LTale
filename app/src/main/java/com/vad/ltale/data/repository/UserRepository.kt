@@ -5,7 +5,7 @@ import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.data.remote.exception.UnauthorizedException
 import com.vad.ltale.data.remote.exception.UserAlreadyExistException
 import com.vad.ltale.data.remote.exception.UserNotFoundException
-import com.vad.ltale.model.User
+import com.vad.ltale.model.pojo.User
 
 class UserRepository(private val retrofitInstance: RemoteInstance) {
 

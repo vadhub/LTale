@@ -7,9 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.*
@@ -28,10 +25,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.model.Audio
-import com.vad.ltale.model.AudioRequest
+import com.vad.ltale.model.pojo.Audio
+import com.vad.ltale.model.pojo.AudioRequest
 import com.vad.ltale.model.FileUtil
-import com.vad.ltale.model.Limit
+import com.vad.ltale.model.pojo.Limit
 import com.vad.ltale.model.TimeFormatter
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.model.audiohandle.Recorder

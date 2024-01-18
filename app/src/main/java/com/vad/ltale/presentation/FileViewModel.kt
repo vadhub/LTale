@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.imageview.ShapeableImageView
 import com.squareup.picasso.Callback
 import com.vad.ltale.data.repository.FileRepository
-import com.vad.ltale.model.Audio
+import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.CacheIcon
 import kotlinx.coroutines.launch
 import java.io.File

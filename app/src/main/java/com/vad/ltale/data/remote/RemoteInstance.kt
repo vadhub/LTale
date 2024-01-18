@@ -1,18 +1,16 @@
 package com.vad.ltale.data.remote
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.GsonBuilder
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
-import com.vad.ltale.model.User
+import com.vad.ltale.model.pojo.User
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 class RemoteInstance(private val user: User) {

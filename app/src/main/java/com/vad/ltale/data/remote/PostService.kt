@@ -1,7 +1,7 @@
 package com.vad.ltale.data.remote
 
-import com.vad.ltale.model.Main
-import com.vad.ltale.model.PostResponse
+import com.vad.ltale.model.pojo.Main
+import com.vad.ltale.model.pojo.PostResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -9,7 +9,6 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PostService {

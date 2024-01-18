@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.vad.ltale.model.Audio
+import com.vad.ltale.model.pojo.Audio
 
 @Dao
 interface AudioDao {

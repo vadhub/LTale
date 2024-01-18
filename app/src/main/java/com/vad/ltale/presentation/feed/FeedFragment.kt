@@ -22,9 +22,9 @@ import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.model.Audio
-import com.vad.ltale.model.Like
-import com.vad.ltale.model.PostResponse
+import com.vad.ltale.model.pojo.Audio
+import com.vad.ltale.model.pojo.Like
+import com.vad.ltale.model.pojo.PostResponse
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.FileViewModel

@@ -1,7 +1,6 @@
 package com.vad.ltale.presentation.login
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +10,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
-import com.vad.ltale.model.User
+import com.vad.ltale.model.pojo.User
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.remote.HandleResponse
-import com.vad.ltale.data.remote.exception.UnauthorizedException
 import com.vad.ltale.data.remote.exception.UserNotFoundException
 import com.vad.ltale.presentation.AuthViewModel
 import com.vad.ltale.presentation.AuthViewModelFactory
 import com.vad.ltale.presentation.BaseFragment
-import com.vad.ltale.presentation.UserViewModel
-import com.vad.ltale.presentation.UserViewModelFactory
 
 class LoginFragment : BaseFragment(), HandleResponse<User> {
 

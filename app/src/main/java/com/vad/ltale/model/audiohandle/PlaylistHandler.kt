@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.vad.ltale.R
-import com.vad.ltale.model.Audio
+import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.TimeFormatter
 import com.vad.ltale.presentation.adapter.AudioAdapter
 

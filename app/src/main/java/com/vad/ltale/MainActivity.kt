@@ -21,7 +21,7 @@ import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.remote.exception.UnauthorizedException
 import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.model.User
+import com.vad.ltale.model.pojo.User
 import com.vad.ltale.presentation.AuthViewModel
 import com.vad.ltale.presentation.AuthViewModelFactory
 import com.vad.ltale.presentation.MainViewModel

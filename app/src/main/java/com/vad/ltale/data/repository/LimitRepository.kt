@@ -1,6 +1,6 @@
 package com.vad.ltale.data.repository
 
-import com.vad.ltale.model.Limit
+import com.vad.ltale.model.pojo.Limit
 import com.vad.ltale.data.remote.RemoteInstance
 import java.sql.Date
 

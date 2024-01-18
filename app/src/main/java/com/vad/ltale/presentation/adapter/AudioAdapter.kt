@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
-import com.vad.ltale.model.Audio
+import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.TimeFormatter
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 

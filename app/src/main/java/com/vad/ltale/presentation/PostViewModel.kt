@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.vad.ltale.model.AudioRequest
-import com.vad.ltale.model.PostResponse
+import com.vad.ltale.model.pojo.AudioRequest
+import com.vad.ltale.model.pojo.PostResponse
 import com.vad.ltale.data.repository.PostRepository
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
