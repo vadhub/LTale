@@ -79,6 +79,8 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userDetails = mainViewModel.getUserDetails()
+        postViewModel.getCountOfPostsByUserId(userDetails.userId)
+        postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
 
     }
 
@@ -109,6 +111,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
         recyclerView.adapter = adapter
 
+        load.getIcon(userDetails.userId, imageIcon)
         username.text = userDetails.username
         countFollowers.text = "0"
 
@@ -123,10 +126,6 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
                     )
                 }
             }
-
-        postViewModel.getCountOfPostsByUserId(userDetails.userId)
-        load.getIcon(userDetails.userId, imageIcon)
-        postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
 
         buttonCreateRecord.setOnClickListener {
             view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)
