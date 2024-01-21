@@ -1,9 +1,12 @@
 package com.vad.ltale.data.remote
 
 import android.content.Context
+import android.widget.ImageView
 import com.google.gson.GsonBuilder
+import com.squareup.picasso.Callback
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
+import com.vad.ltale.R
 import com.vad.ltale.model.pojo.User
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -57,15 +60,30 @@ class RemoteInstance(private val user: User) {
             .baseUrl(baseUrl)
             .build()
 
-    fun picasso(context: Context): Picasso {
+    private fun picasso(context: Context): Picasso {
         return Picasso.Builder(context)
             .downloader(
                 OkHttp3Downloader(
-                    client(
-                        basicAuthInterceptor(user.username, user.password)
-                    )
+                    client(basicAuthInterceptor(user.username, user.password))
                 )
             ).build()
+    }
+
+    fun apiIcon(imageView: ImageView, callback: Callback, userId: Long) {
+        imageView.context.let {
+            picasso(it)
+                .load("${baseUrl}api-v1/files/icon/search?userId=$userId")
+                .error(R.drawable.ic_launcher_foreground)
+                .into(imageView, callback)
+        }
+    }
+
+    fun apiImage(imageView: ImageView, imageId: Long?) {
+        imageView.context.let {
+            picasso(it)
+                .load("${baseUrl}api-v1/files/image/search?id=$imageId")
+                .into(imageView)
+        }
     }
 
     fun apiUser(retrofit: Retrofit): UserService =

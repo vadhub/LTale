@@ -25,14 +25,14 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel(), C
     }
 
     fun getImage(id: Long?, imageViewPost: ImageView) {
-        if (id != null) fileRepository.getImage(id, imageViewPost.context, imageViewPost)
+        if (id != null) fileRepository.getImage(id, imageViewPost)
     }
 
     fun getIcon(userId: Long, imageIcon: ShapeableImageView) {
         val icon = cacheIcon.getImage(userId)
 
         if (icon == null) {
-            fileRepository.getIcon(userId, imageIcon.context, imageIcon, this@FileViewModel)
+            fileRepository.getIcon(userId, imageIcon, this@FileViewModel)
             userIdAndImageView.value = Pair(userId, imageIcon)
         } else {
             imageIcon.setImageDrawable(icon)
