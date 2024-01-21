@@ -34,7 +34,7 @@ class Recorder(
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC_ELD)
             setOutputFile(output)
         }
     }
@@ -57,10 +57,13 @@ class Recorder(
     fun stopRecording(): AudioRequest {
         val duration = chunkTimer.cancelTimer()
 
-        mediaRecorder?.stop()
-        mediaRecorder?.release()
-        mediaRecorder = null
-
+        try {
+            mediaRecorder?.stop()
+            mediaRecorder?.release()
+            mediaRecorder = null
+        } catch (e: Exception) {
+            Log.d("Recorder", e.toString())
+        }
         return AudioRequest(File(output), duration)
     }
 }
