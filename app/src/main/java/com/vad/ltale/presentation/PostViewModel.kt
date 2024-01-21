@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.pojo.AudioRequest
 import com.vad.ltale.model.pojo.PostResponse
-import com.vad.ltale.data.repository.PostRepository
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -23,6 +23,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var postsByUserId: MutableLiveData<List<PostResponse>> = MutableLiveData()
     private var page = 0
     private var pageOfUserPosts = 0
+    private var userId = -1L
 
     fun getPostsByText(text: String) = viewModelScope.launch {
         posts.postValue(postRepository.getPostsByText(text))
@@ -47,7 +48,13 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     fun getPostsByUserId(userId: Long, currentUserId: Long) = viewModelScope.launch {
 
-        val loadedPosts: MutableList<PostResponse>? = posts.value as? MutableList<PostResponse>
+        if (this@PostViewModel.userId != userId) {
+            postsByUserId.value = emptyList()
+            this@PostViewModel.userId = userId
+            pageOfUserPosts = 0
+        }
+
+        val loadedPosts: MutableList<PostResponse>? = postsByUserId.value as? MutableList<PostResponse>
         val loaded = postRepository.getPostByUserId(userId, currentUserId, pageOfUserPosts)
 
         if (loaded.isNotEmpty()) {
