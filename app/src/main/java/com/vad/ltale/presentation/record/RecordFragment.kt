@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.*
@@ -25,13 +27,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.model.pojo.Audio
-import com.vad.ltale.model.pojo.AudioRequest
 import com.vad.ltale.model.FileUtil
-import com.vad.ltale.model.pojo.Limit
 import com.vad.ltale.model.TimeFormatter
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.model.audiohandle.Recorder
+import com.vad.ltale.model.pojo.Audio
+import com.vad.ltale.model.pojo.AudioRequest
+import com.vad.ltale.model.pojo.Limit
 import com.vad.ltale.model.timehandle.ChunkTimer
 import com.vad.ltale.model.timehandle.TimerHandler
 import com.vad.ltale.presentation.*
@@ -85,6 +87,30 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
         }
     }
 
+    private val hashtagTextWatcher: TextWatcher = object : TextWatcher {
+        private var lastLength = 0
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            lastLength = s.length
+        }
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            try {
+                if (lastLength > s.length) return
+                if (s[s.length - 1].code == 32) {
+                    //32 is ascii code for space, do something when condition is true.
+                    createTag(hashtag.text.trim())
+                    hashtag.setText("")
+                }
+            } catch (ex: IndexOutOfBoundsException) {
+                //handle the exception
+            }
+        }
+
+        override fun afterTextChanged(editable: Editable) {
+            //do something
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -109,20 +135,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
         recyclerView = view.findViewById(R.id.audioRecyclerRecord)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        hashtag.setOnKeyListener(object : View.OnKeyListener {
-            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-                if (event != null) {
-                    if (keyCode == KeyEvent.KEYCODE_SPACE && event.action == MotionEvent.ACTION_UP) {
-                        createTag(hashtag.text.trim())
-                        hashtag.setText("")
-                        return true
-                    }
-                }
-                return false
-            }
-
-        })
-
+        hashtag.addTextChangedListener(hashtagTextWatcher)
 
         val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
             { audio: Audio, changePlayItem: () -> Unit ->
