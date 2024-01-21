@@ -10,12 +10,14 @@ import com.squareup.picasso.Callback
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.CacheIcon
+import ir.logicbase.livex.OneShotLiveEvent
+import ir.logicbase.livex.SingleLiveEvent
 import kotlinx.coroutines.launch
 import java.io.File
 
 class FileViewModel(private val fileRepository: FileRepository) : ViewModel(), Callback {
 
-    val uriAudio: MutableLiveData<String> = MutableLiveData()
+    val uriAudio: SingleLiveEvent<String> = SingleLiveEvent()
     private val cacheIcon = CacheIcon()
 
     private val userIdAndImageView: MutableLiveData<Pair<Long, ImageView>> = MutableLiveData()
