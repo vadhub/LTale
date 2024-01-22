@@ -29,8 +29,10 @@ class PostAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun setPosts(posts: List<PostResponse>) {
-        this.posts = posts
-        notifyDataSetChanged()
+        if (posts.isNotEmpty()) {
+            this.posts = posts
+            notifyDataSetChanged()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
