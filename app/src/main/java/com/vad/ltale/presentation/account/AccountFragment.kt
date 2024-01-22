@@ -10,6 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
@@ -19,6 +20,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.App
@@ -101,8 +103,15 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         val countPost: TextView = view.findViewById(R.id.countPosts)
         val countFollowers: TextView = view.findViewById(R.id.countFollowers)
         val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
+        val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefresh)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            postViewModel.clearPostsOfUSer()
+            postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
+            swipeRefreshLayout.isRefreshing = false
+        }
 
         val onReachEndListener: () -> Unit = {
             postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)

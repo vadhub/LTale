@@ -49,9 +49,8 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     fun getPostsByUserId(userId: Long, currentUserId: Long) = viewModelScope.launch {
 
         if (this@PostViewModel.userId != userId) {
-            postsByUserId.value = emptyList()
+            clearPostsOfUSer()
             this@PostViewModel.userId = userId
-            pageOfUserPosts = 0
         }
 
         val loadedPosts: MutableList<PostResponse>? = postsByUserId.value as? MutableList<PostResponse>
@@ -68,6 +67,11 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             pageOfUserPosts++
         }
 
+    }
+
+    fun clearPostsOfUSer() {
+        postsByUserId.value = emptyList()
+        pageOfUserPosts = 0
     }
 
     fun savePost(audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {
