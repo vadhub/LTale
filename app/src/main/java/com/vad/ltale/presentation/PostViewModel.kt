@@ -74,6 +74,11 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         pageOfUserPosts = 0
     }
 
+    fun clearPosts() {
+        posts.value = emptyList()
+        page = 0
+    }
+
     fun savePost(audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {
 
         val listAudio = audio.map{ a ->

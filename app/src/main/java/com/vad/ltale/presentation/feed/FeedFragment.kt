@@ -16,6 +16,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vad.ltale.App
 import com.vad.ltale.R
 import com.vad.ltale.data.local.SaveInternalHandle
@@ -66,6 +67,13 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
 
     private lateinit var adapter: PostAdapter
 
+    private var currentUser = -1L
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        currentUser = mainViewModel.getUserDetails().userId
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,12 +83,21 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         val recyclerView = view.findViewById(R.id.feedRecyclerView) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
+        val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefresh)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            postViewModel.clearPosts()
+            postViewModel.getPosts(currentUser)
+            swipeRefreshLayout.isRefreshing = false
+        }
+
         var changePlayItemTemp: () -> Unit = {}
         val onReachEndListener: () -> Unit = {
-            postViewModel.getPosts(mainViewModel.getUserDetails().userId)
+            postViewModel.getPosts(currentUser)
         }
         val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
             { audio: Audio, changePlayItem: () -> Unit ->
@@ -93,7 +110,7 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
         adapter = PostAdapter(load, this, this, onReachEndListener, playlistHandler)
         recyclerView.adapter = adapter
 
-        postViewModel.getPosts(mainViewModel.getUserDetails().userId)
+        postViewModel.getPosts(currentUser)
 
         load.uriAudio.observe(viewLifecycleOwner) {
             player.setMediaItem(MediaItem.fromUri(it))
@@ -141,7 +158,7 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
 
     override fun onLike(post: PostResponse, position: Int) {
 
-        val like = Like(mainViewModel.getUserDetails().userId, post.postId)
+        val like = Like(currentUser, post.postId)
 
         if (post.isLiked) {
             likeViewModel.deleteLike(like, position, post)
@@ -151,8 +168,10 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
     }
 
     override fun onClick(id: Long) {
-        val directions = FeedFragmentDirections.actionFeedFragmentToPeopleAccountFragment(id)
-        findNavController().navigate(directions)
+        if (id != currentUser) {
+            val directions = FeedFragmentDirections.actionFeedFragmentToPeopleAccountFragment(id)
+            findNavController().navigate(directions)
+        }
     }
 
     override fun onDestroyView() {
