@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/progressBarAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -12,8 +19,8 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
             android:paddingBottom="8dp"
+            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll"
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:toolbarId="@+id/toolbar">
@@ -22,20 +29,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:paddingTop="8dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="8dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imageIcon"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:maxHeight="150dp"
-                    android:maxWidth="150dp"
                     android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
                     android:background="@color/white"
+                    android:maxWidth="150dp"
+                    android:maxHeight="150dp"
                     android:padding="1dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_launcher_foreground"
                     app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                     app:strokeColor="@color/white"
@@ -46,8 +53,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="nik"
-                    android:textSize="24sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -55,22 +62,22 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:src="@drawable/baseline_assessment_24"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_assessment_24" />
 
                     <TextView
                         android:id="@+id/countPosts"
-                        android:layout_marginEnd="6dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
                         android:text="0"
                         android:textColor="@color/white" />
 
                     <ImageView
-                        android:src="@drawable/baseline_supervisor_account_24"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_supervisor_account_24" />
 
                     <TextView
                         android:id="@+id/countFollowers"
@@ -94,9 +101,11 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerItemRecords"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:visibility="visible" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -108,6 +117,6 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/blue_300"
         android:src="@android:drawable/ic_input_add"
-        app:tint="@color/white"/>
+        app:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

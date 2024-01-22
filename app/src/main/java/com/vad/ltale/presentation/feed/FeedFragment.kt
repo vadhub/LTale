@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.media3.common.MediaItem
@@ -84,7 +85,8 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val recyclerView = view.findViewById(R.id.feedRecyclerView) as RecyclerView
+        val progressBar: ProgressBar = view.findViewById(R.id.progressBarFeed)
+        val recyclerView: RecyclerView = view.findViewById(R.id.feedRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefresh)
@@ -121,6 +123,8 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             adapter.setPosts(it)
+            progressBar.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
         }
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {

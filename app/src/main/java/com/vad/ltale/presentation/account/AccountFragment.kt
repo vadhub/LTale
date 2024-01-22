@@ -10,7 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
@@ -98,6 +98,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val progressBar: ProgressBar = view.findViewById(R.id.progressBarAccount)
         val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIcon)
         val username: TextView = view.findViewById(R.id.usernameTextView)
         val countPost: TextView = view.findViewById(R.id.countPosts)
@@ -150,7 +151,9 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
         }
 
         postViewModel.postsByUserId.observe(viewLifecycleOwner) {
+            recyclerView.visibility = View.VISIBLE
             adapter.setPosts(it)
+            progressBar.visibility = View.GONE
         }
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {

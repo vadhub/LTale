@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
@@ -35,6 +38,15 @@ class AnotherAccountFragment : AccountFragment() {
     }
 
     private lateinit var adapter: PostAdapter
+    private var followed = -1L
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val args: AnotherAccountFragmentArgs by navArgs()
+        followed = args.uid
+        userViewModel.getUser(followed)
+        postViewModel.getCountOfPostsByUserId(followed)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +57,7 @@ class AnotherAccountFragment : AccountFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        val progressBar: ProgressBar = view.findViewById(R.id.progressBarAnother)
         val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIconAnother)
         val username: TextView = view.findViewById(R.id.usernameAnother)
         val countPost: TextView = view.findViewById(R.id.countPostsAnother)
@@ -54,11 +67,7 @@ class AnotherAccountFragment : AccountFragment() {
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         var followers = 0L
-
-        val args: AnotherAccountFragmentArgs by navArgs()
-
         val follower = mainViewModel.getUserDetails().userId
-        val followed = args.uid
         var isSubscribe = false
 
         val onReachEndListener: () -> Unit = {
@@ -68,9 +77,7 @@ class AnotherAccountFragment : AccountFragment() {
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
         recyclerView.adapter = adapter
 
-        userViewModel.getUser(followed)
         followViewModel.checkSubscribe(follower, followed)
-        postViewModel.getCountOfPostsByUserId(followed)
 
         followViewModel.isSubscribe.observe(viewLifecycleOwner) {
             isSubscribe = it
@@ -88,7 +95,6 @@ class AnotherAccountFragment : AccountFragment() {
         }
 
         userViewModel.userDetails.observe(viewLifecycleOwner) {
-
             followViewModel.getSubscribers(it.userId)
             load.getIcon(it.userId, imageIcon)
             username.text = it.username
@@ -101,9 +107,10 @@ class AnotherAccountFragment : AccountFragment() {
             countPost.text = "$it"
         }
 
-
         postViewModel.postsByUserId.observe(viewLifecycleOwner) {
             adapter.setPosts(it)
+            progressBar.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
         }
 
         followViewModel.mutableLiveData.observe(viewLifecycleOwner) {
