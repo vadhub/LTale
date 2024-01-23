@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity(), HandleResponse<User> {
                 configuration.getPass()
             )
         )
-
+        RemoteInstance.setPicasso(this)
         navController.navigate(R.id.action_registrationFragment_to_accountFragment)
     }
 
