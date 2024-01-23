@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,20 +15,13 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.RemoteInstance
-import com.vad.ltale.data.repository.FollowRepository
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.model.pojo.Follow
-import com.vad.ltale.presentation.FollowViewModel
-import com.vad.ltale.presentation.FollowViewModelFactory
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
 import com.vad.ltale.presentation.adapter.PostAdapter
 
 class AnotherAccountFragment : AccountFragment() {
-
-    private val followViewModel: FollowViewModel by activityViewModels {
-        FollowViewModelFactory(FollowRepository(RemoteInstance))
-    }
 
     private val userViewModel: UserViewModel by viewModels {
         UserViewModelFactory(UserRepository(RemoteInstance))
@@ -65,17 +57,16 @@ class AnotherAccountFragment : AccountFragment() {
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         var followers = 0L
-        val follower = RemoteInstance.user.userId
         var isSubscribe = false
 
         val onReachEndListener: () -> Unit = {
-            postViewModel.getPostsByUserId(followed, follower)
+            postViewModel.getPostsByUserId(followed, userId)
         }
 
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
         recyclerView.adapter = adapter
 
-        followViewModel.checkSubscribe(follower, followed)
+        followViewModel.checkSubscribe(userId, followed)
 
         followViewModel.isSubscribe.observe(viewLifecycleOwner) {
             isSubscribe = it
@@ -84,10 +75,10 @@ class AnotherAccountFragment : AccountFragment() {
 
         addToFriend.setOnClickListener {
             if (!isSubscribe) {
-                followViewModel.subscribe(followers, Follow(follower, followed))
+                followViewModel.subscribe(followers, Follow(userId, followed))
                 addToFriend.setImageResource(R.drawable.baseline_how_to_reg_24)
             } else {
-                followViewModel.unsubscribe(followers, Follow(follower, followed))
+                followViewModel.unsubscribe(followers, Follow(userId, followed))
                 addToFriend.setImageResource(R.drawable.baseline_person_add_alt_1_24)
             }
         }
@@ -98,7 +89,7 @@ class AnotherAccountFragment : AccountFragment() {
             username.text = it.username
             (requireActivity() as MainActivity).setActionBarTitle(it.username)
 
-            postViewModel.getPostsByUserId(it.userId, follower)
+            postViewModel.getPostsByUserId(it.userId, userId)
         }
 
         postViewModel.countOfPosts.observe(viewLifecycleOwner) {

@@ -13,9 +13,6 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,78 +20,22 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
-import com.vad.ltale.App
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
-import com.vad.ltale.data.local.SaveInternalHandle
-import com.vad.ltale.data.remote.RemoteInstance
-import com.vad.ltale.data.repository.FileRepository
-import com.vad.ltale.data.repository.FollowRepository
-import com.vad.ltale.data.repository.LikeRepository
-import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.FileUtil
-import com.vad.ltale.model.pojo.Like
-import com.vad.ltale.model.pojo.PostResponse
-import com.vad.ltale.model.pojo.User
-import com.vad.ltale.model.audiohandle.PlaylistHandler
-import com.vad.ltale.presentation.BaseFragment
-import com.vad.ltale.presentation.FileViewModel
-import com.vad.ltale.presentation.FollowViewModel
-import com.vad.ltale.presentation.FollowViewModelFactory
-import com.vad.ltale.presentation.LikeViewModel
-import com.vad.ltale.presentation.LikeViewModelFactory
-import com.vad.ltale.presentation.LoadViewModelFactory
-import com.vad.ltale.presentation.PostViewModel
-import com.vad.ltale.presentation.PostViewModelFactory
 import com.vad.ltale.presentation.adapter.AccountClickListener
-import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 import java.io.File
 
-open class AccountFragment : BaseFragment(), LikeOnClickListener,
-    AccountClickListener {
-
-    private val followViewModel: FollowViewModel by activityViewModels {
-        FollowViewModelFactory(FollowRepository(RemoteInstance))
-    }
-
-    protected val postViewModel: PostViewModel by activityViewModels {
-        PostViewModelFactory(
-            PostRepository(RemoteInstance)
-        )
-    }
-    protected val likeViewModel: LikeViewModel by activityViewModels {
-        LikeViewModelFactory(
-            LikeRepository(RemoteInstance)
-        )
-    }
-    protected val load: FileViewModel by activityViewModels {
-        LoadViewModelFactory(
-            FileRepository(
-                SaveInternalHandle(thisContext),
-                (activity?.application as App).database.audioDao(),
-                RemoteInstance
-            )
-        )
-    }
-
-    private val player: ExoPlayer by lazy {
-        ExoPlayer.Builder(thisContext).build()
-    }
+open class AccountFragment : AccountBaseFragment(), AccountClickListener {
 
     private lateinit var adapter: PostAdapter
-    private lateinit var userDetails: User
-    private var userId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userDetails = RemoteInstance.user
-        userId = userDetails.userId
         postViewModel.getCountOfPostsByUserId(userId)
         postViewModel.getPostsByUserId(userId, userId)
         followViewModel.getSubscribers(userId)
-
     }
 
     override fun onCreateView(
@@ -172,37 +113,6 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
             countFollowers.text = "$it"
         }
 
-    }
-
-    protected fun prepareAudioHandler(): PlaylistHandler {
-        var changePlayItemTemp: () -> Unit = {}
-
-        val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
-            { audio: Audio, changePlayItem: () -> Unit ->
-                load.getUri(audio)
-                changePlayItemTemp = changePlayItem
-            }
-
-        load.uriAudio.observe(viewLifecycleOwner) {
-            player.setMediaItem(MediaItem.fromUri(it))
-            player.prepare()
-            player.play()
-            changePlayItemTemp.invoke()
-        }
-
-        return PlaylistHandler(player, play)
-    }
-
-    override fun onLike(post: PostResponse, position: Int) {
-
-        //like only user who uses app at time
-        val like = Like(userId, post.postId)
-
-        if (post.isLiked) {
-            likeViewModel.deleteLike(like, position, post)
-        } else {
-            likeViewModel.addLike(like, position, post)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
