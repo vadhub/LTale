@@ -58,8 +58,8 @@ class FileRepository(private val saveHandle: SaveInternalHandle, private val aud
         remoteInstance.apiFileHandle().uploadIcon(body, dateCreated, dateChanged, userIdL)
     }
 
-    fun getIcon(userId: Long, imageView: ImageView, callback: Callback) {
-        remoteInstance.apiIcon(imageView, callback, userId)
+    fun getIcon(userId: Long, imageView: ImageView) {
+        remoteInstance.apiIcon(imageView, userId)
     }
 
     fun getImage(imageId: Long?, imageView: ImageView) {

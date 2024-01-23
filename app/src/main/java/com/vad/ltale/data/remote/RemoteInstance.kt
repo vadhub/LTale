@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.ImageView
 import com.google.gson.GsonBuilder
 import com.squareup.picasso.Callback
+import com.squareup.picasso.LruCache
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import com.vad.ltale.R
@@ -24,6 +25,7 @@ object RemoteInstance {
     fun setUser(user: User) {
         this.user = user
     }
+
     private const val baseUrl: String = "http://82.97.248.120:8090/"
 
     //"http://10.0.2.2:8080/"
@@ -68,27 +70,31 @@ object RemoteInstance {
             .baseUrl(baseUrl)
             .build()
 
-    private fun picasso(context: Context): Picasso {
-        return Picasso.Builder(context)
+    fun setPicasso(context: Context) {
+        val picasso = Picasso.Builder(context)
+            .memoryCache(LruCache(context))
+            .indicatorsEnabled(true)
             .downloader(
                 OkHttp3Downloader(
                     client(basicAuthInterceptor(user.username, user.password))
                 )
             ).build()
+
+        Picasso.setSingletonInstance(picasso)
     }
 
-    fun apiIcon(imageView: ImageView, callback: Callback, userId: Long) {
+    fun apiIcon(imageView: ImageView, userId: Long) {
         imageView.context.let {
-            picasso(it)
+            Picasso.get()
                 .load("${baseUrl}api-v1/files/icon/search?userId=$userId")
                 .error(R.drawable.account_circle_fill0_wght200_grad0_opsz24)
-                .into(imageView, callback)
+                .into(imageView)
         }
     }
 
     fun apiImage(imageView: ImageView, imageId: Long?) {
         imageView.context.let {
-            picasso(it)
+            Picasso.get()
                 .load("${baseUrl}api-v1/files/image/search?id=$imageId")
                 .into(imageView)
         }
