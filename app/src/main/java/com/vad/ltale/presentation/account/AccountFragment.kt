@@ -27,6 +27,7 @@ import com.vad.ltale.App
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.local.SaveInternalHandle
+import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.FollowRepository
 import com.vad.ltale.data.repository.LikeRepository
@@ -55,17 +56,17 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
     AccountClickListener {
 
     private val followViewModel: FollowViewModel by activityViewModels {
-        FollowViewModelFactory(FollowRepository(mainViewModel.getRetrofit()))
+        FollowViewModelFactory(FollowRepository(RemoteInstance))
     }
 
     protected val postViewModel: PostViewModel by activityViewModels {
         PostViewModelFactory(
-            PostRepository(mainViewModel.getRetrofit())
+            PostRepository(RemoteInstance)
         )
     }
     protected val likeViewModel: LikeViewModel by activityViewModels {
         LikeViewModelFactory(
-            LikeRepository(mainViewModel.getRetrofit())
+            LikeRepository(RemoteInstance)
         )
     }
     protected val load: FileViewModel by activityViewModels {
@@ -73,7 +74,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
             FileRepository(
                 SaveInternalHandle(thisContext),
                 (activity?.application as App).database.audioDao(),
-                mainViewModel.getRetrofit()
+                RemoteInstance
             )
         )
     }
@@ -88,7 +89,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userDetails = mainViewModel.getUserDetails()
+        userDetails = RemoteInstance.user
         userId = userDetails.userId
         postViewModel.getCountOfPostsByUserId(userId)
         postViewModel.getPostsByUserId(userId, userId)

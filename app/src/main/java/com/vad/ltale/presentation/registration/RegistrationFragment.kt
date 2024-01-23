@@ -6,22 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.model.pojo.User
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.data.remote.HandleResponse
+import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.remote.exception.UserAlreadyExistException
 import com.vad.ltale.presentation.AuthViewModel
 import com.vad.ltale.presentation.AuthViewModelFactory
 import com.vad.ltale.presentation.BaseFragment
 
-
 class RegistrationFragment : BaseFragment(), HandleResponse<User> {
 
     private var qwr = ""
+    private val authViewModel: AuthViewModel by activityViewModels {
+        AuthViewModelFactory(UserRepository(RemoteInstance), this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,17 +40,17 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
         val email = view.findViewById(R.id.emailEditText) as TextInputEditText
         val password = view.findViewById(R.id.passwordEditText) as TextInputEditText
 
-        val factory = AuthViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
-        val authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
-
         buttonRegistration.setOnClickListener {
 
             if (username.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, getString(R.string.enter_username), Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.enter_username), Toast.LENGTH_SHORT)
+                    .show()
             } else if (email.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, getString(R.string.enter_mail), Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.enter_mail), Toast.LENGTH_SHORT)
+                    .show()
             } else if (password.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 authViewModel.register(
                     User(
@@ -70,21 +73,17 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
 
     override fun error(e: Exception) {
         if (e is UserAlreadyExistException) {
-            Toast.makeText(thisContext,
-                getString(R.string.user_with_this_nik_already_exist), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                thisContext,
+                getString(R.string.user_with_this_nik_already_exist), Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     override fun success(t: User) {
 
-        mainViewModel.setUserDetails(
-            User(
-                t.userId,
-                t.username,
-                t.email,
-                qwr
-            )
-        )
+        RemoteInstance.setUser(User(t.userId, t.username, t.email, qwr))
+
         configuration.saveLogin(t.username)
         configuration.savePass(qwr)
         configuration.saveFirstStart(true)

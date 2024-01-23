@@ -23,18 +23,15 @@ import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.model.pojo.User
 import com.vad.ltale.presentation.AuthViewModel
 import com.vad.ltale.presentation.AuthViewModelFactory
-import com.vad.ltale.presentation.MainViewModel
-import com.vad.ltale.di.MainViewModelProvider
 
-class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<User> {
+class MainActivity : AppCompatActivity(), HandleResponse<User> {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private val mainViewModel: MainViewModel by viewModels()
     private val configuration = SaveConfiguration(this)
 
     private val authViewModel: AuthViewModel by viewModels {
-        AuthViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
+        AuthViewModelFactory(UserRepository(RemoteInstance), this)
     }
 
     lateinit var bottomMenu: BottomNavigationView
@@ -73,8 +70,6 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    override fun get(): MainViewModel = mainViewModel
-
     override fun error(e: Exception) {
         if (e is UnauthorizedException) {
             Toast.makeText(this, getString(R.string.user_unauthorized), Toast.LENGTH_SHORT).show()
@@ -83,7 +78,7 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
 
     override fun success(t: User) {
         bottomMenu.visibility = View.VISIBLE
-        mainViewModel.setUserDetails(
+        RemoteInstance.setUser(
             User(
                 t.userId,
                 configuration.getLogin(),

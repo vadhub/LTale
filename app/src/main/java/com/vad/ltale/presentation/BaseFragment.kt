@@ -3,10 +3,9 @@ package com.vad.ltale.presentation
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.vad.ltale.data.local.SaveConfiguration
-import com.vad.ltale.di.MainViewModelProvider
 
 open class BaseFragment : Fragment() {
-    protected lateinit var mainViewModel: MainViewModel
+
     protected lateinit var thisContext: Context
     protected lateinit var configuration: SaveConfiguration
 
@@ -14,7 +13,6 @@ open class BaseFragment : Fragment() {
         super.onAttach(context)
         this.thisContext = context
         configuration = SaveConfiguration(thisContext)
-        mainViewModel = (requireActivity() as MainViewModelProvider).get()
     }
 
 }

@@ -21,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vad.ltale.App
 import com.vad.ltale.R
 import com.vad.ltale.data.local.SaveInternalHandle
+import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
@@ -44,12 +45,12 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
 
     private val postViewModel: PostViewModel by activityViewModels {
         PostViewModelFactory(
-            PostRepository(mainViewModel.getRetrofit())
+            PostRepository(RemoteInstance)
         )
     }
     private val likeViewModel: LikeViewModel by activityViewModels {
         LikeViewModelFactory(
-            LikeRepository(mainViewModel.getRetrofit())
+            LikeRepository(RemoteInstance)
         )
     }
     private val load: FileViewModel by activityViewModels {
@@ -57,7 +58,7 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
             FileRepository(
                 SaveInternalHandle(thisContext),
                 (activity?.application as App).database.audioDao(),
-                mainViewModel.getRetrofit()
+                RemoteInstance
             )
         )
     }
@@ -72,7 +73,7 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        currentUser = mainViewModel.getUserDetails().userId
+        currentUser = RemoteInstance.user.userId
     }
 
     override fun onCreateView(

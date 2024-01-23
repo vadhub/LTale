@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
@@ -23,6 +24,9 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
 
     private lateinit var username: TextInputEditText
     private lateinit var password: TextInputEditText
+    private val viewModel: AuthViewModel by activityViewModels {
+        AuthViewModelFactory(UserRepository(RemoteInstance), this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,13 +40,6 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
         val buttonLogin: Button = view.findViewById(R.id.loginButton)
         username = view.findViewById(R.id.usernameLoginEditText) as TextInputEditText
         password = view.findViewById(R.id.passwordLoginEditText) as TextInputEditText
-
-        username.setText("anton")
-        password.setText("1234")
-
-        val factory = AuthViewModelFactory(UserRepository(mainViewModel.getRetrofit()), this)
-        val viewModel: AuthViewModel =
-            ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
         buttonLogin.setOnClickListener {
 
@@ -60,7 +57,7 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
         configuration.saveLogin(username.text.toString())
         configuration.savePass(password.text.toString())
 
-        mainViewModel.setUserDetails(
+        RemoteInstance.setUser(
             User(
                 t.userId,
                 username.text.toString().trim(),
@@ -68,13 +65,16 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
                 password.text.toString().trim()
             )
         )
+
         findNavController().navigate(R.id.accountFragment)
     }
 
     override fun error(e: Exception) {
         if (e is UserNotFoundException) {
-            Toast.makeText(thisContext,
-                getString(R.string.invalid_password_or_username), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                thisContext,
+                getString(R.string.invalid_password_or_username), Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

@@ -25,6 +25,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
+import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.FileUtil
@@ -44,8 +45,8 @@ import java.sql.Timestamp
 
 class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnClickListener {
 
-    private val postViewModel: PostViewModel by activityViewModels { PostViewModelFactory(PostRepository(mainViewModel.getRetrofit())) }
-    private val limitViewModel: LimitViewModel by activityViewModels { LimitViewModelFactory(LimitRepository(mainViewModel.getRetrofit())) }
+    private val postViewModel: PostViewModel by activityViewModels { PostViewModelFactory(PostRepository(RemoteInstance)) }
+    private val limitViewModel: LimitViewModel by activityViewModels { LimitViewModelFactory(LimitRepository(RemoteInstance)) }
 
     private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer
@@ -83,7 +84,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
             )
             ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
         } else {
-            limitViewModel.getLimit(mainViewModel.getUserDetails().userId)
+            limitViewModel.getLimit(RemoteInstance.user.userId)
         }
     }
 
@@ -214,7 +215,7 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
                     file = File(FileUtil.getPath(selectedImage?.data, context))
                 }
 
-                val idUser = mainViewModel.getUserDetails().userId
+                val idUser = RemoteInstance.user.userId
 
                 chips.forEach { hashtags.add(it.text.toString()) }
                 postViewModel.savePost(listAudioRequest, file, idUser, hashtags.ifEmpty { null })
@@ -267,7 +268,6 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
     override fun finishTime() {
         timeRecordTextView.text = "00:00"
         Toast.makeText(thisContext, getString(R.string.time_is_up), Toast.LENGTH_SHORT).show()
-
     }
 
     override fun onClick(v: View?) {

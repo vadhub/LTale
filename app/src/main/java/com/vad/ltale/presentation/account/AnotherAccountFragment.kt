@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
+import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.FollowRepository
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.model.pojo.Follow
@@ -27,11 +28,11 @@ import com.vad.ltale.presentation.adapter.PostAdapter
 class AnotherAccountFragment : AccountFragment() {
 
     private val followViewModel: FollowViewModel by activityViewModels {
-        FollowViewModelFactory(FollowRepository(mainViewModel.getRetrofit()))
+        FollowViewModelFactory(FollowRepository(RemoteInstance))
     }
 
     private val userViewModel: UserViewModel by viewModels {
-        UserViewModelFactory(UserRepository(mainViewModel.getRetrofit()))
+        UserViewModelFactory(UserRepository(RemoteInstance))
     }
 
     private lateinit var adapter: PostAdapter
@@ -64,7 +65,7 @@ class AnotherAccountFragment : AccountFragment() {
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         var followers = 0L
-        val follower = mainViewModel.getUserDetails().userId
+        val follower = RemoteInstance.user.userId
         var isSubscribe = false
 
         val onReachEndListener: () -> Unit = {

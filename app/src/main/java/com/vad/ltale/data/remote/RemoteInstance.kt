@@ -19,6 +19,11 @@ import java.util.concurrent.TimeUnit
 object RemoteInstance {
 
     var user: User = User(-1, "", "", "")
+        private set
+
+    fun setUser(user: User) {
+        this.user = user
+    }
     private const val baseUrl: String = "http://82.97.248.120:8090/"
 
     //"http://10.0.2.2:8080/"
