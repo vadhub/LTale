@@ -3,6 +3,7 @@ package com.vad.ltale.presentation.record
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -16,8 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,7 +29,6 @@ import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.FileUtil
 import com.vad.ltale.model.TimeFormatter
-import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.model.audiohandle.Recorder
 import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.pojo.AudioRequest
@@ -45,8 +43,16 @@ import java.sql.Timestamp
 
 class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.OnClickListener {
 
-    private val postViewModel: PostViewModel by activityViewModels { PostViewModelFactory(PostRepository(RemoteInstance)) }
-    private val limitViewModel: LimitViewModel by activityViewModels { LimitViewModelFactory(LimitRepository(RemoteInstance)) }
+    private val postViewModel: PostViewModel by activityViewModels {
+        PostViewModelFactory(
+            PostRepository(RemoteInstance)
+        )
+    }
+    private val limitViewModel: LimitViewModel by activityViewModels {
+        LimitViewModelFactory(
+            LimitRepository(RemoteInstance)
+        )
+    }
 
     private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer
@@ -64,27 +70,34 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private lateinit var chipGroup: ChipGroup
     private val chips: MutableList<Chip> = mutableListOf()
 
+    private val recordPermission = 0x12345
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (ContextCompat.checkSelfPermission(
-                thisContext,
-                Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                thisContext,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                thisContext,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            val permissions = arrayOf(
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO
-            )
-            ActivityCompat.requestPermissions(requireActivity(), permissions, 0)
-        } else {
-            limitViewModel.getLimit(RemoteInstance.user.userId)
+        when {
+            ContextCompat.checkSelfPermission(thisContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED -> {
+                limitViewModel.getLimit(RemoteInstance.user.userId)
+            }
+
+            else -> requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), recordPermission)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            recordPermission -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    limitViewModel.getLimit(RemoteInstance.user.userId)
+                } else {
+                    Toast.makeText(thisContext,
+                        getString(R.string.permission_denied_record), Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
         }
     }
 
@@ -151,13 +164,14 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             chunkTimer.setTimerHandler(this)
         }
 
-        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-                selectedImage = it.data!!
-                image.layoutParams.height = 150
-                image.setImageURI(selectedImage?.data)
+        val resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == Activity.RESULT_OK && it.data != null) {
+                    selectedImage = it.data!!
+                    image.layoutParams.height = 150
+                    image.setImageURI(selectedImage?.data)
+                }
             }
-        }
 
         imageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
@@ -206,9 +220,17 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
                 chips.forEach { hashtags.add(it.text.toString()) }
                 postViewModel.savePost(listAudioRequest, file, idUser, hashtags.ifEmpty { null })
-                limitViewModel.updateTime(Limit(limit.id, idUser, time, "${Date(System.currentTimeMillis())}"))
+                limitViewModel.updateTime(
+                    Limit(
+                        limit.id,
+                        idUser,
+                        time,
+                        "${Date(System.currentTimeMillis())}"
+                    )
+                )
             } else {
-                Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT)
+                    .show()
             }
             findNavController().navigate(R.id.action_to_accountFragment)
             return true
@@ -229,17 +251,19 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private fun saveAudio() {
         val audio: AudioRequest = recorder.stopRecording()
         listAudioRequest.add(audio)
-        listAudio = listAudioRequest.map { la -> Audio(
-            uri = la.file.absolutePath,
-            duration = la.duration,
-            date = "${Timestamp(System.currentTimeMillis())}"
-        ) }.toMutableList()
+        listAudio = listAudioRequest.map { la ->
+            Audio(
+                uri = la.file.absolutePath,
+                duration = la.duration,
+                date = "${Timestamp(System.currentTimeMillis())}"
+            )
+        }.toMutableList()
         adapter.setRecords(listAudio)
     }
 
     private fun removeAudio(audio: Audio) {
         listAudio.remove(audio)
-        listAudioRequest.removeAll {uri -> uri.file.absolutePath == audio.uri }
+        listAudioRequest.removeAll { uri -> uri.file.absolutePath == audio.uri }
         adapter.setRecords(listAudio)
         time = (time / 1000) * 1000
         time += audio.duration
@@ -260,6 +284,12 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     override fun onClick(v: View?) {
         chipGroup.removeView(v)
         chips.remove(v)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        player.stop()
+        player.release()
     }
 
 }

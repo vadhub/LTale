@@ -24,5 +24,6 @@
     <string name="user_unauthorized">User unauthorized</string>
     <string name="record_audio">Record audio</string>
     <string name="time_is_up">Time is up</string>
+    <string name="permission_denied_record">Permission denied</string>
 
 </resources>
