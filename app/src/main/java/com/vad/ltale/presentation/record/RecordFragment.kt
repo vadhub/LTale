@@ -43,7 +43,7 @@ import java.io.File
 import java.sql.Date
 import java.sql.Timestamp
 
-class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnClickListener {
+class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.OnClickListener {
 
     private val postViewModel: PostViewModel by activityViewModels { PostViewModelFactory(PostRepository(RemoteInstance)) }
     private val limitViewModel: LimitViewModel by activityViewModels { LimitViewModelFactory(LimitRepository(RemoteInstance)) }
@@ -125,11 +125,8 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
 
         val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
-        val player: ExoPlayer = ExoPlayer.Builder(thisContext).build()
         chipGroup = view.findViewById(R.id.chipGroup)
-
         hashtag = view.findViewById(R.id.editTextHashtag)
-
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
         actionButton = view.findViewById(R.id.recordFloatingButton)
         actionButton.setOnTouchListener(this)
@@ -138,21 +135,11 @@ class RecordFragment : BaseFragment(), OnTouchListener, TimerHandler, View.OnCli
 
         hashtag.addTextChangedListener(hashtagTextWatcher)
 
-        val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
-            { audio: Audio, changePlayItem: () -> Unit ->
-                player.setMediaItem(MediaItem.fromUri(audio.uri))
-                player.prepare()
-                player.play()
-                changePlayItem.invoke()
-            }
-
-        val playlistHandler = PlaylistHandler(player, play)
-
         val removeAudioListener: (audio: Audio) -> Unit = {
             removeAudio(it)
         }
 
-        adapter = AudioAdapter(0, playlistHandler, true)
+        adapter = AudioAdapter(0, prepareAudioHandleWithoutViewModel(), true)
         adapter.removeListener = removeAudioListener
 
         recyclerView.adapter = adapter

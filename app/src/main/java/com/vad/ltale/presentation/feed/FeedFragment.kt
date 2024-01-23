@@ -29,6 +29,7 @@ import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.pojo.Like
 import com.vad.ltale.model.pojo.PostResponse
 import com.vad.ltale.model.audiohandle.PlaylistHandler
+import com.vad.ltale.presentation.AudioBaseFragment
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.FileViewModel
 import com.vad.ltale.presentation.LikeViewModel
@@ -40,7 +41,7 @@ import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 
-class FeedFragment : BaseFragment(), LikeOnClickListener,
+class FeedFragment : AudioBaseFragment(), LikeOnClickListener,
     AccountClickListener {
 
     private val postViewModel: PostViewModel by activityViewModels {
@@ -53,19 +54,6 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
             LikeRepository(RemoteInstance)
         )
     }
-    private val load: FileViewModel by activityViewModels {
-        LoadViewModelFactory(
-            FileRepository(
-                SaveInternalHandle(thisContext),
-                (activity?.application as App).database.audioDao(),
-                RemoteInstance
-            )
-        )
-    }
-
-    private val player: ExoPlayer by lazy {
-        ExoPlayer.Builder(thisContext).build()
-    }
 
     private lateinit var adapter: PostAdapter
 
@@ -74,6 +62,7 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         currentUser = RemoteInstance.user.userId
+        postViewModel.getPosts(currentUser)
     }
 
     override fun onCreateView(
@@ -98,29 +87,12 @@ class FeedFragment : BaseFragment(), LikeOnClickListener,
             swipeRefreshLayout.isRefreshing = false
         }
 
-        var changePlayItemTemp: () -> Unit = {}
         val onReachEndListener: () -> Unit = {
             postViewModel.getPosts(currentUser)
         }
-        val play: (audio: Audio, changePlayItem: () -> Unit) -> Unit =
-            { audio: Audio, changePlayItem: () -> Unit ->
-                load.getUri(audio)
-                changePlayItemTemp = changePlayItem
-            }
 
-        val playlistHandler = PlaylistHandler(player, play)
-
-        adapter = PostAdapter(load, this, this, onReachEndListener, playlistHandler)
+        adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
         recyclerView.adapter = adapter
-
-        postViewModel.getPosts(currentUser)
-
-        load.uriAudio.observe(viewLifecycleOwner) {
-            player.setMediaItem(MediaItem.fromUri(it))
-            player.prepare()
-            player.play()
-            changePlayItemTemp.invoke()
-        }
 
         postViewModel.posts.observe(viewLifecycleOwner) {
             adapter.setPosts(it)

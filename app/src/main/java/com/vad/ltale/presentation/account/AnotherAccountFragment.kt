@@ -117,4 +117,10 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        player.release()
+        player.stop()
+    }
+
 }
