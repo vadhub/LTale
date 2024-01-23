@@ -16,9 +16,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
-class RemoteInstance(private val user: User) {
+object RemoteInstance {
 
-    private val baseUrl = "http://10.0.2.2:8080/"
+    var user: User = User(-1, "", "", "")
+    private const val baseUrl: String = "http://82.97.248.120:8090/"
+
+    //"http://10.0.2.2:8080/"
 
     private val interceptorBody: HttpLoggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -73,7 +76,7 @@ class RemoteInstance(private val user: User) {
         imageView.context.let {
             picasso(it)
                 .load("${baseUrl}api-v1/files/icon/search?userId=$userId")
-                .error(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.account_circle_fill0_wght200_grad0_opsz24)
                 .into(imageView, callback)
         }
     }

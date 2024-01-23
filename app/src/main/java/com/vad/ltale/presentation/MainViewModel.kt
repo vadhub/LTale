@@ -7,7 +7,7 @@ import com.vad.ltale.data.remote.RemoteInstance
 class MainViewModel : ViewModel() {
 
     private var user: User = User(0, "","","")
-    private var retrofitInstance: RemoteInstance = RemoteInstance(user)
+    private var retrofitInstance: RemoteInstance = RemoteInstance
 
     fun getRetrofit(): RemoteInstance {
         return retrofitInstance
@@ -19,5 +19,6 @@ class MainViewModel : ViewModel() {
     fun getUserDetails() = user
     fun setUserDetails(user: User) {
         this.user = user
+        retrofitInstance.user = user
     }
 }

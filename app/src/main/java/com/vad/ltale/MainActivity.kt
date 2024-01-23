@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity(), MainViewModelProvider, HandleResponse<
             )
         )
 
-        mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
         navController.navigate(R.id.action_registrationFragment_to_accountFragment)
     }
 

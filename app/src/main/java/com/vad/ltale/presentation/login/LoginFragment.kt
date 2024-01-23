@@ -68,7 +68,6 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
                 password.text.toString().trim()
             )
         )
-        mainViewModel.setRetrofit(RemoteInstance(mainViewModel.getUserDetails()))
         findNavController().navigate(R.id.accountFragment)
     }
 
