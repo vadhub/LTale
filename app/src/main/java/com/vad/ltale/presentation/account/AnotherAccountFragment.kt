@@ -36,6 +36,7 @@ class AnotherAccountFragment : AccountFragment() {
         followed = args.uid
         userViewModel.getUser(followed)
         postViewModel.getCountOfPostsByUserId(followed)
+        postViewModel.getPostsByUserId(followed, userId)
     }
 
     override fun onCreateView(
@@ -88,8 +89,6 @@ class AnotherAccountFragment : AccountFragment() {
             load.getIcon(it.userId, imageIcon)
             username.text = it.username
             (requireActivity() as MainActivity).setActionBarTitle(it.username)
-
-            postViewModel.getPostsByUserId(it.userId, userId)
         }
 
         postViewModel.countOfPosts.observe(viewLifecycleOwner) {
