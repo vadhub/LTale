@@ -1,7 +1,6 @@
 package com.vad.ltale.presentation.account
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
@@ -113,7 +110,7 @@ class AnotherAccountFragment : AccountFragment() {
             recyclerView.visibility = View.VISIBLE
         }
 
-        followViewModel.mutableLiveData.observe(viewLifecycleOwner) {
+        followViewModel.countOfSubscribers.observe(viewLifecycleOwner) {
             followers = it
             countFollowers.text = "$it"
         }

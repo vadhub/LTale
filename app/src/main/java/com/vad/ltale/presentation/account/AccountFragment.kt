@@ -28,6 +28,7 @@ import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.repository.FileRepository
+import com.vad.ltale.data.repository.FollowRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.pojo.Audio
@@ -38,6 +39,8 @@ import com.vad.ltale.model.pojo.User
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.presentation.BaseFragment
 import com.vad.ltale.presentation.FileViewModel
+import com.vad.ltale.presentation.FollowViewModel
+import com.vad.ltale.presentation.FollowViewModelFactory
 import com.vad.ltale.presentation.LikeViewModel
 import com.vad.ltale.presentation.LikeViewModelFactory
 import com.vad.ltale.presentation.LoadViewModelFactory
@@ -50,6 +53,10 @@ import java.io.File
 
 open class AccountFragment : BaseFragment(), LikeOnClickListener,
     AccountClickListener {
+
+    private val followViewModel: FollowViewModel by activityViewModels {
+        FollowViewModelFactory(FollowRepository(mainViewModel.getRetrofit()))
+    }
 
     protected val postViewModel: PostViewModel by activityViewModels {
         PostViewModelFactory(
@@ -77,12 +84,15 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
 
     private lateinit var adapter: PostAdapter
     private lateinit var userDetails: User
+    private var userId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userDetails = mainViewModel.getUserDetails()
-        postViewModel.getCountOfPostsByUserId(userDetails.userId)
-        postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
+        userId = userDetails.userId
+        postViewModel.getCountOfPostsByUserId(userId)
+        postViewModel.getPostsByUserId(userId, userId)
+        followViewModel.getSubscribers(userId)
 
     }
 
@@ -110,18 +120,18 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
 
         swipeRefreshLayout.setOnRefreshListener {
             postViewModel.clearPostsOfUSer()
-            postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
+            postViewModel.getPostsByUserId(userId, userId)
             swipeRefreshLayout.isRefreshing = false
         }
 
         val onReachEndListener: () -> Unit = {
-            postViewModel.getPostsByUserId(userDetails.userId, userDetails.userId)
+            postViewModel.getPostsByUserId(userId, userId)
         }
 
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
         recyclerView.adapter = adapter
 
-        load.getIcon(userDetails.userId, imageIcon)
+        load.getIcon(userId, imageIcon)
         username.text = userDetails.username
         countFollowers.text = "0"
 
@@ -130,10 +140,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                     val selectedImage = it.data
                     imageIcon.setImageURI(selectedImage!!.data)
-                    load.uploadIcon(
-                        File(FileUtil.getPath(selectedImage.data, context)),
-                        userDetails.userId
-                    )
+                    load.uploadIcon(File(FileUtil.getPath(selectedImage.data, context)), userId)
                 }
             }
 
@@ -160,6 +167,10 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
             adapter.notifyItemChanged(it.first, it.second)
         }
 
+        followViewModel.countOfSubscribers.observe(viewLifecycleOwner) {
+            countFollowers.text = "$it"
+        }
+
     }
 
     protected fun prepareAudioHandler(): PlaylistHandler {
@@ -184,7 +195,7 @@ open class AccountFragment : BaseFragment(), LikeOnClickListener,
     override fun onLike(post: PostResponse, position: Int) {
 
         //like only user who uses app at time
-        val like = Like(mainViewModel.getUserDetails().userId, post.postId)
+        val like = Like(userId, post.postId)
 
         if (post.isLiked) {
             likeViewModel.deleteLike(like, position, post)
