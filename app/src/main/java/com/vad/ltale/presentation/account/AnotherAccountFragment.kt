@@ -19,9 +19,10 @@ import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.model.pojo.Follow
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
+import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 
-class AnotherAccountFragment : AccountFragment() {
+class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
 
     private val userViewModel: UserViewModel by viewModels {
         UserViewModelFactory(UserRepository(RemoteInstance))
@@ -109,6 +110,10 @@ class AnotherAccountFragment : AccountFragment() {
         likeViewModel.likeData.observe(viewLifecycleOwner) {
             adapter.notifyItemChanged(it.first, it.second)
         }
+
+    }
+
+    override fun onClick(id: Long) {
 
     }
 
