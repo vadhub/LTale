@@ -71,16 +71,18 @@ object RemoteInstance {
             .build()
 
     fun setPicasso(context: Context) {
-        val picasso = Picasso.Builder(context)
-            .memoryCache(LruCache(context))
-            .indicatorsEnabled(true)
-            .downloader(
-                OkHttp3Downloader(
-                    client(basicAuthInterceptor(user.username, user.password))
-                )
-            ).build()
+        try {
+            val picasso = Picasso.Builder(context)
+                .memoryCache(LruCache(context))
+                .indicatorsEnabled(true)
+                .downloader(
+                    OkHttp3Downloader(
+                        client(basicAuthInterceptor(user.username, user.password))
+                    )
+                ).build()
+            Picasso.setSingletonInstance(picasso)
+        } catch (_: IllegalStateException) {}
 
-        Picasso.setSingletonInstance(picasso)
     }
 
     fun apiIcon(imageView: ImageView, userId: Long) {
