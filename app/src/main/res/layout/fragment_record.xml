@@ -39,17 +39,33 @@
                     android:id="@+id/chipGroup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
                 </com.google.android.material.chip.ChipGroup>
 
-                <ImageView
-                    android:id="@+id/imageViewPostRecord"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:maxHeight="220dp"
-                    android:scaleType="fitCenter"
-                    tools:visibility="visible" />
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageViewPostRecord"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:maxHeight="220dp"
+                        android:scaleType="fitCenter"
+                        tools:visibility="visible" />
+
+                    <ImageButton
+                        android:id="@+id/removeImage"
+                        android:src="@drawable/delete_fill0_wght200_grad_25_opsz24"
+                        android:layout_width="wrap_content"
+                        android:visibility="gone"
+                        android:layout_gravity="center"
+                        tools:visibility="visible"
+                        android:background="@android:color/transparent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/audioRecyclerRecord"

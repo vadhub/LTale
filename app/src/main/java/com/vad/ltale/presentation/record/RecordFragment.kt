@@ -144,8 +144,8 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
         val progressBarOnActionButton: ProgressBar = view.findViewById(R.id.progressBarActionButton)
+        val removeImage: ImageButton = view.findViewById(R.id.removeImage)
         textViewRecordToVoice = view.findViewById(R.id.textView)
-
         chipGroup = view.findViewById(R.id.chipGroup)
         hashtag = view.findViewById(R.id.editTextHashtag)
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
@@ -179,6 +179,12 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             timeRecordTextView.visibility = VISIBLE
         }
 
+        removeImage.setOnClickListener {
+            selectedImage = null
+            image.setImageURI(null)
+            removeImage.visibility = GONE
+        }
+
         limitViewModel.faller.observe(viewLifecycleOwner) {
             if (it is UpdateException) {
                 Toast.makeText(thisContext, getString(R.string.no_update_time), Toast.LENGTH_SHORT).show()
@@ -190,6 +196,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         val resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
+                    removeImage.visibility = VISIBLE
                     selectedImage = it.data!!
                     image.setImageURI(selectedImage?.data)
                 }
