@@ -11,7 +11,9 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.view.View.GONE
 import android.view.View.OnTouchListener
+import android.view.View.VISIBLE
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -140,6 +142,8 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
         val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
+        val progressBarOnActionButton: ProgressBar = view.findViewById(R.id.progressBarActionButton)
+        val progressBarOnTime: ProgressBar = view.findViewById(R.id.progressBarTime)
         chipGroup = view.findViewById(R.id.chipGroup)
         hashtag = view.findViewById(R.id.editTextHashtag)
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
@@ -161,9 +165,17 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
         limitViewModel.limit.observe(viewLifecycleOwner) {
             limit = it
+            timeRecordTextView.text = TimeFormatter.format(it.time)
             chunkTimer = ChunkTimer(it.time)
             recorder = Recorder(chunkTimer, thisContext)
             chunkTimer.setTimerHandler(this)
+
+            progressBarOnActionButton.visibility = GONE
+            progressBarOnTime.visibility = GONE
+
+            actionButton.visibility = VISIBLE
+            imageButton.visibility = VISIBLE
+            timeRecordTextView.visibility = VISIBLE
         }
 
         limitViewModel.faller.observe(viewLifecycleOwner) {
@@ -230,12 +242,10 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
                 chips.forEach { hashtags.add(it.text.toString()) }
                 postViewModel.savePost(listAudioRequest, file, idUser, hashtags.ifEmpty { null })
-
                 limitViewModel.updateTime(Limit(limit.id, idUser, time, "${Date(System.currentTimeMillis())}"))
 
             } else {
-                Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT).show()
             }
             findNavController().navigate(R.id.action_to_accountFragment)
             return true
