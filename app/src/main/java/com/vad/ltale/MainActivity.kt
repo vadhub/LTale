@@ -2,10 +2,9 @@ package com.vad.ltale
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
@@ -16,13 +15,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vad.ltale.data.local.SaveConfiguration
-import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.remote.RemoteInstance
-import com.vad.ltale.data.remote.exception.UnauthorizedException
-import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.model.pojo.User
-import com.vad.ltale.presentation.AuthViewModel
-import com.vad.ltale.presentation.AuthViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,6 +57,8 @@ class MainActivity : AppCompatActivity() {
                     configuration.getPass()
                 )
             )
+
+            Log.d("$$$", "${configuration.getPass()} ${configuration.getIdUser()} ${configuration.getLogin()} ")
             RemoteInstance.setPicasso(this)
             navController.navigate(R.id.action_registrationFragment_to_accountFragment)
         }
