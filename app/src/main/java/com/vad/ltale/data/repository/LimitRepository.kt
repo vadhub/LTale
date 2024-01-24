@@ -2,14 +2,37 @@ package com.vad.ltale.data.repository
 
 import com.vad.ltale.model.pojo.Limit
 import com.vad.ltale.data.remote.RemoteInstance
+import com.vad.ltale.data.remote.Resource
+import com.vad.ltale.data.remote.exception.GetTimeException
+import com.vad.ltale.data.remote.exception.UpdateException
 import java.sql.Date
 
 class LimitRepository(private val remoteInstance: RemoteInstance) {
 
-    suspend fun update(id: Long, limit: Limit) =
-        remoteInstance.apiLimit().update(id, limit).body() ?: "" //todo create handle error
+    suspend fun update(id: Long, limit: Limit): Resource<Boolean> {
+        val response = remoteInstance.apiLimit().update(id, limit)
 
-    suspend fun getByUserId(userId: Long): Limit =
-        remoteInstance.apiLimit().getLimit(userId).body() ?: Limit(-1,-1,-1, Date(0).toString())  //todo create handle error
+        if (response.isSuccessful) {
+            return Resource.Success(response.isSuccessful)
+        }
 
+        return Resource.Failure(UpdateException())
+    }
+
+    suspend fun getByUserId(userId: Long): Resource<Limit> {
+        val response = remoteInstance.apiLimit().getLimit(userId)
+
+        if (response.isSuccessful) {
+            val body = response.body()
+
+            return if (body != null) {
+                Resource.Success(body)
+            } else {
+                Resource.Failure(GetTimeException())
+            }
+
+        }
+
+        return Resource.Failure(GetTimeException())
+    }
 }

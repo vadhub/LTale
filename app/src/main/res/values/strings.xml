@@ -25,5 +25,7 @@
     <string name="record_audio">Record audio</string>
     <string name="time_is_up">Time is up</string>
     <string name="permission_denied_record">Permission denied</string>
+    <string name="no_update_time">No update time</string>
+    <string name="get_time_impossible">get time impossible</string>
 
 </resources>

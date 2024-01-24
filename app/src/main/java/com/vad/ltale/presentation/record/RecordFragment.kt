@@ -25,6 +25,8 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.RemoteInstance
+import com.vad.ltale.data.remote.exception.GetTimeException
+import com.vad.ltale.data.remote.exception.UpdateException
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.FileUtil
@@ -164,6 +166,14 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             chunkTimer.setTimerHandler(this)
         }
 
+        limitViewModel.faller.observe(viewLifecycleOwner) {
+            if (it is UpdateException) {
+                Toast.makeText(thisContext, getString(R.string.no_update_time), Toast.LENGTH_SHORT).show()
+            } else if (it is GetTimeException) {
+                Toast.makeText(thisContext, getString(R.string.get_time_impossible), Toast.LENGTH_SHORT).show()
+            }
+        }
+
         val resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
@@ -220,14 +230,9 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
                 chips.forEach { hashtags.add(it.text.toString()) }
                 postViewModel.savePost(listAudioRequest, file, idUser, hashtags.ifEmpty { null })
-                limitViewModel.updateTime(
-                    Limit(
-                        limit.id,
-                        idUser,
-                        time,
-                        "${Date(System.currentTimeMillis())}"
-                    )
-                )
+
+                limitViewModel.updateTime(Limit(limit.id, idUser, time, "${Date(System.currentTimeMillis())}"))
+
             } else {
                 Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT)
                     .show()
