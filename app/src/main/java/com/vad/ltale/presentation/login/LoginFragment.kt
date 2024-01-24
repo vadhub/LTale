@@ -56,6 +56,7 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
     override fun success(t: User) {
         configuration.saveLogin(username.text.toString())
         configuration.savePass(password.text.toString())
+        configuration.saveIdUser(t.userId)
 
         RemoteInstance.setUser(
             User(

@@ -24,15 +24,11 @@ import com.vad.ltale.model.pojo.User
 import com.vad.ltale.presentation.AuthViewModel
 import com.vad.ltale.presentation.AuthViewModelFactory
 
-class MainActivity : AppCompatActivity(), HandleResponse<User> {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val configuration = SaveConfiguration(this)
-
-    private val authViewModel: AuthViewModel by viewModels {
-        AuthViewModelFactory(UserRepository(RemoteInstance), this)
-    }
 
     lateinit var bottomMenu: BottomNavigationView
         private set
@@ -58,7 +54,17 @@ class MainActivity : AppCompatActivity(), HandleResponse<User> {
         if (!configuration.getFirstStart()) {
             configuration.saveFirstStart(true)
         } else {
-            authViewModel.login(configuration.getLogin())
+            bottomMenu.visibility = View.VISIBLE
+            RemoteInstance.setUser(
+                User(
+                    configuration.getIdUser(),
+                    configuration.getLogin(),
+                    "",
+                    configuration.getPass()
+                )
+            )
+            RemoteInstance.setPicasso(this)
+            navController.navigate(R.id.action_registrationFragment_to_accountFragment)
         }
     }
 
@@ -68,26 +74,6 @@ class MainActivity : AppCompatActivity(), HandleResponse<User> {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    override fun error(e: Exception) {
-        if (e is UnauthorizedException) {
-            Toast.makeText(this, getString(R.string.user_unauthorized), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun success(t: User) {
-        bottomMenu.visibility = View.VISIBLE
-        RemoteInstance.setUser(
-            User(
-                t.userId,
-                configuration.getLogin(),
-                "",
-                configuration.getPass()
-            )
-        )
-        RemoteInstance.setPicasso(this)
-        navController.navigate(R.id.action_registrationFragment_to_accountFragment)
     }
 
     fun setActionBarTitle(title: String) {

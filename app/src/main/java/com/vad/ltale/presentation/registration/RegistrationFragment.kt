@@ -84,6 +84,7 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
 
         RemoteInstance.setUser(User(t.userId, t.username, t.email, qwr))
 
+        configuration.saveIdUser(t.userId)
         configuration.saveLogin(t.username)
         configuration.savePass(qwr)
         configuration.saveFirstStart(true)
