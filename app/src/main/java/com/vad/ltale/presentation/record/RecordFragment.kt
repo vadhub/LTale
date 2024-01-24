@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
@@ -16,6 +17,7 @@ import android.view.View.OnTouchListener
 import android.view.View.VISIBLE
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -76,15 +78,24 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private lateinit var textViewRecordToVoice: TextView
 
     private val recordPermission = 0x12345
+    private val writePermission = 0x223441
+    private val readPermission = 0x324441
+    private val manageExternalPermission = 0x556775
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        when {
-            ContextCompat.checkSelfPermission(thisContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED -> {
+        if (ContextCompat.checkSelfPermission(thisContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(thisContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(thisContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(thisContext, Manifest.permission.MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            ) {
                 limitViewModel.getLimit(RemoteInstance.user.userId)
-            }
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), recordPermission)
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), writePermission)
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), readPermission)
+            requestPermissions(arrayOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE), manageExternalPermission)
 
-            else -> requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), recordPermission)
         }
     }
 
@@ -98,8 +109,28 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     limitViewModel.getLimit(RemoteInstance.user.userId)
                 } else {
-                    Toast.makeText(thisContext,
-                        getString(R.string.permission_denied_record), Toast.LENGTH_SHORT).show()
+                    requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), recordPermission)
+                }
+                return
+            }
+
+            writePermission -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    ContextCompat.checkSelfPermission(thisContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                }
+                return
+            }
+
+            readPermission -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    ContextCompat.checkSelfPermission(thisContext, Manifest.permission.READ_EXTERNAL_STORAGE)
+                }
+                return
+            }
+
+            manageExternalPermission -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    ContextCompat.checkSelfPermission(thisContext, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
                 }
                 return
             }
