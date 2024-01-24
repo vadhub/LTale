@@ -73,6 +73,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private lateinit var hashtag: EditText
     private lateinit var chipGroup: ChipGroup
     private val chips: MutableList<Chip> = mutableListOf()
+    private lateinit var textViewRecordToVoice: TextView
 
     private val recordPermission = 0x12345
 
@@ -143,7 +144,8 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
         val progressBarOnActionButton: ProgressBar = view.findViewById(R.id.progressBarActionButton)
-        val progressBarOnTime: ProgressBar = view.findViewById(R.id.progressBarTime)
+        textViewRecordToVoice = view.findViewById(R.id.textView)
+
         chipGroup = view.findViewById(R.id.chipGroup)
         hashtag = view.findViewById(R.id.editTextHashtag)
         timeRecordTextView = view.findViewById(R.id.timeLastTextView)
@@ -171,7 +173,6 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             chunkTimer.setTimerHandler(this)
 
             progressBarOnActionButton.visibility = GONE
-            progressBarOnTime.visibility = GONE
 
             actionButton.visibility = VISIBLE
             imageButton.visibility = VISIBLE
@@ -190,7 +191,6 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                     selectedImage = it.data!!
-                    image.layoutParams.height = 150
                     image.setImageURI(selectedImage?.data)
                 }
             }
@@ -264,6 +264,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     }
 
     private fun saveAudio() {
+        textViewRecordToVoice.visibility = GONE
         val audio: AudioRequest = recorder.stopRecording()
         listAudioRequest.add(audio)
         listAudio = listAudioRequest.map { la ->
@@ -284,6 +285,10 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         time += audio.duration
         timeRecordTextView.text = TimeFormatter.format(time)
         chunkTimer.setTimeStartFrom(time)
+
+        if (listAudio.isEmpty()) {
+            textViewRecordToVoice.visibility = VISIBLE
+        }
     }
 
     override fun showTime(time: Long) {
