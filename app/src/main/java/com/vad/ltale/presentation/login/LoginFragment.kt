@@ -66,6 +66,7 @@ class LoginFragment : BaseFragment(), HandleResponse<User> {
             )
         )
 
+        RemoteInstance.setPicasso(thisContext)
         findNavController().navigate(R.id.accountFragment)
     }
 

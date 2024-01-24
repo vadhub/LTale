@@ -87,6 +87,8 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
         configuration.saveLogin(t.username)
         configuration.savePass(qwr)
         configuration.saveFirstStart(true)
+
+        RemoteInstance.setPicasso(thisContext)
         findNavController().navigate(R.id.action_registrationFragment_to_accountFragment)
     }
 }
