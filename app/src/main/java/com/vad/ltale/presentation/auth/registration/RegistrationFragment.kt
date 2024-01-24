@@ -1,4 +1,4 @@
-package com.vad.ltale.presentation.registration
+package com.vad.ltale.presentation.auth.registration
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,25 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.model.pojo.User
-import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.data.remote.HandleResponse
-import com.vad.ltale.data.remote.RemoteInstance
-import com.vad.ltale.data.remote.exception.UserAlreadyExistException
-import com.vad.ltale.presentation.AuthViewModel
-import com.vad.ltale.presentation.AuthViewModelFactory
-import com.vad.ltale.presentation.BaseFragment
+import com.vad.ltale.presentation.auth.AuthBaseFragment
 
-class RegistrationFragment : BaseFragment(), HandleResponse<User> {
-
-    private var qwr = ""
-    private val authViewModel: AuthViewModel by activityViewModels {
-        AuthViewModelFactory(UserRepository(RemoteInstance), this)
-    }
+class RegistrationFragment : AuthBaseFragment(){
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +40,9 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
                 Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT)
                     .show()
             } else {
+
+                qwrt = password.text?.trim().toString()
+
                 authViewModel.register(
                     User(
                         0,
@@ -64,32 +55,9 @@ class RegistrationFragment : BaseFragment(), HandleResponse<User> {
 
         }
 
-        qwr = password.text.toString()
-
         buttonLogin.setOnClickListener {
             findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
         }
     }
 
-    override fun error(e: Exception) {
-        if (e is UserAlreadyExistException) {
-            Toast.makeText(
-                thisContext,
-                getString(R.string.user_with_this_nik_already_exist), Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    override fun success(t: User) {
-
-        RemoteInstance.setUser(User(t.userId, t.username, t.email, qwr))
-
-        configuration.saveIdUser(t.userId)
-        configuration.saveLogin(t.username)
-        configuration.savePass(qwr)
-        configuration.saveFirstStart(true)
-
-        RemoteInstance.setPicasso(thisContext)
-        findNavController().navigate(R.id.action_registrationFragment_to_accountFragment)
-    }
 }
