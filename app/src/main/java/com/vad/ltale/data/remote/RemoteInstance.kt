@@ -3,7 +3,6 @@ package com.vad.ltale.data.remote
 import android.content.Context
 import android.widget.ImageView
 import com.google.gson.GsonBuilder
-import com.squareup.picasso.Callback
 import com.squareup.picasso.LruCache
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
@@ -15,6 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 object RemoteInstance {
@@ -26,7 +26,7 @@ object RemoteInstance {
         this.user = user
     }
 
-    private const val baseUrl: String = "http://82.97.248.120:8090/"
+    private const val baseUrl: String = "http://10.0.2.2:8090/" //"http://82.97.248.120:8090/"
 
     //"http://10.0.2.2:8080/"
 
@@ -54,21 +54,17 @@ object RemoteInstance {
 
     private val gson = GsonBuilder().setLenient().create()
 
-    fun retrofit(): Retrofit =
+    private fun retrofitBase(): Retrofit.Builder =
         Retrofit.Builder()
             .baseUrl(baseUrl)
-            .client(client(basicAuthInterceptor(user.username, user.password)))
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
 
+    private fun retrofitWithAuth(): Retrofit.Builder =
+        retrofitBase().client(client(basicAuthInterceptor(user.username, user.password)))
 
-    fun retrofitNoAuth(): Retrofit =
-        Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(clientNoAuth())
-            .baseUrl(baseUrl)
-            .build()
+    private fun retrofitForLogin(username: String, password: String): Retrofit.Builder =
+        retrofitBase().client(client(basicAuthInterceptor(username, password)))
 
     fun setPicasso(context: Context) {
         try {
@@ -102,22 +98,25 @@ object RemoteInstance {
         }
     }
 
-    fun apiUser(retrofit: Retrofit): UserService =
-        retrofit.create(UserService::class.java)
+    fun apiUser(): UserService =
+        retrofitBase().build().create(UserService::class.java)
+
+    fun userLogin(username: String, password: String): UserService =
+        retrofitForLogin(username, password).build().create(UserService::class.java)
 
     fun apiPost(): PostService =
-        retrofit().create(PostService::class.java)
+        retrofitWithAuth().build().create(PostService::class.java)
 
     fun apiFileHandle(): FileService =
-        retrofit().create(FileService::class.java)
+        retrofitWithAuth().build().create(FileService::class.java)
 
     fun apiLike(): LikeService =
-        retrofit().create(LikeService::class.java)
+        retrofitWithAuth().build().create(LikeService::class.java)
 
     fun apiLimit(): LimitService =
-        retrofit().create(LimitService::class.java)
+        retrofitWithAuth().build().create(LimitService::class.java)
 
     fun apiFollow(): FollowService =
-        retrofit().create(FollowService::class.java)
+        retrofitWithAuth().build().create(FollowService::class.java)
 
 }

@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(private val userRepository: UserRepository, private val handleResponse: HandleResponse<User>) : ViewModel() {
 
-    fun login(username: String) = viewModelScope.launch {
-            handleResponse(userRepository.login(username))
+    fun login(username: String, password: String) = viewModelScope.launch {
+        handleResponse(userRepository.login(username, password))
     }
 
     fun register(user: User) = viewModelScope.launch {

@@ -10,10 +10,10 @@ import com.vad.ltale.model.pojo.User
 class UserRepository(private val retrofitInstance: RemoteInstance) {
 
     suspend fun getUserById(id: Long): User? =
-        retrofitInstance.apiUser(retrofitInstance.retrofit()).getUser(id).body()
+        retrofitInstance.apiUser().getUser(id).body()
 
-    suspend fun login(username: String): Resource<User> {
-        val response = retrofitInstance.apiUser(retrofitInstance.retrofitNoAuth()).login(username)
+    suspend fun login(username: String, password: String): Resource<User> {
+        val response = retrofitInstance.userLogin(username, password).login(username)
         if (response.code() == 401) {
             return Resource.Failure(UnauthorizedException("user unauthorized"))
         } else if (response.code() == 409) {
@@ -25,7 +25,7 @@ class UserRepository(private val retrofitInstance: RemoteInstance) {
 
 
     suspend fun createUser(user: User) : Resource<User> {
-        val response = retrofitInstance.apiUser(retrofitInstance.retrofitNoAuth()).registration(user)
+        val response = retrofitInstance.apiUser().registration(user)
 
         if (response.code() == 401) {
             return Resource.Failure(UnauthorizedException("user unauthorized"))

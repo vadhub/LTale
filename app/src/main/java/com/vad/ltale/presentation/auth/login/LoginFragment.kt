@@ -43,8 +43,8 @@ class LoginFragment : AuthBaseFragment() {
             } else if (password.text.isNullOrBlank()) {
                 Toast.makeText(thisContext, getString(R.string.password), Toast.LENGTH_SHORT).show()
             } else {
-                qwrt = password.text.toString()
-                viewModel.login(username.text.toString())
+                qwrt = password.text.toString().trim()
+                viewModel.login(username.text.toString().trim(), qwrt)
             }
         }
     }

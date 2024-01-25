@@ -6,6 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.remote.RemoteInstance
+import com.vad.ltale.data.remote.exception.UnauthorizedException
 import com.vad.ltale.data.remote.exception.UserAlreadyExistException
 import com.vad.ltale.data.remote.exception.UserNotFoundException
 import com.vad.ltale.data.repository.UserRepository
@@ -30,8 +31,14 @@ open class AuthBaseFragment : BaseFragment(), HandleResponse<User> {
                 getString(R.string.user_with_this_nik_already_exist), Toast.LENGTH_SHORT
             ).show()
         }
-
         if (e is UserNotFoundException) {
+            Toast.makeText(
+                thisContext,
+                getString(R.string.invalid_password_or_username), Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        if (e is UnauthorizedException) {
             Toast.makeText(
                 thisContext,
                 getString(R.string.invalid_password_or_username), Toast.LENGTH_SHORT
