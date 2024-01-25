@@ -67,7 +67,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private lateinit var adapter: AudioAdapter
     private var selectedImage: Intent? = null
     private lateinit var listAudio: MutableList<Audio>
-    private lateinit var recorder: Recorder
+    private var recorder: Recorder? = null
     private val listAudioRequest: MutableList<AudioRequest> = ArrayList()
     private lateinit var limit: Limit
     private var time: Long = 0
@@ -77,63 +77,20 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private val chips: MutableList<Chip> = mutableListOf()
     private lateinit var textViewRecordToVoice: TextView
 
-    private val recordPermission = 0x12345
-    private val writePermission = 0x223441
-    private val readPermission = 0x324441
-    private val manageExternalPermission = 0x556775
+    private val permissionLauncherMultiple = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {result ->
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (ContextCompat.checkSelfPermission(thisContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(thisContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(thisContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(thisContext, Manifest.permission.MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-            ) {
-                limitViewModel.getLimit(RemoteInstance.user.userId)
-        } else {
-            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), recordPermission)
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), writePermission)
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), readPermission)
-            requestPermissions(arrayOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE), manageExternalPermission)
+        var areAllGranted = true
 
+        for (isGranted in result.values) {
+            areAllGranted = areAllGranted && isGranted
         }
-    }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            recordPermission -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    limitViewModel.getLimit(RemoteInstance.user.userId)
-                } else {
-                    requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), recordPermission)
-                }
-                return
-            }
-
-            writePermission -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    ContextCompat.checkSelfPermission(thisContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
-                return
-            }
-
-            readPermission -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    ContextCompat.checkSelfPermission(thisContext, Manifest.permission.READ_EXTERNAL_STORAGE)
-                }
-                return
-            }
-
-            manageExternalPermission -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    ContextCompat.checkSelfPermission(thisContext, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
-                }
-                return
-            }
+        if (areAllGranted) {
+            limitViewModel.getLimit(RemoteInstance.user.userId)
+        } else {
+            Toast.makeText(thisContext, getString(R.string.permission_denied_record), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -159,6 +116,20 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         override fun afterTextChanged(editable: Editable) {
             //do something
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val permissions = mutableListOf(Manifest.permission.RECORD_AUDIO)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+        permissionLauncherMultiple.launch(permissions.toTypedArray())
     }
 
     override fun onCreateView(
@@ -294,7 +265,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         when (event?.action) {
-            MotionEvent.ACTION_DOWN -> recorder.startRecording()
+            MotionEvent.ACTION_DOWN -> recorder?.startRecording()
             MotionEvent.ACTION_UP -> saveAudio()
             MotionEvent.ACTION_CANCEL -> saveAudio()
         }
@@ -302,8 +273,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     }
 
     private fun saveAudio() {
-        textViewRecordToVoice.visibility = GONE
-        val audio: AudioRequest = recorder.stopRecording()
+        val audio: AudioRequest = recorder!!.stopRecording()
         listAudioRequest.add(audio)
         listAudio = listAudioRequest.map { la ->
             Audio(
@@ -313,6 +283,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             )
         }.toMutableList()
         adapter.setRecords(listAudio)
+        textViewRecordToVoice.visibility = GONE
     }
 
     private fun removeAudio(audio: Audio) {
