@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
@@ -49,6 +50,7 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        val collapseToolbar: CollapsingToolbarLayout = view.findViewById(R.id.collapseToolbar)
         val progressBar: ProgressBar = view.findViewById(R.id.progressBarAnother)
         val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIconAnother)
         val username: TextView = view.findViewById(R.id.usernameAnother)
@@ -90,6 +92,9 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
             load.getIcon(it.userId, imageIcon)
             username.text = it.username
             (requireActivity() as MainActivity).setActionBarTitle(it.username)
+            progressBar.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+            collapseToolbar.visibility = View.VISIBLE
         }
 
         postViewModel.countOfPosts.observe(viewLifecycleOwner) {
@@ -98,8 +103,6 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
 
         postViewModel.postsByUserId.observe(viewLifecycleOwner) {
             adapter?.setPosts(it)
-            progressBar.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
         }
 
         followViewModel.countOfSubscribers.observe(viewLifecycleOwner) {
