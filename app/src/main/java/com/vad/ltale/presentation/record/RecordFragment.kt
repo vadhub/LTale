@@ -79,7 +79,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
     private val permissionLauncherMultiple = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) {result ->
+    ) { result ->
 
         var areAllGranted = true
 
@@ -90,7 +90,11 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         if (areAllGranted) {
             limitViewModel.getLimit(RemoteInstance.user.userId)
         } else {
-            Toast.makeText(thisContext, getString(R.string.permission_denied_record), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                thisContext,
+                getString(R.string.permission_denied_record),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -189,9 +193,14 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
         limitViewModel.faller.observe(viewLifecycleOwner) {
             if (it is UpdateException) {
-                Toast.makeText(thisContext, getString(R.string.no_update_time), Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.no_update_time), Toast.LENGTH_SHORT)
+                    .show()
             } else if (it is GetTimeException) {
-                Toast.makeText(thisContext, getString(R.string.get_time_impossible), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    thisContext,
+                    getString(R.string.get_time_impossible),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -251,10 +260,18 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
                 chips.forEach { hashtags.add(it.text.toString()) }
                 postViewModel.savePost(listAudioRequest, file, idUser, hashtags.ifEmpty { null })
-                limitViewModel.updateTime(Limit(limit.id, idUser, time, "${Date(System.currentTimeMillis())}"))
+                limitViewModel.updateTime(
+                    Limit(
+                        limit.id,
+                        idUser,
+                        time,
+                        "${Date(System.currentTimeMillis())}"
+                    )
+                )
 
             } else {
-                Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT).show()
+                Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT)
+                    .show()
             }
             findNavController().navigate(R.id.action_to_accountFragment)
             return true
@@ -264,12 +281,20 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        when (event?.action) {
-            MotionEvent.ACTION_DOWN -> recorder?.startRecording()
-            MotionEvent.ACTION_UP -> saveAudio()
-            MotionEvent.ACTION_CANCEL -> saveAudio()
+        return when (event?.action) {
+            MotionEvent.ACTION_DOWN -> {
+                recorder?.startRecording()
+                true
+            }
+
+            MotionEvent.ACTION_CANCEL,
+            MotionEvent.ACTION_UP -> {
+                saveAudio()
+                true
+            }
+
+            else -> false
         }
-        return true
     }
 
     private fun saveAudio() {

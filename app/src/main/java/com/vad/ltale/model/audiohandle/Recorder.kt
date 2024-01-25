@@ -15,38 +15,29 @@ class Recorder(
 ) {
     private var output: String = ""
     private var mediaRecorder: MediaRecorder? = null
-    private val file =  File(Environment.getExternalStorageDirectory().absolutePath, "ltale/audio")
+    private var isRecording = false
 
-    init {
-        initMediaRecorder()
-    }
-
-    private fun initMediaRecorder() {
-        if (!file.exists()) {
-            file.mkdirs()
-        }
-
-        output = context.filesDir.absolutePath + File.separator + "l" + System.currentTimeMillis()
-
-        ///data/user/0/com.vad.ltale/files
-        Log.d("ddd", "${context.filesDir}")
-
-        mediaRecorder = MediaRecorder().apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC_ELD)
-            setOutputFile(output)
-        }
-    }
+    private fun getAudioPath() =
+        "${context.cacheDir.absolutePath}${File.pathSeparator}l${System.currentTimeMillis()}"
 
     fun startRecording() {
-        if (mediaRecorder == null) {
-            initMediaRecorder()
-        }
+
+        output = getAudioPath()
+
         try {
-            chunkTimer.startTimer()
-            mediaRecorder?.prepare()
-            mediaRecorder?.start()
+            mediaRecorder = MediaRecorder().apply {
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AAC_ELD)
+                setAudioEncodingBitRate(16*44100)
+                setAudioSamplingRate(44100)
+                setOutputFile(output)
+                prepare()
+                start()
+                chunkTimer.startTimer()
+                isRecording = true
+            }
+            Log.d("##Recorder", "start $this")
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         } catch (e: IOException) {
@@ -58,11 +49,17 @@ class Recorder(
         val duration = chunkTimer.cancelTimer()
 
         try {
-            mediaRecorder?.stop()
+            if (isRecording) {
+                mediaRecorder?.stop()
+            }
             mediaRecorder?.release()
             mediaRecorder = null
+            isRecording = false
+            Log.d("##Recorder", "stop $this")
         } catch (e: Exception) {
-            Log.d("Recorder", e.toString())
+            File(output).delete();
+
+            e.printStackTrace()
         }
         return AudioRequest(File(output), duration)
     }
