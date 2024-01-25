@@ -6,22 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
-import com.vad.ltale.data.remote.RemoteInstance
-import com.vad.ltale.data.repository.UserRepository
-import com.vad.ltale.presentation.AuthViewModel
-import com.vad.ltale.presentation.AuthViewModelFactory
 import com.vad.ltale.presentation.auth.AuthBaseFragment
 
 class LoginFragment : AuthBaseFragment() {
 
     private lateinit var username: TextInputEditText
     private lateinit var password: TextInputEditText
-    private val viewModel: AuthViewModel by activityViewModels {
-        AuthViewModelFactory(UserRepository(RemoteInstance), this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +36,7 @@ class LoginFragment : AuthBaseFragment() {
                 Toast.makeText(thisContext, getString(R.string.password), Toast.LENGTH_SHORT).show()
             } else {
                 qwrt = password.text.toString().trim()
-                viewModel.login(username.text.toString().trim(), qwrt)
+                authViewModel.login(username.text.toString().trim(), qwrt)
             }
         }
     }
