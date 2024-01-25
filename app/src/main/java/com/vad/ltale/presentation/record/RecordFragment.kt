@@ -64,7 +64,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private lateinit var chunkTimer: ChunkTimer
     private lateinit var actionButton: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: AudioAdapter
+    private var adapter: AudioAdapter? = null
     private var selectedImage: Intent? = null
     private lateinit var listAudio: MutableList<Audio>
     private var recorder: Recorder? = null
@@ -167,7 +167,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         }
 
         adapter = AudioAdapter(0, prepareAudioHandleWithoutViewModel(), true)
-        adapter.removeListener = removeAudioListener
+        adapter?.removeListener = removeAudioListener
 
         recyclerView.adapter = adapter
 
@@ -307,14 +307,14 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
                 date = "${Timestamp(System.currentTimeMillis())}"
             )
         }.toMutableList()
-        adapter.setRecords(listAudio)
+        adapter?.setRecords(listAudio)
         textViewRecordToVoice.visibility = GONE
     }
 
     private fun removeAudio(audio: Audio) {
         listAudio.remove(audio)
         listAudioRequest.removeAll { uri -> uri.file.absolutePath == audio.uri }
-        adapter.setRecords(listAudio)
+        adapter?.setRecords(listAudio)
         time = (time / 1000) * 1000
         time += audio.duration
         timeRecordTextView.text = TimeFormatter.format(time)
@@ -343,7 +343,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     override fun onDestroyView() {
         super.onDestroyView()
         player.stop()
-        player.release()
+        adapter = null
     }
 
 }

@@ -28,7 +28,7 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
         UserViewModelFactory(UserRepository(RemoteInstance))
     }
 
-    private lateinit var adapter: PostAdapter
+    private var adapter: PostAdapter? = null
     private var followed = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +97,7 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
         }
 
         postViewModel.postsByUserId.observe(viewLifecycleOwner) {
-            adapter.setPosts(it)
+            adapter?.setPosts(it)
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         }
@@ -108,7 +108,7 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
         }
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {
-            adapter.notifyItemChanged(it.first, it.second)
+            adapter?.notifyItemChanged(it.first, it.second)
         }
 
     }
@@ -119,8 +119,8 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        player.release()
         player.stop()
+        adapter = null
     }
 
 }
