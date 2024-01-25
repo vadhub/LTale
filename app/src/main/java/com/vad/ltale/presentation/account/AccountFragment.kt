@@ -137,6 +137,5 @@ open class AccountFragment : AccountBaseFragment(), AccountClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
         player.stop()
-        player.release()
     }
 }
