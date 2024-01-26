@@ -26,7 +26,7 @@ object RemoteInstance {
         this.user = user
     }
 
-    private const val baseUrl: String = "http://10.0.2.2:8090/" //"http://82.97.248.120:8090/"
+    private const val baseUrl: String =
 
     //"http://10.0.2.2:8080/"
 
@@ -42,13 +42,6 @@ object RemoteInstance {
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
             .addInterceptor(interceptor)
-            .addInterceptor(interceptorBody)
-            .build()
-
-    private fun clientNoAuth(): OkHttpClient =
-        OkHttpClient.Builder()
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
             .addInterceptor(interceptorBody)
             .build()
 
