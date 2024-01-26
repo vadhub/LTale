@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LTale</string>
+    <string name="sigh_out">выход</string>
+    <string name="enter_username">Введите имя пользователя</string>
+    <string name="enter_mail">Введите почту</string>
+    <string name="enter_password">Введите пароль</string>
+    <string name="user_with_this_nik_already_exist">Пользователь с этим ником уже существует</string>
+    <string name="nik">Ник</string>
+    <string name="email">email</string>
+    <string name="password">пароль</string>
+    <string name="enter">Войти</string>
+    <string name="login">Логин</string>
+    <string name="invalid_password_or_username">Неверный пароль или имя пользователя</string>
+    <string name="searching">поиск...</string>
+    <string name="to_record_voice">Записать голос!</string>
+    <string name="hashtag">#хэштег</string>
+    <string name="account">аккаунт</string>
+    <string name="feed">лента</string>
+    <string name="done">готово</string>
+    <string name="search">поиск</string>
+    <string name="record">Запись</string>
+    <string name="registration">Регистрация</string>
+    <string name="user_unauthorized">Пользователь не авторизован</string>
+    <string name="record_audio">Запись аудио</string>
+    <string name="time_is_up">Время истекло</string>
+    <string name="permission_denied_record">Доступ запрещен</string>
+    <string name="no_update_time">Время невозможно обновить</string>
+    <string name="get_time_impossible">получить время невозможно</string>
+    <string name="internet_available">Интернет недоступен</string>
+</resources>

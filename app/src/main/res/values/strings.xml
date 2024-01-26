@@ -13,7 +13,7 @@
     <string name="login">login</string>
     <string name="invalid_password_or_username">Invalid password or username</string>
     <string name="searching">searching...</string>
-    <string name="to_record_voice">To Record Voice!</string>
+    <string name="to_record_voice">Record your voice!</string>
     <string name="hashtag">#hashtag</string>
     <string name="account">account</string>
     <string name="feed">feed</string>
@@ -25,8 +25,8 @@
     <string name="record_audio">Record audio</string>
     <string name="time_is_up">Time is up</string>
     <string name="permission_denied_record">Permission denied</string>
-    <string name="no_update_time">No update time</string>
-    <string name="get_time_impossible">get time impossible</string>
+    <string name="no_update_time">Time cannot be updated</string>
+    <string name="get_time_impossible">it is impossible to get time</string>
     <string name="internet_available">Internet is not available</string>
 
 </resources>
