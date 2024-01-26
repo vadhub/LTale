@@ -153,7 +153,6 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener,
 
     override fun onDestroyView() {
         super.onDestroyView()
-        player.release()
         player.stop()
     }
 

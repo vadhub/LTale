@@ -23,7 +23,7 @@ import com.vad.ltale.presentation.UserViewModelFactory
 import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 
-class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
+class AnotherAccountFragment : AccountBaseFragment() {
 
     private val userViewModel: UserViewModel by viewModels {
         UserViewModelFactory(UserRepository(RemoteInstance))
@@ -67,7 +67,7 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
             postViewModel.getPostsByUserId(followed, userId)
         }
 
-        adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
+        adapter = PostAdapter(load, this, AccountClickListener.EmptyAccountClickListener() , onReachEndListener, prepareAudioHandler())
         recyclerView.adapter = adapter
 
         followViewModel.checkSubscribe(userId, followed)
@@ -113,10 +113,6 @@ class AnotherAccountFragment : AccountBaseFragment(), AccountClickListener {
         likeViewModel.likeData.observe(viewLifecycleOwner) {
             adapter?.notifyItemChanged(it.first, it.second)
         }
-
-    }
-
-    override fun onClick(id: Long) {
 
     }
 

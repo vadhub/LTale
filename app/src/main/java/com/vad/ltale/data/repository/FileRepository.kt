@@ -1,13 +1,10 @@
 package com.vad.ltale.data.repository
 
-import android.content.Context
 import android.widget.ImageView
-import com.squareup.picasso.Callback
-import com.vad.ltale.R
-import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.data.local.AudioDao
 import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.remote.RemoteInstance
+import com.vad.ltale.model.pojo.Audio
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

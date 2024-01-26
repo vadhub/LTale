@@ -53,7 +53,7 @@ class PostAdapter(
 
     override fun getItemCount() = posts.size
 
-    inner class PostViewHolder(itemView: View) : ViewHolder(itemView) {
+    inner class PostViewHolder(itemView: View) : ViewHolder(itemView), View.OnClickListener {
         private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
         private val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
         private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
@@ -63,9 +63,11 @@ class PostAdapter(
         private val imageIcon = itemView.findViewById(R.id.imageIconPost) as ShapeableImageView
         private val hashtag = itemView.findViewById(R.id.textViewHashtag) as TextView
         private val nikName = itemView.findViewById(R.id.textViewNikName) as TextView
+        private var postResponse = PostResponse.empty()
 
         @SuppressLint("SimpleDateFormat")
         fun bind(postResponse: PostResponse) {
+            this.postResponse = postResponse
 
             imageIcon.setImageDrawable(null)
             imageViewPost.setImageDrawable(null)
@@ -76,7 +78,7 @@ class PostAdapter(
             val parser = SimpleDateFormat("yyyy-MM-dd")
             val formatter = SimpleDateFormat("dd.MM.yyyy")
 
-            textViewDate.text = formatter.format(parser.parse(postResponse.dateChanged))
+            textViewDate.text = formatter.format(parser.parse(postResponse.dateChanged)?: "0.0.0") // if data is null return 0.0.0
             nikName.text = postResponse.nikName
             load.getIcon(postResponse.userId, imageIcon)
             load.getImage(postResponse.image?.id, imageViewPost)
@@ -88,13 +90,8 @@ class PostAdapter(
             adapter.setRecords(postResponse.listAudio)
             recyclerViewAudio.adapter = adapter
 
-            imageIcon.setOnClickListener {
-                onClickAccount.onClick(postResponse.userId)
-            }
-
-            imageViewLike.setOnClickListener {
-                likeOnClickListener.onLike(postResponse, layoutPosition)
-            }
+            imageIcon.setOnClickListener(this)
+            imageViewLike.setOnClickListener(this)
 
             likeHandle(postResponse.isLiked, postResponse.countLike)
         }
@@ -107,6 +104,13 @@ class PostAdapter(
                 imageViewLike.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_outline_favorite_border_24))
             }
             textViewCountLike.text = "$countLike"
+        }
+
+        override fun onClick(v: View?) {
+            when (v) {
+                imageIcon -> {onClickAccount.onClick(postResponse.userId)}
+                imageViewLike -> {likeOnClickListener.onLike(postResponse, layoutPosition)}
+            }
         }
     }
 

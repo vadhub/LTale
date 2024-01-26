@@ -28,7 +28,7 @@ import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 import java.io.File
 
-open class AccountFragment : AccountBaseFragment(), AccountClickListener {
+open class AccountFragment : AccountBaseFragment() {
 
     private lateinit var adapter: PostAdapter
     private lateinit var bottomMenuActivity: BottomNavigationView
@@ -73,7 +73,7 @@ open class AccountFragment : AccountBaseFragment(), AccountClickListener {
             postViewModel.getPostsByUserId(userId, userId)
         }
 
-        adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
+        adapter = PostAdapter(load, this, AccountClickListener.EmptyAccountClickListener(), onReachEndListener, prepareAudioHandler())
         recyclerView.adapter = adapter
 
         load.getIcon(userId, imageIcon)
@@ -132,10 +132,6 @@ open class AccountFragment : AccountBaseFragment(), AccountClickListener {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onClick(id: Long) {
-
     }
 
     override fun onDestroyView() {

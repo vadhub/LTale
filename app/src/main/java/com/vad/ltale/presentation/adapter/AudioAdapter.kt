@@ -41,26 +41,33 @@ class AudioAdapter(private val parentPosition: Int, private val playlistHandler:
 
     override fun getItemCount(): Int = audio.size
 
-    inner class RecordViewHolder(item: View) : ViewHolder(item) {
+    inner class RecordViewHolder(item: View) : ViewHolder(item), View.OnClickListener {
         val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
         val playButton: ShapeableImageView = item.findViewById(R.id.playButton)
         val seekBar: SeekBar = item.findViewById(R.id.seekBar)
         val progressBar: ProgressBar = item.findViewById(R.id.loadingProgressBar)
         val removeButton: ImageButton = item.findViewById(R.id.removeButton)
+        private var audio = Audio(-1,"", 0L, "")
 
         @SuppressLint("SetTextI18n")
         fun bind(audio: Audio) {
+
+            this.audio = audio
+
             if (isRecord) {
                 removeButton.visibility = View.VISIBLE
             }
 
-            removeButton.setOnClickListener {
-                removeListener.invoke(audio)
-            }
+            removeButton.setOnClickListener(this)
+            playButton.setOnClickListener(this)
 
             timeTextView.text = TimeFormatter.format(audio.duration)
-            playButton.setOnClickListener {
-                playlistHandler.play(parentPosition, layoutPosition, this, audio)
+        }
+
+        override fun onClick(v: View?) {
+            when (v) {
+                removeButton -> {removeListener.invoke(audio)}
+                playButton -> {playlistHandler.play(parentPosition, layoutPosition, this, audio)}
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.vad.ltale.data.remote
 
 import android.content.Context
+import android.util.Log
 import android.widget.ImageView
 import com.google.gson.GsonBuilder
 import com.squareup.picasso.LruCache
@@ -26,7 +27,7 @@ object RemoteInstance {
         this.user = user
     }
 
-    private const val baseUrl: String =
+    private const val baseUrl: String = "http://82.97.248.120:8090/"
 
     //"http://10.0.2.2:8080/"
 
@@ -91,8 +92,9 @@ object RemoteInstance {
         }
     }
 
-    fun apiUser(): UserService =
-        retrofitBase().build().create(UserService::class.java)
+    fun apiUser(): UserService {
+        return retrofitWithAuth().build().create(UserService::class.java)
+    }
 
     fun userLogin(username: String, password: String): UserService =
         retrofitForLogin(username, password).build().create(UserService::class.java)
