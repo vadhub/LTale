@@ -3,9 +3,7 @@ package com.vad.ltale.presentation.record
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -17,9 +15,6 @@ import android.view.View.OnTouchListener
 import android.view.View.VISIBLE
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,7 +29,7 @@ import com.vad.ltale.data.remote.exception.UpdateException
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.FileUtil
-import com.vad.ltale.model.TimeFormatter
+import com.vad.ltale.model.timehandle.TimeFormatter
 import com.vad.ltale.model.audiohandle.Recorder
 import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.pojo.AudioRequest

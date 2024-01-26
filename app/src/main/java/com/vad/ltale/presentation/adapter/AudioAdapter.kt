@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
 import com.vad.ltale.model.pojo.Audio
-import com.vad.ltale.model.TimeFormatter
+import com.vad.ltale.model.timehandle.TimeFormatter
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 
 class AudioAdapter(private val parentPosition: Int, private val playlistHandler: PlaylistHandler, private val isRecord: Boolean) :
