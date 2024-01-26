@@ -1,6 +1,8 @@
 package com.vad.ltale
 
+import android.content.Context
 import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -14,6 +16,7 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.vad.ltale.data.local.SaveConfiguration
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.model.pojo.User
@@ -45,24 +48,42 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomMenu.setupWithNavController(navController)
 
-        if (!configuration.getFirstStart()) {
-            configuration.saveFirstStart(true)
-        } else {
-            bottomMenu.visibility = View.VISIBLE
-            RemoteInstance.setUser(
-                User(
-                    configuration.getIdUser(),
-                    configuration.getLogin(),
-                    "",
-                    configuration.getPass()
+        if (isAccessInternet(this)) {
+            if (!configuration.getFirstStart()) {
+                configuration.saveFirstStart(true)
+            } else {
+                bottomMenu.visibility = View.VISIBLE
+                RemoteInstance.setUser(
+                    User(
+                        configuration.getIdUser(),
+                        configuration.getLogin(),
+                        "",
+                        configuration.getPass()
+                    )
                 )
-            )
 
-            Log.d("$$$", "${configuration.getPass()} ${configuration.getIdUser()} ${configuration.getLogin()} ")
-            RemoteInstance.setPicasso(this)
-            navController.navigate(R.id.action_registrationFragment_to_accountFragment)
+                Log.d(
+                    "$$$",
+                    "${configuration.getPass()} ${configuration.getIdUser()} ${configuration.getLogin()} "
+                )
+                RemoteInstance.setPicasso(this)
+                navController.navigate(R.id.action_registrationFragment_to_accountFragment)
+            }
+        } else {
+            Snackbar.make(
+                bottomMenu,
+                resources.getString(R.string.internet_available),
+                Snackbar.LENGTH_SHORT
+            ).show()
         }
     }
+
+    fun isAccessInternet(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return connectivityManager.activeNetworkInfo != null && connectivityManager.activeNetworkInfo!!.isConnected
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)

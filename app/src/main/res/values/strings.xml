@@ -27,5 +27,6 @@
     <string name="permission_denied_record">Permission denied</string>
     <string name="no_update_time">No update time</string>
     <string name="get_time_impossible">get time impossible</string>
+    <string name="internet_available">Internet is not available</string>
 
 </resources>
