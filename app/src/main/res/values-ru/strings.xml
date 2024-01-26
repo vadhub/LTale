@@ -28,4 +28,5 @@
     <string name="no_update_time">Время невозможно обновить</string>
     <string name="get_time_impossible">получить время невозможно</string>
     <string name="internet_available">Интернет недоступен</string>
+    <string name="field_empty">Поле не может быть пустым</string>
 </resources>

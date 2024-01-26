@@ -13,6 +13,7 @@ import android.view.*
 import android.view.View.GONE
 import android.view.View.OnTouchListener
 import android.view.View.VISIBLE
+import android.view.animation.OvershootInterpolator
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
@@ -38,6 +39,7 @@ import com.vad.ltale.model.timehandle.ChunkTimer
 import com.vad.ltale.model.timehandle.TimerHandler
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.AudioAdapter
+import com.vad.ltale.presentation.animation.AnimationButton
 import java.io.File
 import java.sql.Date
 import java.sql.Timestamp
@@ -71,6 +73,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private lateinit var chipGroup: ChipGroup
     private val chips: MutableList<Chip> = mutableListOf()
     private lateinit var textViewRecordToVoice: TextView
+    private var animationButton: AnimationButton? = null
 
     private val permissionLauncherMultiple = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -173,8 +176,9 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             recorder = Recorder(chunkTimer, thisContext)
             chunkTimer.setTimerHandler(this)
 
-            progressBarOnActionButton.visibility = GONE
+            animationButton = AnimationButton(recorder!!, OvershootInterpolator())
 
+            progressBarOnActionButton.visibility = GONE
             actionButton.visibility = VISIBLE
             imageButton.visibility = VISIBLE
             timeRecordTextView.visibility = VISIBLE
@@ -278,12 +282,14 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         return when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
+                animationButton?.startCaptureAudioVolume(actionButton)
                 recorder?.startRecording()
                 true
             }
 
             MotionEvent.ACTION_CANCEL,
             MotionEvent.ACTION_UP -> {
+                animationButton?.stopCapture()
                 saveAudio()
                 true
             }

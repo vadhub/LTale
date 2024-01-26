@@ -2,6 +2,7 @@ package com.vad.ltale.model.audiohandle
 
 import android.content.Context
 import android.media.MediaRecorder
+import android.os.CountDownTimer
 import android.os.Environment
 import android.util.Log
 import com.vad.ltale.model.pojo.AudioRequest
@@ -44,6 +45,8 @@ class Recorder(
             e.printStackTrace()
         }
     }
+
+    fun getVolume() = mediaRecorder?.maxAmplitude ?: 0
 
     fun stopRecording(): AudioRequest {
         val duration = chunkTimer.cancelTimer()
