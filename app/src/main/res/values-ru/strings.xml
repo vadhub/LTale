@@ -29,4 +29,6 @@
     <string name="get_time_impossible">получить время невозможно</string>
     <string name="internet_available">Интернет недоступен</string>
     <string name="field_empty">Поле не может быть пустым</string>
+    <string name="post_fail_loading">Сбой загрузки поста</string>
+    <string name="post_load">Пост создан!</string>
 </resources>

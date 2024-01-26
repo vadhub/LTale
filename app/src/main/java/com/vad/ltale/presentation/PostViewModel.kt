@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.model.FileUtil
 import com.vad.ltale.model.pojo.AudioRequest
 import com.vad.ltale.model.pojo.PostResponse
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
+import ir.logicbase.livex.SingleLiveEvent
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -25,15 +28,21 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     val countOfPosts: MutableLiveData<Int> = MutableLiveData()
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
     var postsByUserId: MutableLiveData<List<PostResponse>> = MutableLiveData()
+    var postResponse: SingleLiveEvent<Resource<PostResponse>> = SingleLiveEvent()
+
     private var page = 0
     private var pageOfUserPosts = 0
     private var userId = -1L
 
-    fun getPostsByText(text: String) = viewModelScope.launch {
+    val coroutineExceptionHandler = CoroutineExceptionHandler{_, throwable ->
+        throwable.printStackTrace()
+    }
+
+    fun getPostsByText(text: String) = viewModelScope.launch(Dispatchers.IO) {
         posts.postValue(postRepository.getPostsByText(text))
     }
 
-    fun getPosts(currentUserId: Long) = viewModelScope.launch {
+    fun getPosts(currentUserId: Long) = viewModelScope.launch(Dispatchers.IO) {
 
         val loadedPosts: MutableList<PostResponse>? = posts.value as? MutableList<PostResponse>
         val loaded = postRepository.getPosts(currentUserId, page)
@@ -50,14 +59,15 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         }
     }
 
-    fun getPostsByUserId(userId: Long, currentUserId: Long) = viewModelScope.launch {
+    fun getPostsByUserId(userId: Long, currentUserId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
 
         if (this@PostViewModel.userId != userId) {
             clearPostsOfUSer()
             this@PostViewModel.userId = userId
         }
 
-        val loadedPosts: MutableList<PostResponse>? = postsByUserId.value as? MutableList<PostResponse>
+        val loadedPosts: MutableList<PostResponse>? =
+            postsByUserId.value as? MutableList<PostResponse>
         val loaded = postRepository.getPostByUserId(userId, currentUserId, pageOfUserPosts)
 
         if (loaded.isNotEmpty()) {
@@ -74,23 +84,35 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun clearPostsOfUSer() {
-        postsByUserId.value = emptyList()
+        postsByUserId.postValue(emptyList())
         pageOfUserPosts = 0
     }
 
     fun clearPosts() {
-        posts.value = emptyList()
+        posts.postValue(emptyList())
         page = 0
     }
 
-    fun savePost(context: Context, audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {
+    fun savePost(
+        context: Context,
+        audio: List<AudioRequest>,
+        image: File?,
+        userId: Long,
+        hashtags: List<String>?
+    ) = viewModelScope.launch {
 
-        val listAudio = audio.map{ a ->
-                MultipartBody.Part.createFormData("audio", a.file.name, a.file.asRequestBody("multipart/form-data".toMediaTypeOrNull()))
+        postResponse.postValue(Resource.Loading)
+
+        val listAudio = audio.map { a ->
+            MultipartBody.Part.createFormData(
+                "audio",
+                a.file.name,
+                a.file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            )
         }
 
-        val listDuration = audio.map {
-            a -> "${a.duration}".toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val listDuration = audio.map { a ->
+            "${a.duration}".toRequestBody("multipart/form-data".toMediaTypeOrNull())
         }
 
         var imageBody: MultipartBody.Part? = null
@@ -100,7 +122,8 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
                 quality(50)
             }
 
-            val requestImage: RequestBody = compressImage.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val requestImage: RequestBody =
+                compressImage.asRequestBody("multipart/form-data".toMediaTypeOrNull())
             imageBody = MultipartBody.Part.createFormData("image", compressImage.name, requestImage)
         }
 
@@ -119,7 +142,18 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
                 h.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             }
         }
-        postRepository.sendPost(listAudio, listDuration, imageBody, requestUserId, requestDateCreated, requestDateChanged, hashtagRequest)
+
+        postResponse.postValue(
+            postRepository.sendPost(
+                listAudio,
+                listDuration,
+                imageBody,
+                requestUserId,
+                requestDateCreated,
+                requestDateChanged,
+                hashtagRequest
+            )
+        )
     }
 
     fun getCountOfPostsByUserId(userId: Long) = viewModelScope.launch {
