@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.MainActivity
@@ -30,6 +31,7 @@ import java.io.File
 open class AccountFragment : AccountBaseFragment(), AccountClickListener {
 
     private lateinit var adapter: PostAdapter
+    private lateinit var bottomMenuActivity: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,8 @@ open class AccountFragment : AccountBaseFragment(), AccountClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (requireActivity() as MainActivity).bottomMenu.visibility = View.VISIBLE
+        bottomMenuActivity = (requireActivity() as MainActivity).bottomMenu
+        bottomMenuActivity.visibility = View.VISIBLE
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_account, container, false)
     }
@@ -123,6 +126,7 @@ open class AccountFragment : AccountBaseFragment(), AccountClickListener {
 
         if (item.itemId == R.id.sigh_out) {
             configuration.clear()
+            bottomMenuActivity.visibility = View.GONE
             findNavController().navigate(R.id.action_accountFragment_to_registrationFragment)
             return true
         }
