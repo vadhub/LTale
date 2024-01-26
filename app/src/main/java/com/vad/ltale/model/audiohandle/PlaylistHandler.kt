@@ -9,7 +9,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.vad.ltale.R
 import com.vad.ltale.model.pojo.Audio
-import com.vad.ltale.model.TimeFormatter
+import com.vad.ltale.model.timehandle.TimeFormatter
 import com.vad.ltale.presentation.adapter.AudioAdapter
 
 class PlaylistHandler(
@@ -114,17 +114,16 @@ class PlaylistHandler(
 
     private fun seekBarChanged(timeTextView: TextView, seekBar: SeekBar, duration: Long) {
 
-        durationBeforeDecrease = TimeFormatter.format(player.duration)
-        timeTextView.text = durationBeforeDecrease
+        durationBeforeDecrease = timeTextView.text.toString()
 
         val runnable = object: Runnable {
             override fun run() {
 
+                handler.postDelayed(this, 1000)
                 val progress = ((player.currentPosition * 100)/duration).toInt()
 
                 timeTextView.text = TimeFormatter.format(player.duration - player.currentPosition)
                 seekBar.progress = progress
-                handler.postDelayed(this, 1000)
             }
         }
 
