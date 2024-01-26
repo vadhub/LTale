@@ -28,5 +28,6 @@
     <string name="no_update_time">Time cannot be updated</string>
     <string name="get_time_impossible">it is impossible to get time</string>
     <string name="internet_available">Internet is not available</string>
+    <string name="field_empty">Field can`t be empty</string>
 
 </resources>

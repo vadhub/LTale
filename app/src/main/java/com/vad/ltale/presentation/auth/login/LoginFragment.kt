@@ -31,8 +31,10 @@ class LoginFragment : AuthBaseFragment() {
         buttonLogin.setOnClickListener {
 
             if (username.text.isNullOrBlank()) {
+                username.error = getString(R.string.field_empty)
                 Toast.makeText(thisContext, getString(R.string.enter_username), Toast.LENGTH_SHORT).show()
             } else if (password.text.isNullOrBlank()) {
+                password.error = getString(R.string.field_empty)
                 Toast.makeText(thisContext, getString(R.string.password), Toast.LENGTH_SHORT).show()
             } else {
                 qwrt = password.text.toString().trim()

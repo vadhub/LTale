@@ -14,6 +14,8 @@ import com.vad.ltale.presentation.auth.AuthBaseFragment
 
 class RegistrationFragment : AuthBaseFragment(){
 
+    private lateinit var username: TextInputEditText
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,23 +26,22 @@ class RegistrationFragment : AuthBaseFragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val buttonRegistration: Button = view.findViewById(R.id.enterRegistrationButton)
         val buttonLogin: Button = view.findViewById(R.id.loginRegistrationButton)
-        val username = view.findViewById(R.id.nikEditText) as TextInputEditText
+        username = view.findViewById(R.id.nikEditText) as TextInputEditText
         val email = view.findViewById(R.id.emailEditText) as TextInputEditText
         val password = view.findViewById(R.id.passwordEditText) as TextInputEditText
 
         buttonRegistration.setOnClickListener {
 
             if (username.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, getString(R.string.enter_username), Toast.LENGTH_SHORT)
-                    .show()
+                username.error = getString(R.string.field_empty)
+                Toast.makeText(thisContext, getString(R.string.enter_username), Toast.LENGTH_SHORT).show()
             } else if (email.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, getString(R.string.enter_mail), Toast.LENGTH_SHORT)
-                    .show()
+                email.error = getString(R.string.field_empty)
+                Toast.makeText(thisContext, getString(R.string.enter_mail), Toast.LENGTH_SHORT).show()
             } else if (password.text.isNullOrBlank()) {
-                Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT)
-                    .show()
+                password.error = getString(R.string.field_empty)
+                Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT).show()
             } else {
-
                 qwrt = password.text?.trim().toString()
 
                 authViewModel.register(
