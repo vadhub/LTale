@@ -85,7 +85,7 @@ open class AccountFragment : AccountBaseFragment() {
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                     val selectedImage = it.data
                     imageIcon.setImageURI(selectedImage!!.data)
-                    load.uploadIcon(File(FileUtil.getPath(selectedImage.data, context)), userId)
+                    load.uploadIcon(thisContext, File(FileUtil.getPath(selectedImage.data, context)), userId)
                 }
             }
 

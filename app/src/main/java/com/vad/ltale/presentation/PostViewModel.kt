@@ -1,12 +1,16 @@
 package com.vad.ltale.presentation
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.repository.PostRepository
+import com.vad.ltale.model.FileUtil
 import com.vad.ltale.model.pojo.AudioRequest
 import com.vad.ltale.model.pojo.PostResponse
+import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.quality
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -79,7 +83,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         page = 0
     }
 
-    fun savePost(audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {
+    fun savePost(context: Context, audio: List<AudioRequest>, image: File?, userId: Long, hashtags: List<String>?) = viewModelScope.launch {
 
         val listAudio = audio.map{ a ->
                 MultipartBody.Part.createFormData("audio", a.file.name, a.file.asRequestBody("multipart/form-data".toMediaTypeOrNull()))
@@ -91,8 +95,13 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
         var imageBody: MultipartBody.Part? = null
         if (image?.exists() == true) {
-            val requestImage: RequestBody = image.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            imageBody = MultipartBody.Part.createFormData("image", image.name, requestImage)
+
+            val compressImage = Compressor.compress(context, image) {
+                quality(50)
+            }
+
+            val requestImage: RequestBody = compressImage.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            imageBody = MultipartBody.Part.createFormData("image", compressImage.name, requestImage)
         }
 
         val requestUserId: RequestBody =

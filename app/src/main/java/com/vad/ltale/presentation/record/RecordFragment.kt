@@ -3,7 +3,11 @@ package com.vad.ltale.presentation.record
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -40,6 +44,9 @@ import com.vad.ltale.model.timehandle.TimerHandler
 import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.AudioAdapter
 import com.vad.ltale.presentation.animation.AnimationButton
+import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.quality
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.sql.Date
 import java.sql.Timestamp
@@ -205,6 +212,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
         val resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                     removeImage.visibility = VISIBLE
                     selectedImage = it.data!!
@@ -218,6 +226,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         }
 
     }
+
 
     private fun createTag(text: CharSequence) {
         var str = text
@@ -252,13 +261,13 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             if (listAudioRequest.isNotEmpty()) {
                 var file: File? = null
                 if (selectedImage != null) {
-                    file = File(FileUtil.getPath(selectedImage?.data, context))
+                    file = File(FileUtil.getPath(selectedImage?.data, thisContext))
                 }
 
                 val idUser = RemoteInstance.user.userId
 
                 chips.forEach { hashtags.add(it.text.toString()) }
-                postViewModel.savePost(listAudioRequest, file, idUser, hashtags.ifEmpty { null })
+                postViewModel.savePost(thisContext, listAudioRequest, file, idUser, hashtags.ifEmpty { null })
                 limitViewModel.updateTime(
                     Limit(
                         limit.id,
