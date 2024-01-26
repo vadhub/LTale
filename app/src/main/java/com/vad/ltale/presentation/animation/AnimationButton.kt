@@ -10,9 +10,6 @@ import kotlin.math.min
 class AnimationButton(private val recorder: Recorder, private val interpolator: OvershootInterpolator) {
 
     private var countDownTimer: CountDownTimer? = null
-    private var scaleXdef = 0F
-    private var scaleYdef = 0F
-    private var button: FloatingActionButton? = null
 
     companion object {
         private const val MAX_RECORD_AMPLITUDE = 32768.0
