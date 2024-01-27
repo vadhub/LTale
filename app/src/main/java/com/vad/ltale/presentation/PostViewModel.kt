@@ -1,6 +1,7 @@
 package com.vad.ltale.presentation
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +24,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.sql.Date
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
@@ -31,9 +33,9 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var postsByUserId: MutableLiveData<List<PostResponse>> = MutableLiveData()
     var postResponse: SingleLiveEvent<Resource<PostResponse>> = SingleLiveEvent()
 
-    private var page = 0
+    private var page = AtomicInteger(0)
     private var pageOfUserPosts = AtomicInteger(0)
-    private var userId = -1L
+    private var userId = AtomicLong(-1L)
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
         throwable.printStackTrace()
@@ -46,7 +48,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     fun getPosts(currentUserId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
 
         val loadedPosts: MutableList<PostResponse>? = posts.value as? MutableList<PostResponse>
-        val loaded = postRepository.getPosts(currentUserId, page)
+        val loaded = postRepository.getPosts(currentUserId, page.get())
 
         if (loaded.isNotEmpty()) {
             if (!loadedPosts.isNullOrEmpty()) {
@@ -56,19 +58,22 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
                 posts.postValue(loaded)
             }
 
-            page++
+            page.incrementAndGet()
         }
     }
 
     fun getPostsByUserId(userId: Long, currentUserId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
 
-        if (this@PostViewModel.userId != userId) {
+        if (this@PostViewModel.userId.get() != userId) {
             clearPostsOfUSer()
-            this@PostViewModel.userId = userId
+            Log.d("$$$#ddd","${this@PostViewModel.userId.get()} $userId")
+            this@PostViewModel.userId.set(userId)
         }
 
         val loadedPosts: MutableList<PostResponse>? = postsByUserId.value as? MutableList<PostResponse>
         val loaded = postRepository.getPostByUserId(userId, currentUserId, pageOfUserPosts.get())
+
+        Log.d("$$$#ddd"," 3 ${loadedPosts.toString()}")
 
         if (loaded.isNotEmpty()) {
             if (!loadedPosts.isNullOrEmpty()) {
@@ -84,13 +89,15 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun clearPostsOfUSer() {
-        postsByUserId.postValue(emptyList())
+        Log.d("$$$#ddd","clear ${postsByUserId.value}")
+        postsByUserId = MutableLiveData()
+        Log.d("$$$#ddd","clear 2 ${postsByUserId.value}")
         pageOfUserPosts.set(0)
     }
 
     fun clearPosts() {
         posts.postValue(emptyList())
-        page = 0
+        page.set(0)
     }
 
     fun savePost(
