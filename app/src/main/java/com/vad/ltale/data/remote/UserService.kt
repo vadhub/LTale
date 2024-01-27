@@ -4,7 +4,7 @@ import com.vad.ltale.model.pojo.User
 import retrofit2.Response
 import retrofit2.http.*
 
-interface UserService : AuthService {
+interface UserService {
 
     @GET("api-v1/users/{id}")
     suspend fun getUser(@Path("id") id: Long): Response<User>

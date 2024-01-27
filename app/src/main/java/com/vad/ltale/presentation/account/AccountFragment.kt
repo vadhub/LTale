@@ -133,6 +133,7 @@ open class AccountFragment : AccountBaseFragment() {
                     progressBarPost.visibility = View.GONE
                     buttonCreateRecord.visibility = View.VISIBLE
                     Snackbar.make(buttonCreateRecord, getString(R.string.post_load), Snackbar.LENGTH_SHORT).show()
+                    postViewModel.getCountOfPostsByUserId(userId)
                 }
             }
         }

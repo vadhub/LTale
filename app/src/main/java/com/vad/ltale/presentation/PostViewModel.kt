@@ -81,6 +81,8 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             }
 
             pageOfUserPosts.incrementAndGet()
+        } else {
+            postsByUserId.postValue(emptyList())
         }
 
     }
@@ -91,7 +93,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun clearPosts() {
-        posts.postValue(emptyList())
+        posts = MutableLiveData()
         page.set(0)
     }
 

@@ -44,7 +44,7 @@
                     android:maxHeight="150dp"
                     android:padding="1dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher_foreground"
+                    android:src="@drawable/account_circle_fill0_wght200_grad0_opsz24"
                     app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                     app:strokeColor="@color/white"
                     app:strokeWidth="1dp" />

@@ -13,15 +13,11 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(private val userRepository: UserRepository, private val handleResponse: HandleResponse<User>) : ViewModel() {
 
-    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
-        throwable.printStackTrace()
-    }
-
-    fun login(username: String, password: String) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+    fun login(username: String, password: String) = viewModelScope.launch {
         handleResponse(userRepository.login(username, password))
     }
 
-    fun register(user: User) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+    fun register(user: User) = viewModelScope.launch {
         handleResponse(userRepository.createUser(user))
     }
 

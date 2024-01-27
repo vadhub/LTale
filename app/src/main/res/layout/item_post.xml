@@ -21,7 +21,7 @@
             android:scaleType="centerCrop"
             android:background="@color/white"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@drawable/account_circle_fill0_wght200_grad0_opsz24"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"

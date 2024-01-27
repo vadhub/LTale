@@ -25,7 +25,7 @@ class UserRepository(private val retrofitInstance: RemoteInstance) {
 
 
     suspend fun createUser(user: User) : Resource<User> {
-        val response = retrofitInstance.apiUser().registration(user)
+        val response = retrofitInstance.userRegistration().registration(user)
 
         if (response.code() == 401) {
             return Resource.Failure(UnauthorizedException("user unauthorized"))
