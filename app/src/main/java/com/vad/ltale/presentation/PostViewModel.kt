@@ -66,14 +66,11 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
         if (this@PostViewModel.userId.get() != userId) {
             clearPostsOfUSer()
-            Log.d("$$$#ddd","${this@PostViewModel.userId.get()} $userId")
             this@PostViewModel.userId.set(userId)
         }
 
         val loadedPosts: MutableList<PostResponse>? = postsByUserId.value as? MutableList<PostResponse>
         val loaded = postRepository.getPostByUserId(userId, currentUserId, pageOfUserPosts.get())
-
-        Log.d("$$$#ddd"," 3 ${loadedPosts.toString()}")
 
         if (loaded.isNotEmpty()) {
             if (!loadedPosts.isNullOrEmpty()) {
@@ -89,9 +86,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun clearPostsOfUSer() {
-        Log.d("$$$#ddd","clear ${postsByUserId.value}")
         postsByUserId = MutableLiveData()
-        Log.d("$$$#ddd","clear 2 ${postsByUserId.value}")
         pageOfUserPosts.set(0)
     }
 
