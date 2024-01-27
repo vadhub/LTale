@@ -113,7 +113,7 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         android:backgroundTint="@color/blue_300"
-        android:src="@android:drawable/ic_btn_speak_now"
+        android:src="@drawable/keyboard_voice_fill0_wght200_grad0_opsz24"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

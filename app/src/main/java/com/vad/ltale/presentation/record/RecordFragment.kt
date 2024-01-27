@@ -178,16 +178,25 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
         limitViewModel.limit.observe(viewLifecycleOwner) {
             limit = it
-            timeRecordTextView.text = TimeFormatter.format(it.time)
-            chunkTimer = ChunkTimer(it.time)
-            recorder = Recorder(chunkTimer, thisContext)
-            chunkTimer.setTimerHandler(this)
 
-            animationButton = AnimationButton(recorder!!, OvershootInterpolator())
+            if (limit.time < 1000) {
+                timeRecordTextView.text = getString(R.string.time_is_up)
+                textViewRecordToVoice.text = getString(R.string.come_back_tomorrow)
+                actionButton.setImageResource(R.drawable.mic_off_fill0_wght200_grad0_opsz24)
+                actionButton.isEnabled = false
+                hashtag.isEnabled = false
+                imageButton.visibility = GONE
+            } else {
+                timeRecordTextView.text = TimeFormatter.format(it.time)
+                chunkTimer = ChunkTimer(it.time)
+                recorder = Recorder(chunkTimer, thisContext)
+                chunkTimer.setTimerHandler(this)
+                animationButton = AnimationButton(recorder!!, OvershootInterpolator())
+                imageButton.visibility = VISIBLE
+            }
 
             progressBarOnActionButton.visibility = GONE
             actionButton.visibility = VISIBLE
-            imageButton.visibility = VISIBLE
             timeRecordTextView.visibility = VISIBLE
         }
 
@@ -341,7 +350,9 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     }
 
     override fun finishTime() {
-        timeRecordTextView.text = "00:00"
+        actionButton.setImageResource(R.drawable.mic_off_fill0_wght200_grad0_opsz24)
+        actionButton.isEnabled = false
+        timeRecordTextView.text = getString(R.string.time_is_up)
         Toast.makeText(thisContext, getString(R.string.time_is_up), Toast.LENGTH_SHORT).show()
     }
 
