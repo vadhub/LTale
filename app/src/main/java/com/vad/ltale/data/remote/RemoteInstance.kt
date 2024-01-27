@@ -96,8 +96,11 @@ object RemoteInstance {
         return retrofitWithAuth().build().create(UserService::class.java)
     }
 
-    fun userLogin(username: String, password: String): UserService =
-        retrofitForLogin(username, password).build().create(UserService::class.java)
+    fun userRegistration(): AuthService =
+        retrofitBase().build().create(AuthService::class.java)
+
+    fun userLogin(username: String, password: String): AuthService =
+        retrofitForLogin(username, password).build().create(AuthService::class.java)
 
     fun apiPost(): PostService =
         retrofitWithAuth().build().create(PostService::class.java)
