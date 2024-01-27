@@ -11,6 +11,8 @@ import com.vad.ltale.model.pojo.Audio
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
 import ir.logicbase.livex.SingleLiveEvent
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -18,7 +20,11 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
 
     val uriAudio: SingleLiveEvent<String> = SingleLiveEvent()
 
-    fun getUri(audio: Audio) = viewModelScope.launch {
+    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+        throwable.printStackTrace()
+    }
+
+    fun getUri(audio: Audio) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         uriAudio.postValue(fileRepository.getUriByAudio(audio))
     }
 
@@ -30,16 +36,12 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
         fileRepository.getIcon(userId, imageIcon)
     }
 
-    fun uploadIcon(context: Context, file: File, userId: Long) = viewModelScope.launch {
+    fun uploadIcon(context: Context, file: File, userId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         val compressImage = Compressor.compress(context, file) {
             quality(50)
         }
 
         fileRepository.uploadIcon(compressImage, userId)
-    }
-
-    fun removeAudioById(id: Long) = viewModelScope.launch {
-        fileRepository.removeAudioById(id)
     }
 
 }

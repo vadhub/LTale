@@ -6,13 +6,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.vad.ltale.model.pojo.User
 import com.vad.ltale.data.repository.UserRepository
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     var userDetails: MutableLiveData<User> = MutableLiveData()
 
-    fun getUser(id: Long) = viewModelScope.launch {
+    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+        throwable.printStackTrace()
+    }
+
+    fun getUser(id: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         userDetails.postValue(userRepository.getUserById(id))
     }
 

@@ -8,6 +8,8 @@ import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.model.pojo.Limit
 import com.vad.ltale.data.repository.LimitRepository
 import ir.logicbase.livex.SingleLiveEvent
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LimitViewModel(private val repository: LimitRepository) : ViewModel() {
@@ -15,7 +17,11 @@ class LimitViewModel(private val repository: LimitRepository) : ViewModel() {
     val limit: MutableLiveData<Limit> = MutableLiveData()
     val faller: SingleLiveEvent<Exception> = SingleLiveEvent()
 
-    fun updateTime(limit: Limit) = viewModelScope.launch {
+    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+        throwable.printStackTrace()
+    }
+
+    fun updateTime(limit: Limit) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         val response = repository.update(limit.id, limit)
 
         if (response is Resource.Failure) {
@@ -23,7 +29,7 @@ class LimitViewModel(private val repository: LimitRepository) : ViewModel() {
         }
     }
 
-    fun getLimit(userId: Long) = viewModelScope.launch {
+    fun getLimit(userId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
 
         val response = repository.getByUserId(userId)
 

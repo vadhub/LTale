@@ -22,6 +22,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.sql.Date
+import java.util.concurrent.atomic.AtomicInteger
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
@@ -31,18 +32,18 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var postResponse: SingleLiveEvent<Resource<PostResponse>> = SingleLiveEvent()
 
     private var page = 0
-    private var pageOfUserPosts = 0
+    private var pageOfUserPosts = AtomicInteger(0)
     private var userId = -1L
 
-    val coroutineExceptionHandler = CoroutineExceptionHandler{_, throwable ->
+    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
         throwable.printStackTrace()
     }
 
-    fun getPostsByText(text: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun getPostsByText(text: String) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         posts.postValue(postRepository.getPostsByText(text))
     }
 
-    fun getPosts(currentUserId: Long) = viewModelScope.launch(Dispatchers.IO) {
+    fun getPosts(currentUserId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
 
         val loadedPosts: MutableList<PostResponse>? = posts.value as? MutableList<PostResponse>
         val loaded = postRepository.getPosts(currentUserId, page)
@@ -66,9 +67,8 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             this@PostViewModel.userId = userId
         }
 
-        val loadedPosts: MutableList<PostResponse>? =
-            postsByUserId.value as? MutableList<PostResponse>
-        val loaded = postRepository.getPostByUserId(userId, currentUserId, pageOfUserPosts)
+        val loadedPosts: MutableList<PostResponse>? = postsByUserId.value as? MutableList<PostResponse>
+        val loaded = postRepository.getPostByUserId(userId, currentUserId, pageOfUserPosts.get())
 
         if (loaded.isNotEmpty()) {
             if (!loadedPosts.isNullOrEmpty()) {
@@ -78,14 +78,14 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
                 postsByUserId.postValue(loaded)
             }
 
-            pageOfUserPosts++
+            pageOfUserPosts.incrementAndGet()
         }
 
     }
 
     fun clearPostsOfUSer() {
         postsByUserId.postValue(emptyList())
-        pageOfUserPosts = 0
+        pageOfUserPosts.set(0)
     }
 
     fun clearPosts() {
@@ -99,7 +99,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         image: File?,
         userId: Long,
         hashtags: List<String>?
-    ) = viewModelScope.launch {
+    ) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
 
         postResponse.postValue(Resource.Loading)
 
@@ -156,7 +156,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         )
     }
 
-    fun getCountOfPostsByUserId(userId: Long) = viewModelScope.launch {
+    fun getCountOfPostsByUserId(userId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         countOfPosts.postValue(postRepository.getCountOfPost(userId))
     }
 }
