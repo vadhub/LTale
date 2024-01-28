@@ -31,4 +31,7 @@
     <string name="field_empty">Поле не может быть пустым</string>
     <string name="post_fail_loading">Сбой загрузки поста</string>
     <string name="post_load">Пост создан!</string>
+    <string name="wait_for_the_post_to_load">Подожтите пока пост загрузится</string>
+    <string name="come_back_tomorrow">возвращайтесь завтра</string>
+    <string name="error_loading_icon">Ошибка при загрузке изображения</string>
 </resources>
