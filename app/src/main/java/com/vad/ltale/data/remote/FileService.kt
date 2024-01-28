@@ -1,5 +1,6 @@
 package com.vad.ltale.data.remote;
 
+import com.vad.ltale.model.pojo.Image
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -15,7 +16,7 @@ interface FileService {
         @Part("dateCreated") dateCreated: RequestBody,
         @Part("dateChanged") dateChanged: RequestBody,
         @Part("userId") userId: RequestBody
-    )
+    ) : Response<Image>
 
     @GET("/api-v1/files/audio/search")
     @Streaming

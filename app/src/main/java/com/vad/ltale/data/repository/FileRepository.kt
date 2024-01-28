@@ -4,7 +4,9 @@ import android.widget.ImageView
 import com.vad.ltale.data.local.AudioDao
 import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.remote.RemoteInstance
+import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.model.pojo.Audio
+import com.vad.ltale.model.pojo.Image
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -31,17 +33,13 @@ class FileRepository(private val saveHandle: SaveInternalHandle, private val aud
         return audioDao.getById(audio.id)?.uri ?: ""
     }
 
-    suspend fun removeAudioById(id: Long) {
-        audioDao.deleteById(id)
-    }
-
-    suspend fun uploadIcon(icon: File, userId: Long) {
+    suspend fun uploadIcon(icon: File, userId: Long) : Resource<Image> {
 
         val requestIcon: RequestBody =
             icon.asRequestBody("multipart/form-data".toMediaTypeOrNull())
 
         val body: MultipartBody.Part =
-            MultipartBody.Part.createFormData("file", icon.name, requestIcon)
+            MultipartBody.Part.createFormData("file", "${icon.name}${System.currentTimeMillis()}", requestIcon)
 
         val dateCreated: RequestBody =
             "${Date(System.currentTimeMillis())}".toRequestBody("multipart/form-data".toMediaTypeOrNull())
@@ -52,7 +50,13 @@ class FileRepository(private val saveHandle: SaveInternalHandle, private val aud
         val userIdL: RequestBody =
             "$userId".toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-        remoteInstance.apiFileHandle().uploadIcon(body, dateCreated, dateChanged, userIdL)
+        val response = remoteInstance.apiFileHandle().uploadIcon(body, dateCreated, dateChanged, userIdL)
+
+        if (response.isSuccessful) {
+            return Resource.Success(response.body()!!)
+        }
+
+        return Resource.Failure(IllegalAccessException("bad request"))
     }
 
     fun getIcon(userId: Long, imageView: ImageView) {

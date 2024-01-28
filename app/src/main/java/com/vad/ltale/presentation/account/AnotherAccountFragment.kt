@@ -38,7 +38,7 @@ class AnotherAccountFragment : AccountBaseFragment() {
         followed = args.uid
         userViewModel.getUser(followed)
         postViewModel.getCountOfPostsByUserId(followed)
-        postViewModel.getPostsByUserId(followed, userId)
+        postViewModel.getPostsByUserIdPaging(followed, userId)
     }
 
     override fun onCreateView(
@@ -64,7 +64,7 @@ class AnotherAccountFragment : AccountBaseFragment() {
         var isSubscribe = false
 
         val onReachEndListener: () -> Unit = {
-            postViewModel.getPostsByUserId(followed, userId)
+            postViewModel.getPostsByUserIdPaging(followed, userId)
         }
 
         adapter = PostAdapter(load, this, AccountClickListener.EmptyAccountClickListener() , onReachEndListener, prepareAudioHandler())

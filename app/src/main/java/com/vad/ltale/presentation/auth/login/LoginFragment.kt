@@ -9,6 +9,7 @@ import android.widget.Toast
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.presentation.auth.AuthBaseFragment
+import java.nio.charset.StandardCharsets
 
 class LoginFragment : AuthBaseFragment() {
 
@@ -37,7 +38,8 @@ class LoginFragment : AuthBaseFragment() {
                 password.error = getString(R.string.field_empty)
                 Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT).show()
             } else {
-                qwrt = password.text.toString().trim()
+                val bytes = password.text.toString().trim().toByteArray(StandardCharsets.UTF_8)
+                qwrt = String(bytes, StandardCharsets.UTF_8)
                 authViewModel.login(username.text.toString().trim(), qwrt)
             }
         }

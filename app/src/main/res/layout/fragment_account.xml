@@ -46,7 +46,7 @@
                     android:src="@drawable/account_circle_fill0_wght200_grad0_opsz24"
                     app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                     app:strokeColor="@color/white"
-                    app:strokeWidth="1dp" />
+                    app:strokeWidth="1dp"/>
 
                 <TextView
                     android:id="@+id/usernameTextView"
@@ -88,6 +88,13 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBarIcon"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

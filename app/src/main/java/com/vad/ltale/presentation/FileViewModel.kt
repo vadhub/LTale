@@ -2,14 +2,19 @@ package com.vad.ltale.presentation
 
 import android.content.Context
 import android.widget.ImageView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.imageview.ShapeableImageView
+import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.data.repository.FileRepository
 import com.vad.ltale.model.pojo.Audio
+import com.vad.ltale.model.pojo.Image
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
+import id.zelory.compressor.constraint.size
 import ir.logicbase.livex.SingleLiveEvent
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +24,7 @@ import java.io.File
 class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
 
     val uriAudio: SingleLiveEvent<String> = SingleLiveEvent()
+    val uploadIcon: MutableLiveData<Resource<Image>> = MutableLiveData()
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
         throwable.printStackTrace()
@@ -37,11 +43,15 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
     }
 
     fun uploadIcon(context: Context, file: File, userId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+
+        uploadIcon.postValue(Resource.Loading)
+
         val compressImage = Compressor.compress(context, file) {
             quality(50)
+            size(1_000_000)
         }
 
-        fileRepository.uploadIcon(compressImage, userId)
+        uploadIcon.postValue(fileRepository.uploadIcon(compressImage, userId))
     }
 
 }

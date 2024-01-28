@@ -1,7 +1,6 @@
 package com.vad.ltale.presentation
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +11,7 @@ import com.vad.ltale.model.pojo.AudioRequest
 import com.vad.ltale.model.pojo.PostResponse
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
+import id.zelory.compressor.constraint.size
 import ir.logicbase.livex.SingleLiveEvent
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -62,7 +62,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         }
     }
 
-    fun getPostsByUserId(userId: Long, currentUserId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+    fun getPostsByUserIdPaging(userId: Long, currentUserId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
 
         if (this@PostViewModel.userId.get() != userId) {
             clearPostsOfUSer()
@@ -73,6 +73,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         val loaded = postRepository.getPostByUserId(userId, currentUserId, pageOfUserPosts.get())
 
         if (loaded.isNotEmpty()) {
+
             if (!loadedPosts.isNullOrEmpty()) {
                 loadedPosts.addAll(loaded)
                 postsByUserId.postValue(loadedPosts!!)
@@ -81,13 +82,15 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             }
 
             pageOfUserPosts.incrementAndGet()
-        } else {
-            postsByUserId.postValue(emptyList())
         }
 
     }
 
-    fun clearPostsOfUSer() {
+    fun getPostsByUserId(userId: Long, currentUserId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+        postsByUserId.postValue(postRepository.getPostByUserId(userId, currentUserId, 0))
+    }
+
+    private fun clearPostsOfUSer() {
         postsByUserId = MutableLiveData()
         pageOfUserPosts.set(0)
     }
@@ -124,11 +127,12 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
             val compressImage = Compressor.compress(context, image) {
                 quality(50)
+                size(1_000_000)
             }
 
             val requestImage: RequestBody =
                 compressImage.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-            imageBody = MultipartBody.Part.createFormData("image", compressImage.name, requestImage)
+            imageBody = MultipartBody.Part.createFormData("image", "${compressImage.name}${System.currentTimeMillis()}", requestImage)
         }
 
         val requestUserId: RequestBody =

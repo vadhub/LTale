@@ -39,7 +39,7 @@ open class AccountFragment : AccountBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         postViewModel.getCountOfPostsByUserId(userId)
-        postViewModel.getPostsByUserId(userId, userId)
+        postViewModel.getPostsByUserIdPaging(userId, userId)
         followViewModel.getSubscribers(userId)
     }
 
@@ -58,6 +58,7 @@ open class AccountFragment : AccountBaseFragment() {
 
         val progressBar: ProgressBar = view.findViewById(R.id.progressBarAccount)
         val progressBarPost: ProgressBar = view.findViewById(R.id.progressBarLoadingPost)
+        val progressBarIcon: ProgressBar = view.findViewById(R.id.progressBarIcon)
         val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIcon)
         val username: TextView = view.findViewById(R.id.usernameTextView)
         val countPost: TextView = view.findViewById(R.id.countPosts)
@@ -72,13 +73,12 @@ open class AccountFragment : AccountBaseFragment() {
         }
 
         swipeRefreshLayout.setOnRefreshListener {
-            postViewModel.clearPostsOfUSer()
             postViewModel.getPostsByUserId(userId, userId)
             swipeRefreshLayout.isRefreshing = false
         }
 
         val onReachEndListener: () -> Unit = {
-            postViewModel.getPostsByUserId(userId, userId)
+            postViewModel.getPostsByUserIdPaging(userId, userId)
         }
 
         adapter = PostAdapter(
@@ -114,6 +114,21 @@ open class AccountFragment : AccountBaseFragment() {
         imageIcon.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             resultLauncher.launch(intent)
+        }
+
+        load.uploadIcon.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {progressBarIcon.visibility = View.VISIBLE}
+
+                is Resource.Success -> {
+                    postViewModel.getPostsByUserId(userId, userId)
+                    progressBarIcon.visibility = View.GONE
+                }
+                is Resource.Failure -> {
+                    Toast.makeText(thisContext, getString(R.string.error_loading_icon), Toast.LENGTH_SHORT).show()
+                    progressBarIcon.visibility = View.GONE
+                }
+            }
         }
 
         postViewModel.postResponse.observe(viewLifecycleOwner) {
