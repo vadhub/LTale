@@ -54,13 +54,13 @@
 
     <Button
         android:id="@+id/enterRegistrationButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/enter" />
 
     <Button
         android:id="@+id/loginRegistrationButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login" />
 </LinearLayout>
