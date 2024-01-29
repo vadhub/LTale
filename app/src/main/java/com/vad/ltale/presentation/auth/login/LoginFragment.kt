@@ -38,8 +38,7 @@ class LoginFragment : AuthBaseFragment() {
                 password.error = getString(R.string.field_empty)
                 Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT).show()
             } else {
-                val bytes = password.text.toString().trim().toByteArray(StandardCharsets.UTF_8)
-                qwrt = String(bytes, StandardCharsets.UTF_8)
+                qwrt = password.text.toString().trim()
                 authViewModel.login(username.text.toString().trim(), qwrt)
             }
         }
