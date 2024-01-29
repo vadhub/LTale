@@ -59,8 +59,6 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             }
 
             page.incrementAndGet()
-        } else {
-            posts.postValue(emptyList())
         }
     }
 
@@ -84,7 +82,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             }
 
             pageOfUserPosts.incrementAndGet()
-        } else {
+        } else if (pageOfUserPosts.get() == 0) {
             postsByUserId.postValue(emptyList())
         }
 
