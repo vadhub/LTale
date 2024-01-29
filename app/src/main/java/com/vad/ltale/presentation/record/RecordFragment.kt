@@ -13,12 +13,15 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.view.View.GONE
 import android.view.View.OnTouchListener
 import android.view.View.VISIBLE
 import android.view.animation.OvershootInterpolator
+import android.view.inputmethod.EditorInfo
 import android.widget.*
+import android.widget.TextView.OnEditorActionListener
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -112,7 +115,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             try {
                 if (lastLength > s.length) return
-                if (s[s.length - 1].code == 32) {
+                if (s[s.length - 1].code == 32 || s[s.length - 1].code == 10) {
                     //32 is ascii code for space, do something when condition is true.
                     createTag(hashtag.text.trim())
                     hashtag.setText("")
