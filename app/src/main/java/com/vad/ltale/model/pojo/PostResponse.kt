@@ -2,9 +2,6 @@ package com.vad.ltale.model.pojo
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.vad.ltale.model.pojo.Audio
-import com.vad.ltale.model.pojo.Hashtag
-import com.vad.ltale.model.pojo.Image
 
 data class PostResponse(
 

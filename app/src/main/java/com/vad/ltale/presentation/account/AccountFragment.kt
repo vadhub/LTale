@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.Resource
@@ -122,6 +123,7 @@ open class AccountFragment : AccountBaseFragment() {
 
                 is Resource.Success -> {
                     postViewModel.getPostsByUserId(userId, userId)
+                    load.getIcon(userId, imageIcon)
                     progressBarIcon.visibility = View.GONE
                 }
                 is Resource.Failure -> {

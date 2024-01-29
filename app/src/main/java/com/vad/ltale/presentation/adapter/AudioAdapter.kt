@@ -1,7 +1,6 @@
 package com.vad.ltale.presentation.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
+import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.timehandle.TimeFormatter
-import com.vad.ltale.model.audiohandle.PlaylistHandler
 
 class AudioAdapter(private val parentPosition: Int, private val playlistHandler: PlaylistHandler, private val isRecord: Boolean) :
     Adapter<AudioAdapter.RecordViewHolder>() {

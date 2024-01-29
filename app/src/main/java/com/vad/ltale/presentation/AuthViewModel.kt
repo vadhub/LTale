@@ -7,8 +7,6 @@ import com.vad.ltale.data.remote.HandleResponse
 import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.model.pojo.User
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AuthViewModel(private val userRepository: UserRepository, private val handleResponse: HandleResponse<User>) : ViewModel() {

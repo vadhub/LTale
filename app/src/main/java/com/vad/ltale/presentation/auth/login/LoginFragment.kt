@@ -9,7 +9,6 @@ import android.widget.Toast
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.presentation.auth.AuthBaseFragment
-import java.nio.charset.StandardCharsets
 
 class LoginFragment : AuthBaseFragment() {
 

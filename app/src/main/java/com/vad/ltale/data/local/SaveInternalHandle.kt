@@ -4,7 +4,6 @@ import android.content.Context
 import okio.IOException
 import java.io.InputStream
 
-
 class SaveInternalHandle(private val context: Context) {
 
     fun saveFile(fileName: String, fileData: InputStream): String {

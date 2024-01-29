@@ -1,11 +1,10 @@
 package com.vad.ltale.data.repository
 
-import com.vad.ltale.model.pojo.Limit
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.data.remote.exception.GetTimeException
 import com.vad.ltale.data.remote.exception.UpdateException
-import java.sql.Date
+import com.vad.ltale.model.pojo.Limit
 
 class LimitRepository(private val remoteInstance: RemoteInstance) {
 
