@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LTale</string>
-    <string name="sigh_out">выход</string>
+    <string name="sigh_out">Выход</string>
     <string name="enter_username">Введите имя пользователя</string>
     <string name="enter_mail">Введите почту</string>
     <string name="enter_password">Введите пароль</string>
@@ -13,12 +13,12 @@
     <string name="login">Логин</string>
     <string name="invalid_password_or_username">Неверный пароль или имя пользователя</string>
     <string name="searching">поиск...</string>
-    <string name="to_record_voice">Записать голос!</string>
+    <string name="to_record_voice">Запишите свой голос!</string>
     <string name="hashtag">#хэштег</string>
-    <string name="account">аккаунт</string>
-    <string name="feed">лента</string>
-    <string name="done">готово</string>
-    <string name="search">поиск</string>
+    <string name="account">Аккаунт</string>
+    <string name="feed">Лента</string>
+    <string name="done">Готово</string>
+    <string name="search">Поиск</string>
     <string name="record">Запись</string>
     <string name="registration">Регистрация</string>
     <string name="user_unauthorized">Пользователь не авторизован</string>
@@ -32,6 +32,6 @@
     <string name="post_fail_loading">Сбой загрузки поста</string>
     <string name="post_load">Пост создан!</string>
     <string name="wait_for_the_post_to_load">Подожтите пока пост загрузится</string>
-    <string name="come_back_tomorrow">возвращайтесь завтра</string>
+    <string name="come_back_tomorrow">Возвращайтесь завтра</string>
     <string name="error_loading_icon">Ошибка при загрузке изображения</string>
 </resources>
