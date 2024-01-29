@@ -64,7 +64,6 @@ object RemoteInstance {
         try {
             val picasso = Picasso.Builder(context)
                 .memoryCache(LruCache(context))
-                .indicatorsEnabled(true)
                 .downloader(
                     OkHttp3Downloader(
                         client(basicAuthInterceptor(user.username, user.password))
