@@ -11,12 +11,16 @@ class AnimationButton(private val recorder: Recorder, private val interpolator: 
 
     private var countDownTimer: CountDownTimer? = null
 
+    private lateinit var button: FloatingActionButton
+
     companion object {
         private const val MAX_RECORD_AMPLITUDE = 32768.0
         private const val VOLUME_UPDATE_DURATION = 100L
     }
 
     fun startCaptureAudioVolume(button: FloatingActionButton) {
+
+        this.button = button
 
         countDownTimer = object : CountDownTimer(60_000, 100) {
             override fun onTick(p0: Long) {
@@ -35,6 +39,10 @@ class AnimationButton(private val recorder: Recorder, private val interpolator: 
     fun stopCapture() {
         countDownTimer?.cancel()
         countDownTimer = null
+        button.animate()
+            .scaleX(1F)
+            .scaleY(1F)
+
     }
 
     private fun handleVolume(volume: Int, button: FloatingActionButton) {
