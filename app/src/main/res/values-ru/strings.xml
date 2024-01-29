@@ -34,4 +34,6 @@
     <string name="wait_for_the_post_to_load">Подожтите пока пост загрузится</string>
     <string name="come_back_tomorrow">Возвращайтесь завтра</string>
     <string name="error_loading_icon">Ошибка при загрузке изображения</string>
+    <string name="version">β - версия</string>
+    <string name="warning">Это бета-версия приложения. Возможны ошибки. При выходе полной версии приложения все данные могут быть удалены.</string>
 </resources>

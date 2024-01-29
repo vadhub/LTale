@@ -34,5 +34,7 @@
     <string name="wait_for_the_post_to_load">Wait for the post to load</string>
     <string name="come_back_tomorrow">come back tomorrow</string>
     <string name="error_loading_icon">Error loading icon</string>
+    <string name="version">β - version</string>
+    <string name="warning">This is a beta version of the application. Possible bugs. When a full version of the application is released, all data may be deleted.</string>
 
 </resources>
