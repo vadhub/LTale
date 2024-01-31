@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LTale</string>
+    <string name="app_name">LilTale</string>
     <string name="sigh_out">Выход</string>
     <string name="enter_username">Введите имя пользователя</string>
     <string name="enter_mail">Введите почту</string>
