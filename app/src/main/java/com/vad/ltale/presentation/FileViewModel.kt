@@ -50,8 +50,8 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
         uploadIcon.postValue(Resource.Loading)
 
         val compressImage = Compressor.compress(context, file) {
-            quality(50)
-            size(1_000_000)
+            quality(40)
+            size(500_000)
         }
 
         uploadIcon.postValue(fileRepository.uploadIcon(compressImage, userId))
