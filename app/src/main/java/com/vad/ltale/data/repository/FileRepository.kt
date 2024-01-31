@@ -59,8 +59,8 @@ class FileRepository(private val saveHandle: SaveInternalHandle, private val aud
         return Resource.Failure(IllegalAccessException("bad request"))
     }
 
-    fun getIcon(userId: Long, imageView: ImageView) {
-        remoteInstance.apiIcon(imageView, userId)
+    fun getIcon(userId: Long, imageView: ImageView, invalidate: Boolean) {
+        remoteInstance.apiIcon(imageView, userId, invalidate)
     }
 
     fun getImage(imageId: Long?, imageView: ImageView) {

@@ -68,25 +68,28 @@ object RemoteInstance {
                     )
                 ).build()
             Picasso.setSingletonInstance(picasso)
-        } catch (_: IllegalStateException) {}
+        } catch (_: IllegalStateException) {
+        }
 
     }
 
-    fun apiIcon(imageView: ImageView, userId: Long) {
-        imageView.context.let {
+    fun apiIcon(imageView: ImageView, userId: Long, invalidate: Boolean) {
+
+        val picasso = Picasso.get()
+
+        if (invalidate) {
+            picasso.invalidate("${baseUrl}api-v1/files/icon/search?userId=$userId")
+        } else {
             Picasso.get()
                 .load("${baseUrl}api-v1/files/icon/search?userId=$userId")
-                .error(R.drawable.account_circle_fill0_wght200_grad0_opsz24)
                 .into(imageView)
         }
     }
 
     fun apiImage(imageView: ImageView, imageId: Long?) {
-        imageView.context.let {
-            Picasso.get()
-                .load("${baseUrl}api-v1/files/image/search?id=$imageId")
-                .into(imageView)
-        }
+        Picasso.get()
+            .load("${baseUrl}api-v1/files/image/search?id=$imageId")
+            .into(imageView)
     }
 
     fun apiUser(): UserService {

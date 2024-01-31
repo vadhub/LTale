@@ -38,7 +38,11 @@ class FileViewModel(private val fileRepository: FileRepository) : ViewModel() {
     }
 
     fun getIcon(userId: Long, imageIcon: ShapeableImageView) {
-        fileRepository.getIcon(userId, imageIcon)
+        fileRepository.getIcon(userId, imageIcon, false)
+    }
+
+    fun invalidate(userId: Long, imageIcon: ShapeableImageView) {
+        fileRepository.getIcon(userId, imageIcon, true)
     }
 
     fun uploadIcon(context: Context, file: File, userId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
