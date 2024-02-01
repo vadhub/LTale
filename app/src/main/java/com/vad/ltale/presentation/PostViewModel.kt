@@ -169,6 +169,10 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     fun getCountOfPostsByUserId(userId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         countOfPosts.postValue(postRepository.getCountOfPost(userId))
     }
+
+    fun removePost(idPost: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+        postRepository.deletePost(idPost)
+    }
 }
 
 @Suppress("UNCHECKED_CAST")

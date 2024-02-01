@@ -14,6 +14,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +31,7 @@ import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.model.FileUtil
 import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
+import kotlinx.coroutines.launch
 import java.io.File
 
 open class AccountFragment : AccountBaseFragment() {
@@ -68,6 +71,23 @@ open class AccountFragment : AccountBaseFragment() {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
+        val itemOnClickListener: (idPost: Long, view: View) -> Unit = { idPost, mView ->
+            val popupMenu = PopupMenu(thisContext, mView)
+            popupMenu.menuInflater.inflate(R.menu.menu_more, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                lifecycleScope.launch {
+                    postViewModel.removePost(idPost)
+                    postViewModel.getPostsByUserId(userId, userId)
+                    postViewModel.getCountOfPostsByUserId(userId)
+                    Toast.makeText(thisContext, resources.getString(R.string.post_removed), Toast.LENGTH_SHORT).show()
+                }
+                true
+            }
+
+            popupMenu.show()
+        }
+
         progressBarPost.setOnClickListener {
             Toast.makeText(thisContext, getString(R.string.wait_for_the_post_to_load), Toast.LENGTH_SHORT).show()
         }
@@ -88,6 +108,9 @@ open class AccountFragment : AccountBaseFragment() {
             onReachEndListener,
             prepareAudioHandler()
         )
+
+        adapter.itemClickListener = itemOnClickListener
+
         recyclerView.adapter = adapter
 
         load.getIcon(userId, imageIcon)

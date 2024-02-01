@@ -28,7 +28,7 @@ class PostAdapter(
     private var posts: List<PostResponse> = emptyList()
 
     // if is null so that adapter no under account fragment
-    var itemClickListener: (() -> Unit)? = null
+    var itemClickListener: ((idPost: Long, View) -> Unit)? = null
 
     @SuppressLint("NotifyDataSetChanged")
     fun setPosts(posts: List<PostResponse>) {
@@ -77,7 +77,7 @@ class PostAdapter(
             if (itemClickListener != null) {
                 moreOptions.visibility = View.VISIBLE
                 moreOptions.setOnClickListener {
-                    itemClickListener?.invoke()
+                    itemClickListener?.invoke(postResponse.postId, moreOptions)
                 }
             }
 

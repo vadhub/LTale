@@ -41,4 +41,7 @@ class PostRepository(private val retrofitInstance: RemoteInstance) {
 
     suspend fun getCountOfPost(userId: Long) =
         retrofitInstance.apiPost().getCountOfPosts(userId).body()
+
+    suspend fun deletePost(id: Long) =
+        retrofitInstance.apiPost().deletePost(id)
 }
