@@ -36,5 +36,7 @@
     <string name="error_loading_icon">Error loading icon</string>
     <string name="version">β - version</string>
     <string name="warning">This is a beta version of the application. Possible bugs. When a full version of the application is released, all data may be deleted.</string>
+    <string name="delete">remove</string>
+    <string name="post_removed">Post removed</string>
 
 </resources>

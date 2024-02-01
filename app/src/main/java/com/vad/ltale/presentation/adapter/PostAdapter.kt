@@ -27,6 +27,9 @@ class PostAdapter(
 
     private var posts: List<PostResponse> = emptyList()
 
+    // if is null so that adapter no under account fragment
+    var itemClickListener: (() -> Unit)? = null
+
     @SuppressLint("NotifyDataSetChanged")
     fun setPosts(posts: List<PostResponse>) {
         if (posts.isNotEmpty()) {
@@ -64,10 +67,19 @@ class PostAdapter(
         private val hashtag = itemView.findViewById(R.id.textViewHashtag) as TextView
         private val nikName = itemView.findViewById(R.id.textViewNikName) as TextView
         private var postResponse = PostResponse.empty()
+        private var moreOptions = itemView.findViewById(R.id.more_options) as ImageButton
 
         @SuppressLint("SimpleDateFormat")
         fun bind(postResponse: PostResponse) {
             this.postResponse = postResponse
+
+            // if is null so that adapter no under account fragment
+            if (itemClickListener != null) {
+                moreOptions.visibility = View.VISIBLE
+                moreOptions.setOnClickListener {
+                    itemClickListener?.invoke()
+                }
+            }
 
             imageIcon.setImageDrawable(null)
             imageViewPost.setImageDrawable(null)
