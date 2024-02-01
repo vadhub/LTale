@@ -82,6 +82,7 @@ object RemoteInstance {
         } else {
             Picasso.get()
                 .load("${baseUrl}api-v1/files/icon/search?userId=$userId")
+                .error(R.drawable.account_circle_fill0_wght200_grad0_opsz24)
                 .into(imageView)
         }
     }
