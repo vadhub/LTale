@@ -32,6 +32,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
     var postsByUserId: MutableLiveData<List<PostResponse>> = MutableLiveData()
     var postResponse: SingleLiveEvent<Resource<PostResponse>> = SingleLiveEvent()
+    val postDelete: SingleLiveEvent<Resource<Int>> = SingleLiveEvent()
 
     private var page = AtomicInteger(0)
     private var pageOfUserPosts = AtomicInteger(0)
@@ -129,7 +130,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
             val compressImage = Compressor.compress(context, image) {
                 quality(50)
-                size(1_000_000)
+                size(500_000)
             }
 
             val requestImage: RequestBody =
@@ -171,7 +172,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun removePost(idPost: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-        postRepository.deletePost(idPost)
+        postDelete.postValue(postRepository.deletePost(idPost))
     }
 }
 

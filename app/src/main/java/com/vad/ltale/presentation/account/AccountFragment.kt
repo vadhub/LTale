@@ -76,12 +76,7 @@ open class AccountFragment : AccountBaseFragment() {
             popupMenu.menuInflater.inflate(R.menu.menu_more, popupMenu.menu)
 
             popupMenu.setOnMenuItemClickListener { menuItem ->
-                lifecycleScope.launch {
-                    postViewModel.removePost(idPost)
-                    postViewModel.getPostsByUserId(userId, userId)
-                    postViewModel.getCountOfPostsByUserId(userId)
-                    Toast.makeText(thisContext, resources.getString(R.string.post_removed), Toast.LENGTH_SHORT).show()
-                }
+                postViewModel.removePost(idPost)
                 true
             }
 
@@ -169,10 +164,37 @@ open class AccountFragment : AccountBaseFragment() {
                 }
 
                 is Resource.Success -> {
+                    postViewModel.getCountOfPostsByUserId(userId)
+                    postViewModel.getPostsByUserId(userId, userId)
                     progressBarPost.visibility = View.GONE
                     buttonCreateRecord.visibility = View.VISIBLE
+
                     Snackbar.make(buttonCreateRecord, getString(R.string.post_load), Snackbar.LENGTH_SHORT).show()
+
+                }
+            }
+        }
+
+        postViewModel.postDelete.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {
+                    progressBarPost.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                }
+
+                is Resource.Failure -> {
+                    progressBarPost.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                }
+
+                is Resource.Success -> {
+                    postViewModel.getPostsByUserId(userId, userId)
                     postViewModel.getCountOfPostsByUserId(userId)
+                    progressBarPost.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+
+                    Snackbar.make(buttonCreateRecord, resources.getString(R.string.post_removed), Snackbar.LENGTH_SHORT).show()
+
                 }
             }
         }
