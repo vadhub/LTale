@@ -20,6 +20,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,7 +32,6 @@ import com.vad.ltale.data.remote.exception.GetTimeException
 import com.vad.ltale.data.remote.exception.UpdateException
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
-import com.vad.ltale.model.FileUtil
 import com.vad.ltale.model.audiohandle.Recorder
 import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.pojo.AudioRequest
@@ -74,6 +76,9 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private val chips: MutableList<Chip> = mutableListOf()
     private lateinit var textViewRecordToVoice: TextView
     private var animationButton: AnimationButton? = null
+    private val userId = RemoteInstance.user.userId
+    private var file: File? = null
+    private lateinit var image: ImageView
 
     private val permissionLauncherMultiple = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -145,7 +150,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val image: ImageView = view.findViewById(R.id.imageViewPostRecord)
+        image = view.findViewById(R.id.imageViewPostRecord)
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
         val progressBarOnActionButton: ProgressBar = view.findViewById(R.id.progressBarActionButton)
         val removeImage: ImageButton = view.findViewById(R.id.removeImage)
@@ -212,21 +217,8 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             }
         }
 
-        val resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-
-                if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-                    removeImage.visibility = VISIBLE
-                    selectedImage = it.data!!
-
-                    selectedImage!!.data
-                    image.setImageURI(selectedImage?.data)
-                }
-            }
-
         imageButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            resultLauncher.launch(intent)
+            startCrop()
         }
 
     }
@@ -263,19 +255,17 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.done) {
             if (listAudioRequest.isNotEmpty()) {
-                var file: File? = null
+
                 if (selectedImage != null) {
-                    file = File(FileUtil.getPath(selectedImage?.data, thisContext))
+                    file = File(selectedImage?.data?.encodedPath)
                 }
 
-                val idUser = RemoteInstance.user.userId
-
                 chips.forEach { hashtags.add(it.text.toString()) }
-                postViewModel.savePost(thisContext, listAudioRequest, file, idUser, hashtags.ifEmpty { null })
+                postViewModel.savePost(thisContext, listAudioRequest, file, userId, hashtags.ifEmpty { null })
                 limitViewModel.updateTime(
                     Limit(
                         limit.id,
-                        idUser,
+                        userId,
                         time,
                         "${Date(System.currentTimeMillis())}"
                     )
@@ -337,6 +327,31 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         if (listAudio.isEmpty()) {
             textViewRecordToVoice.visibility = VISIBLE
         }
+    }
+
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            val uriContent = result.uriContent
+
+            uriContent?.let {
+                image.setImageURI(uriContent)
+                file = File(uriContent.encodedPath)
+            }
+        } else {
+            Toast.makeText(thisContext, getString(R.string.can_t_load_image), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun startCrop() {
+        cropImage.launch(
+            CropImageContractOptions(
+                uri = null,
+                cropImageOptions = CropImageOptions(
+                    imageSourceIncludeGallery = true,
+                    imageSourceIncludeCamera = true
+                ),
+            ),
+        )
     }
 
     override fun showTime(time: Long) {
