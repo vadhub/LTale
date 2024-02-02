@@ -218,6 +218,8 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
                 if (it.resultCode == Activity.RESULT_OK && it.data != null) {
                     removeImage.visibility = VISIBLE
                     selectedImage = it.data!!
+
+                    selectedImage!!.data
                     image.setImageURI(selectedImage?.data)
                 }
             }

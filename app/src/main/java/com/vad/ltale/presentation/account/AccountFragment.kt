@@ -1,9 +1,6 @@
 package com.vad.ltale.presentation.account
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,14 +10,15 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
@@ -28,16 +26,15 @@ import com.google.android.material.snackbar.Snackbar
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.Resource
-import com.vad.ltale.model.FileUtil
 import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
-import kotlinx.coroutines.launch
 import java.io.File
 
 open class AccountFragment : AccountBaseFragment() {
 
     private lateinit var adapter: PostAdapter
     private lateinit var bottomMenuActivity: BottomNavigationView
+    private lateinit var imageIcon: ShapeableImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +59,7 @@ open class AccountFragment : AccountBaseFragment() {
         val progressBar: ProgressBar = view.findViewById(R.id.progressBarAccount)
         val progressBarPost: ProgressBar = view.findViewById(R.id.progressBarLoadingPost)
         val progressBarIcon: ProgressBar = view.findViewById(R.id.progressBarIcon)
-        val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIcon)
+        imageIcon = view.findViewById(R.id.imageIcon)
         val username: TextView = view.findViewById(R.id.usernameTextView)
         val countPost: TextView = view.findViewById(R.id.countPosts)
         val countFollowers: TextView = view.findViewById(R.id.countFollowers)
@@ -112,26 +109,12 @@ open class AccountFragment : AccountBaseFragment() {
         username.text = userDetails.username
         countFollowers.text = "0"
 
-        val resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                if (it.resultCode == Activity.RESULT_OK && it.data != null) {
-                    val selectedImage = it.data
-                    imageIcon.setImageURI(selectedImage!!.data)
-                    load.uploadIcon(
-                        thisContext,
-                        File(FileUtil.getPath(selectedImage.data, context)),
-                        userId
-                    )
-                }
-            }
-
         buttonCreateRecord.setOnClickListener {
             view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)
         }
 
         imageIcon.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            resultLauncher.launch(intent)
+            startCrop()
         }
 
         load.uploadIcon.observe(viewLifecycleOwner) {
@@ -217,6 +200,31 @@ open class AccountFragment : AccountBaseFragment() {
             countFollowers.text = "$it"
         }
 
+    }
+
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            val uriContent = result.uriContent
+
+            uriContent?.let {
+                imageIcon.setImageURI(uriContent)
+                load.uploadIcon(thisContext, File(uriContent.encodedPath), userId)
+            }
+        } else {
+            Toast.makeText(thisContext, getString(R.string.can_t_load_image), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun startCrop() {
+        cropImage.launch(
+            CropImageContractOptions(
+                uri = null,
+                cropImageOptions = CropImageOptions(
+                    imageSourceIncludeGallery = true,
+                    imageSourceIncludeCamera = true
+                ),
+            ),
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

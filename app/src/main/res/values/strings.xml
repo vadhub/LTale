@@ -38,5 +38,6 @@
     <string name="warning">This is a beta version of the application. Possible bugs. When a full version of the application is released, all data may be deleted.</string>
     <string name="delete">remove</string>
     <string name="post_removed">Post removed</string>
+    <string name="can_t_load_image">can`t load image</string>
 
 </resources>
