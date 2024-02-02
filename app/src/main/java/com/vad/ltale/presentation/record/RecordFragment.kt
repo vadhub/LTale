@@ -223,7 +223,6 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
     }
 
-
     private fun createTag(text: CharSequence) {
         var str = text
 
@@ -261,19 +260,16 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
                 }
 
                 chips.forEach { hashtags.add(it.text.toString()) }
-                postViewModel.savePost(thisContext, listAudioRequest, file, userId, hashtags.ifEmpty { null })
-                limitViewModel.updateTime(
-                    Limit(
-                        limit.id,
-                        userId,
-                        time,
-                        "${Date(System.currentTimeMillis())}"
-                    )
-                )
+                postViewModel.savePost(
+                    thisContext,
+                    listAudioRequest,
+                    file,
+                    userId,
+                    hashtags.ifEmpty { null })
+                limitViewModel.time = time
 
             } else {
-                Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(thisContext, getString(R.string.record_audio), Toast.LENGTH_SHORT).show()
             }
             findNavController().navigate(R.id.action_to_accountFragment)
             return true
@@ -338,7 +334,8 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
                 file = File(uriContent.encodedPath)
             }
         } else {
-            Toast.makeText(thisContext, getString(R.string.can_t_load_image), Toast.LENGTH_SHORT).show()
+            Toast.makeText(thisContext, getString(R.string.can_t_load_image), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 

@@ -16,6 +16,7 @@ class LimitViewModel(private val repository: LimitRepository) : ViewModel() {
 
     val limit: MutableLiveData<Limit> = MutableLiveData()
     val faller: SingleLiveEvent<Exception> = SingleLiveEvent()
+    var time = 0L
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
         throwable.printStackTrace()

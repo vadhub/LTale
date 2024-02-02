@@ -11,6 +11,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,16 +26,28 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
+import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.remote.Resource
+import com.vad.ltale.data.repository.LimitRepository
+import com.vad.ltale.model.pojo.Limit
+import com.vad.ltale.presentation.LimitViewModel
+import com.vad.ltale.presentation.LimitViewModelFactory
 import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 import java.io.File
+import java.sql.Date
 
 open class AccountFragment : AccountBaseFragment() {
 
     private lateinit var adapter: PostAdapter
     private lateinit var bottomMenuActivity: BottomNavigationView
     private lateinit var imageIcon: ShapeableImageView
+
+    private val limitViewModel: LimitViewModel by activityViewModels {
+        LimitViewModelFactory(
+            LimitRepository(RemoteInstance)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +94,11 @@ open class AccountFragment : AccountBaseFragment() {
         }
 
         progressBarPost.setOnClickListener {
-            Toast.makeText(thisContext, getString(R.string.wait_for_the_post_to_load), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                thisContext,
+                getString(R.string.wait_for_the_post_to_load),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         swipeRefreshLayout.setOnRefreshListener {
@@ -119,15 +136,22 @@ open class AccountFragment : AccountBaseFragment() {
 
         load.uploadIcon.observe(viewLifecycleOwner) {
             when (it) {
-                is Resource.Loading -> {progressBarIcon.visibility = View.VISIBLE}
+                is Resource.Loading -> {
+                    progressBarIcon.visibility = View.VISIBLE
+                }
 
                 is Resource.Success -> {
                     postViewModel.getPostsByUserId(userId, userId)
                     load.invalidate(userId, imageIcon)
                     progressBarIcon.visibility = View.GONE
                 }
+
                 is Resource.Failure -> {
-                    Toast.makeText(thisContext, getString(R.string.error_loading_icon), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        thisContext,
+                        getString(R.string.error_loading_icon),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     progressBarIcon.visibility = View.GONE
                 }
             }
@@ -143,7 +167,11 @@ open class AccountFragment : AccountBaseFragment() {
                 is Resource.Failure -> {
                     progressBarPost.visibility = View.GONE
                     buttonCreateRecord.visibility = View.VISIBLE
-                    Snackbar.make(buttonCreateRecord, getString(R.string.post_fail_loading), Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        buttonCreateRecord,
+                        getString(R.string.post_fail_loading),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
 
                 is Resource.Success -> {
@@ -151,8 +179,19 @@ open class AccountFragment : AccountBaseFragment() {
                     postViewModel.getPostsByUserId(userId, userId)
                     progressBarPost.visibility = View.GONE
                     buttonCreateRecord.visibility = View.VISIBLE
-
-                    Snackbar.make(buttonCreateRecord, getString(R.string.post_load), Snackbar.LENGTH_SHORT).show()
+                    limitViewModel.updateTime(
+                        Limit(
+                            limitViewModel.limit.value!!.id,
+                            userId,
+                            limitViewModel.time,
+                            "${Date(System.currentTimeMillis())}"
+                        )
+                    )
+                    Snackbar.make(
+                        buttonCreateRecord,
+                        getString(R.string.post_load),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
 
                 }
             }
@@ -176,7 +215,11 @@ open class AccountFragment : AccountBaseFragment() {
                     progressBarPost.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
 
-                    Snackbar.make(buttonCreateRecord, resources.getString(R.string.post_removed), Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        buttonCreateRecord,
+                        resources.getString(R.string.post_removed),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
 
                 }
             }
@@ -211,7 +254,8 @@ open class AccountFragment : AccountBaseFragment() {
                 load.uploadIcon(thisContext, File(uriContent.encodedPath), userId)
             }
         } else {
-            Toast.makeText(thisContext, getString(R.string.can_t_load_image), Toast.LENGTH_SHORT).show()
+            Toast.makeText(thisContext, getString(R.string.can_t_load_image), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
