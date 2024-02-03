@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -64,7 +65,6 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private lateinit var actionButton: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
     private var adapter: AudioAdapter? = null
-    private var selectedImage: Intent? = null
     private lateinit var listAudio: MutableList<Audio>
     private var recorder: Recorder? = null
     private val listAudioRequest: MutableList<AudioRequest> = ArrayList()
@@ -130,12 +130,6 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
         val permissions = mutableListOf(Manifest.permission.RECORD_AUDIO)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
-        } else {
-            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-
         permissionLauncherMultiple.launch(permissions.toTypedArray())
     }
 
@@ -199,7 +193,6 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         }
 
         removeImage.setOnClickListener {
-            selectedImage = null
             image.setImageURI(null)
             removeImage.visibility = GONE
         }
@@ -254,10 +247,6 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.done) {
             if (listAudioRequest.isNotEmpty()) {
-
-                if (selectedImage != null) {
-                    file = File(selectedImage?.data?.encodedPath)
-                }
 
                 chips.forEach { hashtags.add(it.text.toString()) }
                 postViewModel.savePost(
@@ -327,11 +316,11 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
-            val uriContent = result.uriContent
+            val uriContent = result.getUriFilePath(thisContext, true)
 
             uriContent?.let {
-                image.setImageURI(uriContent)
-                file = File(uriContent.encodedPath)
+                image.setImageURI(Uri.parse(uriContent))
+                file = File(uriContent)
             }
         } else {
             Toast.makeText(thisContext, getString(R.string.can_t_load_image), Toast.LENGTH_SHORT)

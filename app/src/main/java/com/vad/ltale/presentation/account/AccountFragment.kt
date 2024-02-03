@@ -1,6 +1,8 @@
 package com.vad.ltale.presentation.account
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -247,11 +249,11 @@ open class AccountFragment : AccountBaseFragment() {
 
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
-            val uriContent = result.uriContent
+            val uriContent = result.getUriFilePath(thisContext, true)
 
             uriContent?.let {
-                imageIcon.setImageURI(uriContent)
-                load.uploadIcon(thisContext, File(uriContent.encodedPath), userId)
+                imageIcon.setImageURI(Uri.parse(uriContent))
+                load.uploadIcon(thisContext, File(uriContent), userId)
             }
         } else {
             Toast.makeText(thisContext, getString(R.string.can_t_load_image), Toast.LENGTH_SHORT)

@@ -36,4 +36,7 @@
     <string name="error_loading_icon">Ошибка при загрузке изображения</string>
     <string name="version">β - версия</string>
     <string name="warning">Это бета-версия приложения. Возможны ошибки. При выходе полной версии приложения все данные могут быть удалены.</string>
+    <string name="delete">удалить</string>
+    <string name="post_removed">Пост удален</string>
+    <string name="can_t_load_image">невозможно загрузить изображение</string>
 </resources>
