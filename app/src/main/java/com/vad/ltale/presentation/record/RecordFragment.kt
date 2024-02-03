@@ -304,7 +304,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         listAudio.remove(audio)
         listAudioRequest.removeAll { uri -> uri.file.absolutePath == audio.uri }
         adapter?.setRecords(listAudio)
-        time = (time / 1000) * 1000
+        time = (time / 1000) * 1000 //needed for leveling
         time += audio.duration
         timeRecordTextView.text = TimeFormatter.format(time)
         chunkTimer.setTimeStartFrom(time)
