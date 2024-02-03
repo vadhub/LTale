@@ -2,6 +2,7 @@ package com.vad.ltale.model.audiohandle
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
@@ -19,7 +20,6 @@ class PlaylistHandler(
 
     private var playingParentPosition = -1
     private var playingChildPosition = -1
-    private var durationBeforeDecrease = ""
     private var handler = Handler(Looper.getMainLooper())
 
     private var playingChildHolder: AudioAdapter.RecordViewHolder? = null
@@ -30,7 +30,6 @@ class PlaylistHandler(
         clickedHolder = null
         playingParentPosition = -1
         playingChildPosition = -1
-        durationBeforeDecrease = ""
     }
 
     init {
@@ -38,7 +37,7 @@ class PlaylistHandler(
             override fun onPlaybackStateChanged(playbackState: Int) {
                 if (playbackState == ExoPlayer.STATE_READY) {
                     if (playingChildHolder != null) {
-                        seekBarChanged(playingChildHolder!!.timeTextView, playingChildHolder!!.seekBar, player.duration)
+                        seekBarChanged(playingChildHolder!!.timeTextView, playingChildHolder!!.seekBar)
                     }
                 }
 
@@ -53,7 +52,7 @@ class PlaylistHandler(
 
     private fun updateNonPlayingChild(playingHolder: AudioAdapter.RecordViewHolder?) {
         handler.removeCallbacksAndMessages(null)
-        playingHolder?.timeTextView?.text = durationBeforeDecrease
+        playingHolder?.timeTextView?.text = TimeFormatter.format(player.duration)
         playingHolder?.seekBar?.progress = 0
         playingHolder?.playButton?.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
@@ -112,15 +111,19 @@ class PlaylistHandler(
 
     }
 
-    private fun seekBarChanged(timeTextView: TextView, seekBar: SeekBar, duration: Long) {
+    fun seekTo(progress: Int, fromUser: Boolean) {
+        if (fromUser) {
+            player.seekTo((progress*player.duration)/100)
+        }
+    }
 
-        durationBeforeDecrease = timeTextView.text.toString()
+    private fun seekBarChanged(timeTextView: TextView, seekBar: SeekBar) {
 
         val runnable = object: Runnable {
             override fun run() {
 
                 handler.postDelayed(this, 1000)
-                val progress = ((player.currentPosition * 100)/duration).toInt()
+                val progress = ((player.currentPosition * 100)/player.duration).toInt()
 
                 timeTextView.text = TimeFormatter.format(player.duration - player.currentPosition)
                 seekBar.progress = progress

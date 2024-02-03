@@ -40,7 +40,7 @@ class AudioAdapter(private val parentPosition: Int, private val playlistHandler:
 
     override fun getItemCount(): Int = audio.size
 
-    inner class RecordViewHolder(item: View) : ViewHolder(item), View.OnClickListener {
+    inner class RecordViewHolder(item: View) : ViewHolder(item), View.OnClickListener, SeekBar.OnSeekBarChangeListener {
         val timeTextView: TextView = item.findViewById(R.id.audioTimeTextView)
         val playButton: ShapeableImageView = item.findViewById(R.id.playButton)
         val seekBar: SeekBar = item.findViewById(R.id.seekBar)
@@ -59,6 +59,7 @@ class AudioAdapter(private val parentPosition: Int, private val playlistHandler:
 
             removeButton.setOnClickListener(this)
             playButton.setOnClickListener(this)
+            seekBar.setOnSeekBarChangeListener(this)
 
             timeTextView.text = TimeFormatter.format(audio.duration)
         }
@@ -69,6 +70,14 @@ class AudioAdapter(private val parentPosition: Int, private val playlistHandler:
                 playButton -> {playlistHandler.play(parentPosition, layoutPosition, this, audio)}
             }
         }
+
+        override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
+            playlistHandler.seekTo(progress, fromUser)
+        }
+
+        override fun onStartTrackingTouch(p0: SeekBar?) {}
+
+        override fun onStopTrackingTouch(p0: SeekBar?) {}
     }
 
 
