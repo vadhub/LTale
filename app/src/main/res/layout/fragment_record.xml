@@ -7,7 +7,7 @@
     tools:context=".presentation.record.RecordFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewMessageForRecord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/to_record_voice"

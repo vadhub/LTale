@@ -4,16 +4,13 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.google.android.material.imageview.ShapeableImageView
 import com.vad.ltale.R
-import com.vad.ltale.model.pojo.PostResponse
+import com.vad.ltale.databinding.ItemPostBinding
 import com.vad.ltale.model.audiohandle.PlaylistHandler
+import com.vad.ltale.model.pojo.PostResponse
 import com.vad.ltale.presentation.FileViewModel
 import java.text.SimpleDateFormat
 
@@ -40,7 +37,7 @@ class PostAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PostViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
+            ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
@@ -56,18 +53,18 @@ class PostAdapter(
 
     override fun getItemCount() = posts.size
 
-    inner class PostViewHolder(itemView: View) : ViewHolder(itemView), View.OnClickListener {
-        private val textViewDate = itemView.findViewById(R.id.textViewDate) as TextView
-        private val imageViewPost = itemView.findViewById(R.id.imageViewPost) as ImageView
-        private val recyclerViewAudio = itemView.findViewById(R.id.audioRecycler) as RecyclerView
+    inner class PostViewHolder(itemView: ItemPostBinding) : ViewHolder(itemView.root), View.OnClickListener {
+        private val textViewDate = itemView.textViewDate
+        private val imageViewPost = itemView.imageViewPost
+        private val recyclerViewAudio = itemView.audioRecycler
         private lateinit var adapter: AudioAdapter
-        private val textViewCountLike = itemView.findViewById(R.id.countLikes) as TextView
-        private val imageViewLike = itemView.findViewById(R.id.like) as ImageButton
-        private val imageIcon = itemView.findViewById(R.id.imageIconPost) as ShapeableImageView
-        private val hashtag = itemView.findViewById(R.id.textViewHashtag) as TextView
-        private val nikName = itemView.findViewById(R.id.textViewNikName) as TextView
+        private val textViewCountLike = itemView.countLikes
+        private val imageViewLike = itemView.like
+        private val imageIcon = itemView.imageIconPost
+        private val hashtag = itemView.textViewHashtag
+        private val nikName = itemView.textViewNikName
         private var postResponse = PostResponse.empty()
-        private var moreOptions = itemView.findViewById(R.id.more_options) as ImageButton
+        private var moreOptions = itemView.moreOptions
 
         @SuppressLint("SimpleDateFormat")
         fun bind(postResponse: PostResponse) {

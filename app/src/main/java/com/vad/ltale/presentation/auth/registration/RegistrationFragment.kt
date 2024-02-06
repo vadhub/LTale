@@ -9,26 +9,29 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
+import com.vad.ltale.databinding.FragmentRegistrationBinding
 import com.vad.ltale.model.pojo.User
 import com.vad.ltale.presentation.auth.AuthBaseFragment
 
 class RegistrationFragment : AuthBaseFragment(){
 
-    private lateinit var username: TextInputEditText
+    private var _binding: FragmentRegistrationBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_registration, container, false)
+    ): View {
+        _binding = FragmentRegistrationBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val buttonRegistration: Button = view.findViewById(R.id.enterRegistrationButton)
-        val buttonLogin: Button = view.findViewById(R.id.loginRegistrationButton)
-        username = view.findViewById(R.id.nikEditText) as TextInputEditText
-        val email = view.findViewById(R.id.emailEditText) as TextInputEditText
-        val password = view.findViewById(R.id.passwordEditText) as TextInputEditText
+        val buttonRegistration: Button = binding.enterRegistrationButton
+        val buttonLogin: Button = binding.loginRegistrationButton
+        val username = binding.nikEditText
+        val email = binding.emailEditText
+        val password = binding.passwordEditText
 
         buttonRegistration.setOnClickListener {
 
@@ -59,6 +62,11 @@ class RegistrationFragment : AuthBaseFragment(){
         buttonLogin.setOnClickListener {
             findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

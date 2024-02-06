@@ -2,7 +2,6 @@ package com.vad.ltale.presentation.account
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -24,13 +23,13 @@ import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
 import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.data.repository.LimitRepository
+import com.vad.ltale.databinding.FragmentAccountBinding
 import com.vad.ltale.model.pojo.Limit
 import com.vad.ltale.presentation.LimitViewModel
 import com.vad.ltale.presentation.LimitViewModelFactory
@@ -41,9 +40,11 @@ import java.sql.Date
 
 open class AccountFragment : AccountBaseFragment() {
 
+    private var _binding: FragmentAccountBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var adapter: PostAdapter
     private lateinit var bottomMenuActivity: BottomNavigationView
-    private lateinit var imageIcon: ShapeableImageView
 
     private val limitViewModel: LimitViewModel by activityViewModels {
         LimitViewModelFactory(
@@ -64,23 +65,24 @@ open class AccountFragment : AccountBaseFragment() {
     ): View? {
         bottomMenuActivity = (requireActivity() as MainActivity).bottomMenu
         bottomMenuActivity.visibility = View.VISIBLE
+
+        _binding = FragmentAccountBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_account, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val progressBar: ProgressBar = view.findViewById(R.id.progressBarAccount)
-        val progressBarPost: ProgressBar = view.findViewById(R.id.progressBarLoadingPost)
-        val progressBarIcon: ProgressBar = view.findViewById(R.id.progressBarIcon)
-        imageIcon = view.findViewById(R.id.imageIcon)
-        val username: TextView = view.findViewById(R.id.usernameTextView)
-        val countPost: TextView = view.findViewById(R.id.countPosts)
-        val countFollowers: TextView = view.findViewById(R.id.countFollowers)
-        val buttonCreateRecord: FloatingActionButton = view.findViewById(R.id.createRecordButton)
-        val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefresh)
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecords)
+        val progressBar: ProgressBar = binding.progressBarAccount
+        val progressBarPost: ProgressBar = binding.progressBarLoadingPost
+        val progressBarIcon: ProgressBar = binding.progressBarIcon
+        val username: TextView = binding.usernameTextView
+        val countPost: TextView = binding.countPosts
+        val countFollowers: TextView = binding.countFollowers
+        val buttonCreateRecord: FloatingActionButton = binding.createRecordButton
+        val swipeRefreshLayout: SwipeRefreshLayout = binding.swipeRefresh
+        val recyclerView: RecyclerView = binding.recyclerItemRecords
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
         val itemOnClickListener: (idPost: Long, view: View) -> Unit = { idPost, mView ->
@@ -124,7 +126,7 @@ open class AccountFragment : AccountBaseFragment() {
 
         recyclerView.adapter = adapter
 
-        load.getIcon(userId, imageIcon)
+        load.getIcon(userId, binding.imageIcon)
         username.text = userDetails.username
         countFollowers.text = "0"
 
@@ -132,7 +134,7 @@ open class AccountFragment : AccountBaseFragment() {
             view.findNavController().navigate(R.id.action_accountFragment_to_recordFragment)
         }
 
-        imageIcon.setOnClickListener {
+        binding.imageIcon.setOnClickListener {
             startCrop()
         }
 
@@ -144,7 +146,7 @@ open class AccountFragment : AccountBaseFragment() {
 
                 is Resource.Success -> {
                     postViewModel.getPostsByUserId(userId, userId)
-                    load.invalidate(userId, imageIcon)
+                    load.invalidate(userId, binding.imageIcon)
                     progressBarIcon.visibility = View.GONE
                 }
 
@@ -252,7 +254,7 @@ open class AccountFragment : AccountBaseFragment() {
             val uriContent = result.getUriFilePath(thisContext, true)
 
             uriContent?.let {
-                imageIcon.setImageURI(Uri.parse(uriContent))
+                binding.imageIcon.setImageURI(Uri.parse(uriContent))
                 load.uploadIcon(thisContext, File(uriContent), userId)
             }
         } else {
@@ -291,6 +293,7 @@ open class AccountFragment : AccountBaseFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         player.stop()
     }
 }

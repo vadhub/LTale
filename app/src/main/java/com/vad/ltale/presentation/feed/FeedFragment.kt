@@ -19,6 +19,7 @@ import com.vad.ltale.R
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
+import com.vad.ltale.databinding.FragmentFeedBinding
 import com.vad.ltale.model.pojo.Like
 import com.vad.ltale.model.pojo.PostResponse
 import com.vad.ltale.presentation.AudioBaseFragment
@@ -30,8 +31,10 @@ import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 
-class FeedFragment : AudioBaseFragment(), LikeOnClickListener,
-    AccountClickListener {
+class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListener {
+
+    private var _binding: FragmentFeedBinding? = null
+    private val binding get() = _binding!!
 
     private val postViewModel: PostViewModel by activityViewModels {
         PostViewModelFactory(
@@ -57,15 +60,16 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_feed, container, false)
+        _binding = FragmentFeedBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val progressBar: ProgressBar = view.findViewById(R.id.progressBarFeed)
-        val recyclerView: RecyclerView = view.findViewById(R.id.feedRecyclerView)
+        val progressBar: ProgressBar = binding.progressBarFeed
+        val recyclerView: RecyclerView = binding.feedRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefresh)
@@ -142,6 +146,7 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener,
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         player.stop()
     }
 

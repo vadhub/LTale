@@ -2,12 +2,8 @@ package com.vad.ltale.presentation.record
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -20,19 +16,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.remote.exception.GetTimeException
 import com.vad.ltale.data.remote.exception.UpdateException
 import com.vad.ltale.data.repository.LimitRepository
 import com.vad.ltale.data.repository.PostRepository
+import com.vad.ltale.databinding.FragmentRecordBinding
 import com.vad.ltale.model.audiohandle.Recorder
 import com.vad.ltale.model.pojo.Audio
 import com.vad.ltale.model.pojo.AudioRequest
@@ -44,10 +39,12 @@ import com.vad.ltale.presentation.*
 import com.vad.ltale.presentation.adapter.AudioAdapter
 import com.vad.ltale.presentation.animation.AnimationButton
 import java.io.File
-import java.sql.Date
 import java.sql.Timestamp
 
 class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.OnClickListener {
+
+    private var _binding: FragmentRecordBinding? = null
+    private val binding get() = _binding!!
 
     private val postViewModel: PostViewModel by activityViewModels {
         PostViewModelFactory(
@@ -60,10 +57,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         )
     }
 
-    private lateinit var timeRecordTextView: TextView
     private lateinit var chunkTimer: ChunkTimer
-    private lateinit var actionButton: FloatingActionButton
-    private lateinit var recyclerView: RecyclerView
     private var adapter: AudioAdapter? = null
     private lateinit var listAudio: MutableList<Audio>
     private var recorder: Recorder? = null
@@ -71,14 +65,10 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     private lateinit var limit: Limit
     private var time: Long = 0
     private val hashtags: MutableList<String> = mutableListOf()
-    private lateinit var hashtag: EditText
-    private lateinit var chipGroup: ChipGroup
     private val chips: MutableList<Chip> = mutableListOf()
-    private lateinit var textViewRecordToVoice: TextView
     private var animationButton: AnimationButton? = null
     private val userId = RemoteInstance.user.userId
     private var file: File? = null
-    private lateinit var image: ImageView
 
     private val permissionLauncherMultiple = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -112,8 +102,8 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
                 if (lastLength > s.length) return
                 if (s[s.length - 1].code == 32 || s[s.length - 1].code == 10) {
                     //32 is ascii code for space, do something when condition is true.
-                    createTag(hashtag.text.trim())
-                    hashtag.setText("")
+                    createTag(binding.editTextHashtag.text.trim())
+                    binding.editTextHashtag.setText("")
                 }
             } catch (ex: IndexOutOfBoundsException) {
                 //handle the exception
@@ -136,28 +126,23 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_record, container, false)
+        _binding = FragmentRecordBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        image = view.findViewById(R.id.imageViewPostRecord)
+        val image: ImageView = binding.imageViewPostRecord
         val imageButton: ImageButton = view.findViewById(R.id.imageButtonChoose)
         val progressBarOnActionButton: ProgressBar = view.findViewById(R.id.progressBarActionButton)
         val removeImage: ImageButton = view.findViewById(R.id.removeImage)
-        textViewRecordToVoice = view.findViewById(R.id.textView)
-        chipGroup = view.findViewById(R.id.chipGroup)
-        hashtag = view.findViewById(R.id.editTextHashtag)
-        timeRecordTextView = view.findViewById(R.id.timeLastTextView)
-        actionButton = view.findViewById(R.id.recordFloatingButton)
-        actionButton.setOnTouchListener(this)
-        recyclerView = view.findViewById(R.id.audioRecyclerRecord)
-        recyclerView.layoutManager = LinearLayoutManager(context)
 
-        hashtag.addTextChangedListener(hashtagTextWatcher)
+        binding.recordFloatingButton.setOnTouchListener(this)
+        binding.audioRecyclerRecord.layoutManager = LinearLayoutManager(context)
+        binding.editTextHashtag.addTextChangedListener(hashtagTextWatcher)
 
         val removeAudioListener: (audio: Audio) -> Unit = {
             removeAudio(it)
@@ -166,20 +151,20 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         adapter = AudioAdapter(0, prepareAudioHandleWithoutViewModel(), true)
         adapter?.removeListener = removeAudioListener
 
-        recyclerView.adapter = adapter
+        binding.audioRecyclerRecord.adapter = adapter
 
         limitViewModel.limit.observe(viewLifecycleOwner) {
             limit = it
 
             if (limit.time < 1000) {
-                timeRecordTextView.text = getString(R.string.time_is_up)
-                textViewRecordToVoice.text = getString(R.string.come_back_tomorrow)
-                actionButton.setImageResource(R.drawable.mic_off_fill0_wght200_grad0_opsz24)
-                actionButton.isEnabled = false
-                hashtag.isEnabled = false
+                binding.timeLastTextView.text = getString(R.string.time_is_up)
+                binding.textViewMessageForRecord.text = getString(R.string.come_back_tomorrow)
+                binding.recordFloatingButton.setImageResource(R.drawable.mic_off_fill0_wght200_grad0_opsz24)
+                binding.recordFloatingButton.isEnabled = false
+                binding.editTextHashtag.isEnabled = false
                 imageButton.visibility = GONE
             } else {
-                timeRecordTextView.text = TimeFormatter.format(it.time)
+                binding.timeLastTextView.text = TimeFormatter.format(it.time)
                 chunkTimer = ChunkTimer(it.time)
                 recorder = Recorder(chunkTimer, thisContext)
                 chunkTimer.setTimerHandler(this)
@@ -188,8 +173,8 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             }
 
             progressBarOnActionButton.visibility = GONE
-            actionButton.visibility = VISIBLE
-            timeRecordTextView.visibility = VISIBLE
+            binding.recordFloatingButton.visibility = VISIBLE
+            binding.timeLastTextView.visibility = VISIBLE
         }
 
         removeImage.setOnClickListener {
@@ -225,7 +210,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
                 str = "#$str"
             }
 
-            createChip(str, chipGroup)
+            createChip(str, binding.chipGroup)
         }
     }
 
@@ -270,7 +255,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         return when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
-                animationButton?.startCaptureAudioVolume(actionButton)
+                animationButton?.startCaptureAudioVolume(binding.recordFloatingButton)
                 recorder?.startRecording()
                 true
             }
@@ -297,7 +282,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             )
         }.toMutableList()
         adapter?.setRecords(listAudio)
-        textViewRecordToVoice.visibility = GONE
+        binding.textViewMessageForRecord.visibility = GONE
     }
 
     private fun removeAudio(audio: Audio) {
@@ -306,11 +291,11 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
         adapter?.setRecords(listAudio)
         time = (time / 1000) * 1000
         time += audio.duration
-        timeRecordTextView.text = TimeFormatter.format(time)
+        binding.timeLastTextView.text = TimeFormatter.format(time)
         chunkTimer.setTimeStartFrom(time)
 
         if (listAudio.isEmpty()) {
-            textViewRecordToVoice.visibility = VISIBLE
+            binding.textViewMessageForRecord.visibility = VISIBLE
         }
     }
 
@@ -319,7 +304,7 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
             val uriContent = result.getUriFilePath(thisContext, true)
 
             uriContent?.let {
-                image.setImageURI(Uri.parse(uriContent))
+                binding.imageViewPostRecord.setImageURI(Uri.parse(uriContent))
                 file = File(uriContent)
             }
         } else {
@@ -342,23 +327,24 @@ class RecordFragment : AudioBaseFragment(), OnTouchListener, TimerHandler, View.
 
     override fun showTime(time: Long) {
         this.time = time
-        timeRecordTextView.text = TimeFormatter.format(time)
+        binding.timeLastTextView.text = TimeFormatter.format(time)
     }
 
     override fun finishTime() {
-        actionButton.setImageResource(R.drawable.mic_off_fill0_wght200_grad0_opsz24)
-        actionButton.isEnabled = false
-        timeRecordTextView.text = getString(R.string.time_is_up)
+        binding.recordFloatingButton.setImageResource(R.drawable.mic_off_fill0_wght200_grad0_opsz24)
+        binding.recordFloatingButton.isEnabled = false
+        binding.timeLastTextView.text = getString(R.string.time_is_up)
         Toast.makeText(thisContext, getString(R.string.time_is_up), Toast.LENGTH_SHORT).show()
     }
 
     override fun onClick(v: View?) {
-        chipGroup.removeView(v)
+        binding.chipGroup.removeView(v)
         chips.remove(v)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         player.stop()
         adapter = null
     }

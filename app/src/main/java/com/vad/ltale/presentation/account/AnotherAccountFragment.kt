@@ -17,6 +17,7 @@ import com.vad.ltale.MainActivity
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.UserRepository
+import com.vad.ltale.databinding.FragmentPeopleAccountBinding
 import com.vad.ltale.model.pojo.Follow
 import com.vad.ltale.presentation.UserViewModel
 import com.vad.ltale.presentation.UserViewModelFactory
@@ -24,6 +25,9 @@ import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
 
 class AnotherAccountFragment : AccountBaseFragment() {
+
+    private var _binding: FragmentPeopleAccountBinding? = null
+    private val binding get() = _binding!!
 
     private val userViewModel: UserViewModel by viewModels {
         UserViewModelFactory(UserRepository(RemoteInstance))
@@ -44,20 +48,21 @@ class AnotherAccountFragment : AccountBaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_people_account, container, false)
+    ): View {
+        _binding = FragmentPeopleAccountBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val collapseToolbar: CollapsingToolbarLayout = view.findViewById(R.id.collapseToolbar)
-        val progressBar: ProgressBar = view.findViewById(R.id.progressBarAnother)
-        val imageIcon: ShapeableImageView = view.findViewById(R.id.imageIconAnother)
-        val username: TextView = view.findViewById(R.id.usernameAnother)
-        val countPost: TextView = view.findViewById(R.id.countPostsAnother)
-        val countFollowers: TextView = view.findViewById(R.id.countFollowersAnother)
-        val addToFriend: ImageView = view.findViewById(R.id.addFriend)
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerItemRecordsAnother)
+        val collapseToolbar: CollapsingToolbarLayout = binding.collapseToolbar
+        val progressBar: ProgressBar = binding.progressBarAnother
+        val imageIcon: ShapeableImageView = binding.imageIconAnother
+        val username: TextView = binding.usernameAnother
+        val countPost: TextView = binding.countPostsAnother
+        val countFollowers: TextView = binding.countFollowersAnother
+        val addToFriend: ImageView = binding.addFriend
+        val recyclerView: RecyclerView = binding.recyclerItemRecordsAnother
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         var followers = 0L
@@ -118,6 +123,7 @@ class AnotherAccountFragment : AccountBaseFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         player.stop()
         adapter = null
     }
