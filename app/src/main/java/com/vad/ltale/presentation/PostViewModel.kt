@@ -1,6 +1,7 @@
 package com.vad.ltale.presentation
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +29,8 @@ import java.util.concurrent.atomic.AtomicLong
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
+    private var sortType = 1
+
     val countOfPosts: MutableLiveData<Int> = MutableLiveData()
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
     var postsByUserId: MutableLiveData<List<PostResponse>> = MutableLiveData()
@@ -37,9 +40,20 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     private var page = AtomicInteger(0)
     private var pageOfUserPosts = AtomicInteger(0)
     private var userId = AtomicLong(-1L)
+    private var currentUserId_ = 0L
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
         throwable.printStackTrace()
+    }
+
+    fun setSortType(type: Int) {
+        if (type != sortType) {
+            sortType = type
+            clearPosts()
+            viewModelScope.launch {
+                postRepository.getPosts(currentUserId_, page.get(), sortType)
+            }
+        }
     }
 
     fun getPostsByText(text: String) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
@@ -47,16 +61,18 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun getPosts(currentUserId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-
+        currentUserId_ = currentUserId
         val loadedPosts: MutableList<PostResponse>? = posts.value as? MutableList<PostResponse>
-        val loaded = postRepository.getPosts(currentUserId, page.get())
+        val loaded = postRepository.getPosts(currentUserId, page.get(), sortType)
 
         if (loaded.isNotEmpty()) {
             if (!loadedPosts.isNullOrEmpty()) {
                 loadedPosts.addAll(loaded)
                 posts.postValue(loadedPosts!!)
+                Log.d("#update", "update1")
             } else {
                 posts.postValue(loaded)
+                Log.d("#update", "update2")
             }
 
             page.incrementAndGet()

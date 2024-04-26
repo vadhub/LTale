@@ -8,8 +8,8 @@ import okhttp3.RequestBody
 import java.lang.Exception
 
 class PostRepository(private val retrofitInstance: RemoteInstance) {
-    suspend fun getPosts(currentUserId: Long, page: Int) =
-        retrofitInstance.apiPost().getPost(currentUserId, page).body() ?: emptyList()
+    suspend fun getPosts(currentUserId: Long, page: Int, sortType: Int) =
+        retrofitInstance.apiPost().getPost(currentUserId, page, sortType).body() ?: emptyList()
 
     suspend fun getPostByUserId(userId: Long, currentUserId: Long, page: Int) =
         retrofitInstance.apiPost().getPostsByUserId(userId, currentUserId, page).body()

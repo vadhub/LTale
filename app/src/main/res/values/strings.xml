@@ -39,5 +39,9 @@
     <string name="post_removed">Post removed</string>
     <string name="can_t_load_image">can\'t load image</string>
     <string name="delete">delete</string>
+    <string name="sort">sort</string>
+    <string name="popular">Popular</string>
+    <string name="old">Old</string>
+    <string name="_new">New</string>
 
 </resources>

@@ -19,7 +19,7 @@ class PostAdapter(
     private val likeOnClickListener: LikeOnClickListener,
     private val onClickAccount: AccountClickListener,
     private val onReachEndListener: () -> Unit,
-    private val playlistHandler: PlaylistHandler,
+    private val playlistHandler: PlaylistHandler
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private var posts: List<PostResponse> = emptyList()

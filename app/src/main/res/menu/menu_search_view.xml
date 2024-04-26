@@ -7,4 +7,22 @@
         android:title="@string/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
+
+    <item
+        android:id="@+id/sort"
+        android:title="@string/sort"
+        android:icon="@drawable/sort_fill0_wght400_grad0_opsz24"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/byPopular"
+                android:title="@string/popular" />
+            <item
+                android:id="@+id/byNew"
+                android:title="@string/_new" />
+            <item
+                android:id="@+id/byOld"
+                android:title="@string/old" />
+        </menu>
+    </item>
 </menu>

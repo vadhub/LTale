@@ -15,7 +15,7 @@ import retrofit2.http.Query
 
 interface PostService {
     @GET("api-v1/posts")
-    suspend fun getPost(@Query("currentUserId") currentUserId: Long, @Query("page") page: Int): Response<List<PostResponse>>
+    suspend fun getPost(@Query("currentUserId") currentUserId: Long, @Query("page") page: Int, @Query("sortType") sortType: Int): Response<List<PostResponse>>
 
     @GET("api-v1/posts/user")
     suspend fun getPostsByUserId(@Query("userId") userId: Long, @Query("currentUserId") currentUserId: Long, @Query("page") page: Int): Response<List<PostResponse>>

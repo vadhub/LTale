@@ -50,19 +50,14 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
         navController = navHostFragment.navController
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.accountFragment, R.id.registrationFragment))
+        appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.accountFragment, R.id.registrationFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomMenu.setupWithNavController(navController)
 
         if (isAccessInternet(this)) {
-            if (!configuration.getFirstStart()) {
+            if (configuration.getFirstStart()) {
 
-                AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.version))
-                    .setMessage(getString(R.string.warning))
-                    .setPositiveButton("Ok") { _, _ -> }.create().show()
-
-            } else {
                 bottomMenu.visibility = View.VISIBLE
                 RemoteInstance.setUser(
                     User(
