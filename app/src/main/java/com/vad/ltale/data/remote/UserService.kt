@@ -8,4 +8,7 @@ interface UserService {
 
     @GET("api-v1/users/{id}")
     suspend fun getUser(@Path("id") id: Long): Response<User>
+
+    @PUT("/change")
+    suspend fun changeUsername(@Query("newNik") newNik: String, @Query("id") id: Long): Response<User>
 }

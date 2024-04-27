@@ -2,10 +2,12 @@ package com.vad.ltale.presentation.account
 
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.FollowRepository
 import com.vad.ltale.data.repository.LikeRepository
 import com.vad.ltale.data.repository.PostRepository
+import com.vad.ltale.data.repository.UserRepository
 import com.vad.ltale.model.pojo.Like
 import com.vad.ltale.model.pojo.PostResponse
 import com.vad.ltale.model.pojo.User
@@ -16,6 +18,8 @@ import com.vad.ltale.presentation.LikeViewModel
 import com.vad.ltale.presentation.LikeViewModelFactory
 import com.vad.ltale.presentation.PostViewModel
 import com.vad.ltale.presentation.PostViewModelFactory
+import com.vad.ltale.presentation.UserViewModel
+import com.vad.ltale.presentation.UserViewModelFactory
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
 
 open class AccountBaseFragment : AudioBaseFragment(), LikeOnClickListener {
@@ -36,6 +40,10 @@ open class AccountBaseFragment : AudioBaseFragment(), LikeOnClickListener {
         LikeViewModelFactory(
             LikeRepository(RemoteInstance)
         )
+    }
+
+    protected val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(UserRepository(RemoteInstance))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

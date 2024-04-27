@@ -6,4 +6,12 @@
         android:menuCategory="secondary"
         android:title="@string/sigh_out" />
 
+    <item
+        android:id="@+id/change_nik"
+        android:title="@string/change_nik" />
+
+    <item
+        android:id="@+id/change_photo"
+        android:title="@string/change_photo" />
+
 </menu>

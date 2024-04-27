@@ -23,9 +23,20 @@ class UserRepository(private val retrofitInstance: RemoteInstance) {
         return Resource.Success(response.body()!!)
     }
 
-
     suspend fun createUser(user: User) : Resource<User> {
         val response = retrofitInstance.userRegistration().registration(user)
+
+        if (response.code() == 401) {
+            return Resource.Failure(UnauthorizedException("user unauthorized"))
+        } else if (response.code() == 409) {
+            return Resource.Failure(UserAlreadyExistException("user already exist"))
+        }
+
+        return Resource.Success(response.body()!!)
+    }
+
+    suspend fun changeUsername(newNik: String, id: Long) : Resource<User> {
+        val response = retrofitInstance.apiUser().changeUsername(newNik, id)
 
         if (response.code() == 401) {
             return Resource.Failure(UnauthorizedException("user unauthorized"))

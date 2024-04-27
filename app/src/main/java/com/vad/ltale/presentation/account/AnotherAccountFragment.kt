@@ -30,10 +30,6 @@ class AnotherAccountFragment : AccountBaseFragment() {
     private var _binding: FragmentPeopleAccountBinding? = null
     private val binding get() = _binding!!
 
-    private val userViewModel: UserViewModel by viewModels {
-        UserViewModelFactory(UserRepository(RemoteInstance))
-    }
-
     private var adapter: PostAdapter? = null
     private var followed = -1L
 

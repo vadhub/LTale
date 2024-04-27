@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LilTale</string>
 
-    <string name="sigh_out">sigh out</string>
+    <string name="sigh_out">Sigh out</string>
     <string name="enter_username">Enter username</string>
     <string name="enter_mail">Enter mail</string>
     <string name="enter_password">Enter password</string>
@@ -43,5 +43,8 @@
     <string name="popular">Popular</string>
     <string name="old">Old</string>
     <string name="_new">New</string>
+    <string name="change_nik">Change nik</string>
+    <string name="change_photo">Change photo</string>
+    <string name="new_nik">New nik</string>
 
 </resources>

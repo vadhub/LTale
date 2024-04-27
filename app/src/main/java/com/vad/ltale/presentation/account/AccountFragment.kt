@@ -43,6 +43,7 @@ open class AccountFragment : AccountBaseFragment() {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
 
+    val username: TextView by lazy {  binding.usernameTextView }
     private lateinit var adapter: PostAdapter
     private lateinit var bottomMenuActivity: BottomNavigationView
 
@@ -77,7 +78,6 @@ open class AccountFragment : AccountBaseFragment() {
         val progressBar: ProgressBar = binding.progressBarAccount
         val progressBarPost: ProgressBar = binding.progressBarLoadingPost
         val progressBarIcon: ProgressBar = binding.progressBarIcon
-        val username: TextView = binding.usernameTextView
         val countPost: TextView = binding.countPosts
         val countFollowers: TextView = binding.countFollowers
         val buttonCreateRecord: FloatingActionButton = binding.createRecordButton
@@ -281,14 +281,36 @@ open class AccountFragment : AccountBaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if (item.itemId == R.id.sigh_out) {
-            configuration.clear()
-            bottomMenuActivity.visibility = View.GONE
-            findNavController().navigate(R.id.action_accountFragment_to_registrationFragment)
-            return true
-        }
+        when (item.itemId) {
+            R.id.sigh_out -> {
+                configuration.clear()
+                bottomMenuActivity.visibility = View.GONE
+                findNavController().navigate(R.id.action_accountFragment_to_registrationFragment)
+                return true
+            }
 
-        return super.onOptionsItemSelected(item)
+            R.id.change_nik -> {
+                createSettingsDialog()
+                return true
+            }
+
+            R.id.change_photo -> {
+                startCrop()
+                return true
+            }
+            else -> return false
+        }
+    }
+
+    private fun createSettingsDialog() {
+        val changeNick: (new: String) -> Unit = {
+            userViewModel.changeUsername(it, userId)
+            configuration.saveLogin(it)
+            RemoteInstance.setUser(userDetails.copy(username=it))
+            username.text = it
+        }
+        val settingsDialog = SettingsAccount(changeNick)
+        settingsDialog.show(parentFragmentManager, "SettingsDialog")
     }
 
     override fun onDestroyView() {

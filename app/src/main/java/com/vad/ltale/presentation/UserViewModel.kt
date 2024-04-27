@@ -22,6 +22,10 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         userDetails.postValue(userRepository.getUserById(id))
     }
 
+    fun changeUsername(newNik: String, id: Long) = viewModelScope.launch {
+        userRepository.changeUsername(newNik, id)
+    }
+
 }
 
 @Suppress("UNCHECKED_CAST")
