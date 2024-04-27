@@ -1,15 +1,22 @@
 package com.vad.ltale.data.repository
 
+import androidx.lifecycle.MutableLiveData
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.model.pojo.PostResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import java.lang.Exception
 
 class PostRepository(private val retrofitInstance: RemoteInstance) {
-    suspend fun getPosts(currentUserId: Long, page: Int, sortType: Int) =
-        retrofitInstance.apiPost().getPost(currentUserId, page, sortType).body() ?: emptyList()
+    suspend fun getPosts(
+        currentUserId: Long,
+        page: Int,
+        sortType: Int
+    ): MutableLiveData<List<PostResponse>> {
+        return MutableLiveData(
+            retrofitInstance.apiPost().getPost(currentUserId, page, sortType).body()
+        )
+    }
 
     suspend fun getPostByUserId(userId: Long, currentUserId: Long, page: Int) =
         retrofitInstance.apiPost().getPostsByUserId(userId, currentUserId, page).body()

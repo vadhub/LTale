@@ -33,6 +33,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     val countOfPosts: MutableLiveData<Int> = MutableLiveData()
     var posts: MutableLiveData<List<PostResponse>> = MutableLiveData()
+    var posts2: MutableLiveData<List<PostResponse>> = MutableLiveData() // for sorting
     var postsByUserId: MutableLiveData<List<PostResponse>> = MutableLiveData()
     var postResponse: SingleLiveEvent<Resource<PostResponse>> = SingleLiveEvent()
     val postDelete: SingleLiveEvent<Resource<Int>> = SingleLiveEvent()
@@ -50,8 +51,8 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         if (type != sortType) {
             sortType = type
             clearPosts()
-            viewModelScope.launch {
-                postRepository.getPosts(currentUserId_, page.get(), sortType)
+            viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+                posts2.postValue(postRepository.getPosts(currentUserId_, page.get(), sortType).value)
             }
         }
     }
@@ -63,16 +64,14 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     fun getPosts(currentUserId: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         currentUserId_ = currentUserId
         val loadedPosts: MutableList<PostResponse>? = posts.value as? MutableList<PostResponse>
-        val loaded = postRepository.getPosts(currentUserId, page.get(), sortType)
+        val loaded = postRepository.getPosts(currentUserId, page.get(), sortType).value ?: emptyList()
 
         if (loaded.isNotEmpty()) {
             if (!loadedPosts.isNullOrEmpty()) {
                 loadedPosts.addAll(loaded)
                 posts.postValue(loadedPosts!!)
-                Log.d("#update", "update1")
             } else {
                 posts.postValue(loaded)
-                Log.d("#update", "update2")
             }
 
             page.incrementAndGet()

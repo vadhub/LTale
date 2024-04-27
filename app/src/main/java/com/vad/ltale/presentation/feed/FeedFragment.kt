@@ -56,7 +56,6 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         currentUser = RemoteInstance.user.userId
-        postViewModel.getPosts(currentUser)
     }
 
     override fun onCreateView(
@@ -69,7 +68,7 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        postViewModel.getPosts(currentUser)
         val progressBar: ProgressBar = binding.progressBarFeed
         val recyclerView: RecyclerView = binding.feedRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
@@ -90,7 +89,15 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
         recyclerView.adapter = adapter
 
         postViewModel.posts.observe(viewLifecycleOwner) {
-            Log.d("#dd", "update")
+            Log.d("@dd", "update")
+            adapter.setPosts(it)
+            progressBar.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+
+        postViewModel.posts2.observe(viewLifecycleOwner) {
+            progressBar.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
             adapter.setPosts(it)
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
@@ -134,23 +141,20 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
         return when (item.itemId) {
             R.id.byNew -> {
                 postViewModel.setSortType(1)
-                Log.d("#1", "1")
                 true
             }
 
             R.id.byOld -> {
                 postViewModel.setSortType(2)
-                Log.d("#2", "2")
                 true
             }
 
             R.id.byPopular -> {
                 postViewModel.setSortType(0)
-                Log.d("#3", "3")
                 true
             }
 
-            else -> super.onOptionsItemSelected(item)
+            else -> false
         }
     }
 

@@ -1,6 +1,7 @@
 package com.vad.ltale.presentation.account
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.vad.ltale.data.remote.RemoteInstance
@@ -48,6 +49,7 @@ open class AccountBaseFragment : AudioBaseFragment(), LikeOnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("@##", postViewModel.toString())
         userDetails = RemoteInstance.user
         userId = userDetails.userId
     }
