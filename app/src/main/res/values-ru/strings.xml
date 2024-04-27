@@ -39,4 +39,11 @@
     <string name="delete">удалить</string>
     <string name="post_removed">Пост удален</string>
     <string name="can_t_load_image">невозможно загрузить изображение</string>
+    <string name="sort">Сортировка</string>
+    <string name="popular">Популярные</string>
+    <string name="old">Старые</string>
+    <string name="_new">Новые</string>
+    <string name="change_nik">Изменить ник</string>
+    <string name="change_photo">Именить фото</string>
+    <string name="new_nik">Новый ник</string>
 </resources>
