@@ -27,7 +27,7 @@ object RemoteInstance {
 
     private const val baseUrl: String = "http://82.97.248.120:8090/"
 
-    //"http://10.0.2.2:8080/"
+    //"http://10.0.2.2:8090/"
 
     private val interceptorBody: HttpLoggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)

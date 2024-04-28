@@ -2,7 +2,6 @@ package com.vad.ltale.presentation.feed
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -56,6 +55,7 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         currentUser = RemoteInstance.user.userId
+        postViewModel.getPosts(currentUser)
     }
 
     override fun onCreateView(
@@ -68,7 +68,6 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postViewModel.getPosts(currentUser)
         val progressBar: ProgressBar = binding.progressBarFeed
         val recyclerView: RecyclerView = binding.feedRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
@@ -89,7 +88,6 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
         recyclerView.adapter = adapter
 
         postViewModel.posts.observe(viewLifecycleOwner) {
-            Log.d("@dd", "update")
             adapter.setPosts(it)
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE

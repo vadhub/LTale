@@ -114,6 +114,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun clearPosts() {
+        posts.value = emptyList()
         posts = MutableLiveData()
         page.set(0)
     }
