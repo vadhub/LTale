@@ -24,6 +24,19 @@
             android:src="@drawable/more_vert_fill0_wght400_grad0_opsz24"
             app:tint="@android:color/secondary_text_dark" />
 
+        <ImageButton
+            android:id="@+id/complaint_report"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/report_fill0_wght300_grad0_opsz24" />
+
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageIconPost"
             android:layout_width="50dp"

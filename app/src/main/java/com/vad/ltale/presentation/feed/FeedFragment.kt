@@ -84,7 +84,12 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
             postViewModel.getPosts(currentUser)
         }
 
+        val reportClickListener: ((idPost: Long) -> Unit) = {
+
+        }
+
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())
+        adapter.reportClickListener = reportClickListener
         recyclerView.adapter = adapter
 
         postViewModel.posts.observe(viewLifecycleOwner) {

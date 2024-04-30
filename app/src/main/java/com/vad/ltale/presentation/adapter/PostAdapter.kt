@@ -25,7 +25,8 @@ class PostAdapter(
     private var posts: List<PostResponse> = emptyList()
 
     // if is null so that adapter no under account fragment
-    var itemClickListener: ((idPost: Long, View) -> Unit)? = null
+    var moreClickListener: ((idPost: Long, View) -> Unit)? = null
+    var reportClickListener: ((idPost: Long) -> Unit)? = null
 
     @SuppressLint("NotifyDataSetChanged")
     fun setPosts(posts: List<PostResponse>) {
@@ -65,16 +66,24 @@ class PostAdapter(
         private val nikName = itemView.textViewNikName
         private var postResponse = PostResponse.empty()
         private var moreOptions = itemView.moreOptions
+        private var reportButton = itemView.complaintReport
 
         @SuppressLint("SimpleDateFormat")
         fun bind(postResponse: PostResponse) {
             this.postResponse = postResponse
 
             // if is null so that adapter no under account fragment
-            if (itemClickListener != null) {
+            if (moreClickListener != null) {
                 moreOptions.visibility = View.VISIBLE
                 moreOptions.setOnClickListener {
-                    itemClickListener?.invoke(postResponse.postId, moreOptions)
+                    moreClickListener?.invoke(postResponse.postId, moreOptions)
+                }
+            }
+
+            if (reportClickListener != null) {
+                reportButton.visibility = View.VISIBLE
+                reportButton.setOnClickListener {
+                    reportClickListener?.invoke(postResponse.postId)
                 }
             }
 
