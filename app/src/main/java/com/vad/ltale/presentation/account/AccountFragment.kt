@@ -122,7 +122,7 @@ open class AccountFragment : AccountBaseFragment() {
             prepareAudioHandler()
         )
 
-        adapter.itemClickListener = itemOnClickListener
+        adapter.moreClickListener = itemOnClickListener
 
         recyclerView.adapter = adapter
 
