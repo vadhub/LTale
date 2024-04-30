@@ -118,4 +118,7 @@ object RemoteInstance {
     fun apiFollow(): FollowService =
         retrofitWithAuth().build().create(FollowService::class.java)
 
+    fun apiComplaintReport(): ComplaintService =
+        retrofitWithAuth().build().create(ComplaintService::class.java)
+
 }

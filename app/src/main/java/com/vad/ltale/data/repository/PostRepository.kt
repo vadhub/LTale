@@ -3,6 +3,7 @@ package com.vad.ltale.data.repository
 import androidx.lifecycle.MutableLiveData
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.remote.Resource
+import com.vad.ltale.model.pojo.ComplaintReport
 import com.vad.ltale.model.pojo.PostResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -59,5 +60,9 @@ class PostRepository(private val retrofitInstance: RemoteInstance) {
 
         return Resource.Failure(Exception("fail"))
 
+    }
+
+    suspend fun complaintOnPost(complaintReport: ComplaintReport) {
+        retrofitInstance.apiComplaintReport().sendReport(complaintReport)
     }
 }

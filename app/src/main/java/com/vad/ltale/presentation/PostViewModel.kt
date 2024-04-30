@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.pojo.AudioRequest
+import com.vad.ltale.model.pojo.ComplaintReport
 import com.vad.ltale.model.pojo.PostResponse
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
@@ -189,6 +190,10 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     fun removePost(idPost: Long) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         postDelete.postValue(postRepository.deletePost(idPost))
+    }
+
+    fun complaintReportOnPost(postId: Long, idComplaint: Int) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+        postRepository.complaintOnPost(ComplaintReport(postId, idComplaint, System.currentTimeMillis().toString()))
     }
 }
 
