@@ -46,8 +46,6 @@
     <string name="change_nik">Change nik</string>
     <string name="change_photo">Change photo</string>
     <string name="new_nik">New nik</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="report">report</string>
     <string name="candid_image">Candid image</string>
     <string name="spam">spam</string>
@@ -55,5 +53,7 @@
     <string name="prohibited_goods">prohibited goods</string>
     <string name="violence_and_hostility">violence and hostility</string>
     <string name="what_exactly_do_you_find_unacceptable_in_this_post">What exactly do you find unacceptable in this post?</string>
+    <string name="complaint">Complaint</string>
+    <string name="complaint_report">The complaint has been sent for consideration</string>
 
 </resources>

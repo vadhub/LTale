@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -109,6 +110,10 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
 
         likeViewModel.likeData.observe(viewLifecycleOwner) {
             adapter.notifyItemChanged(it.first, it.second)
+        }
+
+        postViewModel.postComplaint.observe(viewLifecycleOwner) {
+            Toast.makeText(thisContext, it, Toast.LENGTH_SHORT).show()
         }
 
     }

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.vad.ltale.R
 import com.vad.ltale.data.remote.Resource
 import com.vad.ltale.data.repository.PostRepository
 import com.vad.ltale.model.pojo.AudioRequest
@@ -38,6 +39,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     var postsByUserId: MutableLiveData<List<PostResponse>> = MutableLiveData()
     var postResponse: SingleLiveEvent<Resource<PostResponse>> = SingleLiveEvent()
     val postDelete: SingleLiveEvent<Resource<Int>> = SingleLiveEvent()
+    val postComplaint: SingleLiveEvent<Int> = SingleLiveEvent()
 
     private var page = AtomicInteger(0)
     private var pageOfUserPosts = AtomicInteger(0)
@@ -194,6 +196,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     fun complaintReportOnPost(postId: Long, idComplaint: Int) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
         postRepository.complaintOnPost(ComplaintReport("/api-v1/posts/$postId", idComplaint, System.currentTimeMillis().toString()))
+        postComplaint.postValue(R.string.complaint_report)
     }
 }
 

@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.vad.ltale.App
+import com.vad.ltale.R
 import com.vad.ltale.data.local.SaveInternalHandle
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.data.repository.FileRepository
@@ -102,6 +104,7 @@ class ReportComplaintFragment : BaseFragment() {
             }
 
             postViewModel.complaintReportOnPost(idPost, id)
+            findNavController().navigate(R.id.action_reportComplaintFragment_to_feedFragment)
 
         }
     }
