@@ -4,15 +4,15 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class ComplaintReport(
-    @SerializedName("id")
+    @SerializedName("post")
     @Expose
-    val postId: Long,
+    val post: String,
 
     @SerializedName("id_complaint")
     @Expose
     val idComplaint: Int,
 
-    @SerializedName("dateCreated")
+    @SerializedName("date_created")
     @Expose
     val dateCreated: String,
 

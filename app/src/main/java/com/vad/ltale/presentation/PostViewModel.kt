@@ -193,7 +193,7 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun complaintReportOnPost(postId: Long, idComplaint: Int) = viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-        postRepository.complaintOnPost(ComplaintReport(postId, idComplaint, System.currentTimeMillis().toString()))
+        postRepository.complaintOnPost(ComplaintReport("/api-v1/posts/$postId", idComplaint, System.currentTimeMillis().toString()))
     }
 }
 
