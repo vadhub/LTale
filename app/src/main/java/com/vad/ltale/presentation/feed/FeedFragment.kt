@@ -85,7 +85,8 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
         }
 
         val reportClickListener: ((idPost: Long) -> Unit) = {
-
+            val directions = FeedFragmentDirections.actionFeedFragmentToReportComplaintFragment(it)
+            findNavController().navigate(directions)
         }
 
         adapter = PostAdapter(load, this, this, onReachEndListener, prepareAudioHandler())

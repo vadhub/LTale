@@ -9,16 +9,16 @@
         android:id="@+id/accountFragment"
         android:name="com.vad.ltale.presentation.account.AccountFragment"
         android:label=""
-        tools:layout="@layout/fragment_account" >
+        tools:layout="@layout/fragment_account">
         <action
             android:id="@+id/action_accountFragment_to_recordFragment"
             app:destination="@id/recordFragment" />
         <action
             android:id="@+id/action_accountFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/accountFragment"
-            app:popUpToInclusive="true"
-            app:destination="@id/registrationFragment" />
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_accountFragment_to_feedFragment"
             app:destination="@id/feedFragment" />
@@ -27,19 +27,19 @@
         android:id="@+id/loginFragment"
         android:name="com.vad.ltale.presentation.auth.login.LoginFragment"
         android:label="@string/login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_registrationFragment_to_accountFragment"
+            app:destination="@id/accountFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/registrationFragment"
-            app:popUpToInclusive="true"
-            app:destination="@id/accountFragment" />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/recordFragment"
         android:name="com.vad.ltale.presentation.record.RecordFragment"
         android:label="@string/record"
-        tools:layout="@layout/fragment_record" >
+        tools:layout="@layout/fragment_record">
         <action
             android:id="@+id/action_to_accountFragment"
             app:destination="@id/accountFragment" />
@@ -48,35 +48,48 @@
         android:id="@+id/registrationFragment"
         android:name="com.vad.ltale.presentation.auth.registration.RegistrationFragment"
         android:label="@string/registration"
-        tools:layout="@layout/fragment_registration" >
+        tools:layout="@layout/fragment_registration">
         <action
             android:id="@+id/action_registrationFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
         <action
             android:id="@+id/action_registrationFragment_to_accountFragment"
+            app:destination="@id/accountFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/registrationFragment"
-            app:popUpToInclusive="true"
-            app:destination="@id/accountFragment" />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/feedFragment"
         android:name="com.vad.ltale.presentation.feed.FeedFragment"
         android:label="@string/feed"
-        tools:layout="@layout/fragment_feed" >
+        tools:layout="@layout/fragment_feed">
         <action
             android:id="@+id/action_feedFragment_to_peopleAccountFragment"
             app:destination="@id/peopleAccountFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_reportComplaintFragment"
+            app:destination="@id/reportComplaintFragment" />
     </fragment>
     <fragment
         android:id="@+id/peopleAccountFragment"
         android:name="com.vad.ltale.presentation.account.AnotherAccountFragment"
-        android:label="" >
+        android:label="">
 
         <argument
             android:name="uid"
-            app:argType="long"
-            android:defaultValue="1L"/>
+            android:defaultValue="1L"
+            app:argType="long" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/reportComplaintFragment"
+        android:name="com.vad.ltale.presentation.complaint.ReportComplaintFragment"
+        android:label="@string/complaint">
+
+        <argument
+            android:name="post_id"
+            android:defaultValue="-1L"
+            app:argType="long" />
     </fragment>
 </navigation>
