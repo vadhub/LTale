@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.vad.ltale.R
+import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.databinding.ItemPostBinding
 import com.vad.ltale.model.audiohandle.PlaylistHandler
 import com.vad.ltale.model.pojo.PostResponse
@@ -81,7 +82,7 @@ class PostAdapter(
             }
 
             if (reportClickListener != null) {
-                reportButton.visibility = View.VISIBLE
+                reportButton.visibility = if (RemoteInstance.user.userId != postResponse.userId) View.VISIBLE else View.GONE
                 reportButton.setOnClickListener {
                     reportClickListener?.invoke(postResponse.postId)
                 }
