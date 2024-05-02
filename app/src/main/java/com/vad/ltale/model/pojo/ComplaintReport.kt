@@ -8,11 +8,11 @@ data class ComplaintReport(
     @Expose
     val post: String,
 
-    @SerializedName("id_complaint")
+    @SerializedName("idComplaint")
     @Expose
     val idComplaint: Int,
 
-    @SerializedName("date_created")
+    @SerializedName("dateCreated")
     @Expose
     val dateCreated: String,
 
