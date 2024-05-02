@@ -6,7 +6,7 @@ import retrofit2.http.POST
 
 interface ComplaintService {
 
-    @POST("/api-v1/complaint")
+    @POST("/api-v1/complaintReports")
     suspend fun sendReport(@Body report: ComplaintReport)
 
 }
