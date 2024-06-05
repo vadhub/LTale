@@ -73,7 +73,7 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val mBanner = binding.adView
-        mBanner.setAdUnitId("demo-banner-yandex")
+        mBanner.setAdUnitId("R-M-9155942-1") // demo-banner-yandex
         mBanner.setAdSize(BannerAdSize.fixedSize(thisContext, 300, 70))
         val adRequest: AdRequest = AdRequest.Builder().build()
         mBanner.loadAd(adRequest)
