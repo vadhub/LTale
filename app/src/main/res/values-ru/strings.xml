@@ -46,4 +46,14 @@
     <string name="change_nik">Изменить ник</string>
     <string name="change_photo">Именить фото</string>
     <string name="new_nik">Новый ник</string>
+    <string name="report">сообщить</string>
+    <string name="candid_image">Откровенное изображение</string>
+    <string name="spam">Спам</string>
+    <string name="deception">Обман</string>
+    <string name="prohibited_goods">Запрещенные товары</string>
+    <string name="violence_and_hostility">Насилие и вражда</string>
+    <string name="what_exactly_do_you_find_unacceptable_in_this_post">Что именно вы считаете недопустимым в этом посте?</string>
+    <string name="complaint">Жалоба</string>
+    <string name="complaint_report">Жалоба отправлена на рассмотрение</string>
+    <string name="valid_email">Введите действительный адрес электронной почты!</string>
 </resources>
