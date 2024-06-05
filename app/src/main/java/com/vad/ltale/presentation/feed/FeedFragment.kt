@@ -32,6 +32,8 @@ import com.vad.ltale.presentation.PostViewModelFactory
 import com.vad.ltale.presentation.adapter.AccountClickListener
 import com.vad.ltale.presentation.adapter.LikeOnClickListener
 import com.vad.ltale.presentation.adapter.PostAdapter
+import com.yandex.mobile.ads.banner.BannerAdSize
+import com.yandex.mobile.ads.common.AdRequest
 
 class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListener {
 
@@ -69,6 +71,13 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val mBanner = binding.adView
+        mBanner.setAdUnitId("demo-banner-yandex")
+        mBanner.setAdSize(BannerAdSize.fixedSize(thisContext, 300, 70))
+        val adRequest: AdRequest = AdRequest.Builder().build()
+        mBanner.loadAd(adRequest)
+
         val progressBar: ProgressBar = binding.progressBarFeed
         val recyclerView: RecyclerView = binding.feedRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
