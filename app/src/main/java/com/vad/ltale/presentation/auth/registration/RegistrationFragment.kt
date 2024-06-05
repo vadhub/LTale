@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.textfield.TextInputEditText
 import com.vad.ltale.R
 import com.vad.ltale.databinding.FragmentRegistrationBinding
 import com.vad.ltale.model.pojo.User
 import com.vad.ltale.presentation.auth.AuthBaseFragment
+import com.vad.ltale.presentation.auth.Validator
 
 class RegistrationFragment : AuthBaseFragment(){
 
@@ -38,9 +38,9 @@ class RegistrationFragment : AuthBaseFragment(){
             if (username.text.isNullOrBlank()) {
                 username.error = getString(R.string.field_empty)
                 Toast.makeText(thisContext, getString(R.string.enter_username), Toast.LENGTH_SHORT).show()
-            } else if (email.text.isNullOrBlank()) {
-                email.error = getString(R.string.field_empty)
-                Toast.makeText(thisContext, getString(R.string.enter_mail), Toast.LENGTH_SHORT).show()
+            } else if (!Validator.emailValidator(email.text.toString())) {
+                email.error = getString(R.string.valid_email)
+                Toast.makeText(thisContext, getString(R.string.valid_email), Toast.LENGTH_SHORT).show()
             } else if (password.text.isNullOrBlank()) {
                 password.error = getString(R.string.field_empty)
                 Toast.makeText(thisContext, getString(R.string.enter_password), Toast.LENGTH_SHORT).show()
