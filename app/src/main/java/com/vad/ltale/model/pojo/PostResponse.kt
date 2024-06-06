@@ -43,7 +43,7 @@ data class PostResponse(
 
     @SerializedName("hashtags")
     @Expose
-    val hashtags: List<Hashtag>
+    val hashtags: List<Hashtag>?
 ) {
     companion object {
         fun empty() =

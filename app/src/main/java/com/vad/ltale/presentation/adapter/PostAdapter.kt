@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.squareup.picasso.Picasso
 import com.vad.ltale.R
 import com.vad.ltale.data.remote.RemoteInstance
 import com.vad.ltale.databinding.ItemPostBinding
@@ -90,19 +91,23 @@ class PostAdapter(
 
             imageIcon.setImageDrawable(null)
             imageViewPost.setImageDrawable(null)
-            nikName.text = ""
             hashtag.text = ""
-            textViewDate.text = ""
 
             val parser = SimpleDateFormat("yyyy-MM-dd")
             val formatter = SimpleDateFormat("dd.MM.yyyy")
 
             textViewDate.text = formatter.format(parser.parse(postResponse.dateChanged)?: "0.0.0") // if data is null return 0.0.0
             nikName.text = postResponse.nikName
-            load.getIcon(postResponse.userId, imageIcon)
-            load.getImage(postResponse.image?.id, imageViewPost)
 
-            if (postResponse.hashtags.isNotEmpty()) hashtag.text = postResponse.hashtags.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
+            if (postResponse.image != null) {
+                load.getImage(postResponse.image.id, imageViewPost)
+            } else {
+                imageViewPost.setImageDrawable(null)
+            }
+
+            load.getIcon(postResponse.userId, imageIcon)
+
+            if (!postResponse.hashtags.isNullOrEmpty()) hashtag.text = postResponse.hashtags.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
 
             recyclerViewAudio.layoutManager = LinearLayoutManager(itemView.context)
             adapter = AudioAdapter(layoutPosition, playlistHandler, false)

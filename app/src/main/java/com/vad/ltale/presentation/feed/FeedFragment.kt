@@ -80,6 +80,8 @@ class FeedFragment : AudioBaseFragment(), LikeOnClickListener, AccountClickListe
 
         val progressBar: ProgressBar = binding.progressBarFeed
         val recyclerView: RecyclerView = binding.feedRecyclerView
+        recyclerView.setHasFixedSize(true)
+        recyclerView.setItemViewCacheSize(20)
         recyclerView.layoutManager = LinearLayoutManager(thisContext)
 
         val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefresh)

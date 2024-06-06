@@ -86,7 +86,7 @@ class ReportComplaintFragment : BaseFragment() {
         load.getIcon(postResponse.userId, icon)
         load.getImage(postResponse.image?.id, image)
 
-        if (postResponse.hashtags.isNotEmpty()) hashtag.text = postResponse.hashtags.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
+        if (!postResponse.hashtags.isNullOrEmpty()) hashtag.text = postResponse.hashtags!!.map { it.hashtagName }.reduce { acc, s -> "$acc $s" }
 
         buttonReport.setOnClickListener {
             var id = 0
